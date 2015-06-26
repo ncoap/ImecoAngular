@@ -4,12 +4,12 @@ angular.module('ngBoilerplate.client', ['ui.router', 'ngResource', 'ui.bootstrap
                 url: '/enlaces',
                 views: {
                     'main': {
-                        templateUrl: 'client/client.tpl.html',
+                        templateUrl: 'enlace/enlace.tpl.html',
                         controller: 'itemControler'
                     }
                 },
                 data: {
-                    pageTitle: 'Enlaces'
+                    pageTitle: 'Enlaces de Interes'
                 }
             });
         })
@@ -91,7 +91,7 @@ angular.module('ngBoilerplate.client', ['ui.router', 'ngResource', 'ui.bootstrap
             $scope.showModalNuevoEnlace = function () {
 
                 var modalInstance = $modal.open({
-                    templateUrl: 'client/nuevoEnlace.html',
+                    templateUrl: 'client/newEnlace.html',
                     controller: 'NuevoEnlaceController'
                 });
 
@@ -110,7 +110,7 @@ angular.module('ngBoilerplate.client', ['ui.router', 'ngResource', 'ui.bootstrap
 
             $scope.showModalVerEnlace = function (enlaceSeleccionado) {
                 var modalInstance = $modal.open({
-                    templateUrl: 'client/verEnlace.html',
+                    templateUrl: 'client/viewEnlace.html',
                     controller: 'VerEnlaceController',
                     resolve: {
                         enlaceSeleccionado: function () {
@@ -124,7 +124,7 @@ angular.module('ngBoilerplate.client', ['ui.router', 'ngResource', 'ui.bootstrap
             $scope.showModalActualizarEnlace = function (enlaceSeleccionado) {
 
                 var modalInstance = $modal.open({
-                    templateUrl: 'client/actualizarEnlace.html',
+                    templateUrl: 'client/updateEnlace.html',
                     controller: 'ActualizarEnlaceController',
                     resolve: {
                         enlaceSeleccionado: function () {
