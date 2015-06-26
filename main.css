@@ -1,0 +1,16 @@
+.container{
+    width: 700px;
+}
+
+.alumno-pagination{
+    text-align: center;
+}
+.alumno-lista{
+    margin: 0 auto;
+    width: 450px;
+    overflow-y:visible;overflow-x:hidden;
+    height: 500px;
+}
+.alumno-titulo{
+    font-weight: bold;
+}

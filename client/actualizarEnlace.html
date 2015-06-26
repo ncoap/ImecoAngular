@@ -1,0 +1,38 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()"
+            data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4>Actualizar Enlace de Interés  
+        <span class="label label-success">
+            {{enlaceSeleccionado.id}}
+        </span>  
+    </h4>
+</div>
+<div class="modal-body"> 
+    <div class="box box-primary">
+        <form method="post" ng-submit="updateForm()" name="nameFormActualizarEnlace">
+            <div class="box-body">  
+                <div class="form-group">
+                    <label for="idCodigo">Código</label>
+                    <input type="text" class="form-control" ng-model="enlaceSeleccionado.id"
+                           readonly="true">
+                </div>
+                <div class="form-group">
+                    <label for="idTitulo">Título</label>
+                    <input type="text" class="form-control" ng-model="enlaceSeleccionado.titulo"
+                           placeholder="Ingrese su Titulo" required>
+                </div>
+                <div class="form-group">
+                    <label for="idEnlace">Enlace</label>
+                    <input type="url" class="form-control" ng-model="enlaceSeleccionado.enlace"
+                           placeholder="Ingrese su Enlace" required>
+                </div>
+            </div>
+            <div class="box-footer">
+                <button type="submit" class="btn btn-primary pull-right" 
+                        ng-disabled='!nameFormActualizarEnlace.$valid'>
+                    Actualizar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

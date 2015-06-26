@@ -1,0 +1,48 @@
+<div style="margin-bottom: 10px">
+    <input  class="btn btn-primary" type='submit' name='boton' 
+            ng-click="showModalNuevoEnlace()"
+            value='Nuevo' title="Nuevo Enlace de Interés">
+</div>
+
+<div class="box box-primary">
+    <div class="box-header">
+        <i class="fa fa-users"></i> 
+        <h3 class="box-title">Enlaces de Interés</h3>
+    </div>
+    <div class="box-body">
+        <table id="AS" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Título</th>
+                    <th>Enlace</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="e in currentEnlaces">
+                    <td>{{e.id}}</td>
+                    <td>{{e.titulo}}</td>
+                    <td>
+                        <a href="{{e.enlace}}" target="_blank">{{e.enlace}}</a>
+                    <td style="text-align: center">
+                        <img style="cursor: pointer" src="assets/iconos/ver.png" title="Ver Enlace" 
+                             ng-click = "showModalVerEnlace(e)">
+                        <img style="cursor: pointer" src="assets/iconos/update.png" title="Actualizar Enlace" 
+                             ng-click="showModalActualizarEnlace(e)">
+                        <img style="cursor: pointer" src="assets/iconos/delete.png" title="Eliminar Enlace" 
+                             ng-click="deleteEnlace(e.id)">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div>
+    <pagination total-items="bigTotalItems" ng-model="bigCurrentPage" 
+                max-size="maxSize" ng-change="pageChanged()"
+                class="pagination-md" 
+                boundary-links="true" rotate="false">
+    </pagination>
+</div>

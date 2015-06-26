@@ -1,0 +1,49 @@
+<!doctype html>
+<html ng-app="ui.bootstrap.demo">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Pagination</title>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
+    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>
+    <script src="example.js"></script>
+    
+    <link rel="stylesheet" href="http:////netdna.bootstrapcdn.com/bootswatch/3.0.0/simplex/bootstrap.min.css" />
+    <link rel="stylesheet" href="main.css"/>
+</head>
+<body>
+
+<div ng-controller="PaginationDemoCtrl">
+    
+    <div class="container">
+        <div class="alumno-pagination">
+        <h1 class="alumno-titulo">Lista de Alumnos</h1>
+        <pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-md" boundary-links="true" ng-change="pageChanged()"></pagination>
+        </div>
+        <div class="alumno-lista">
+            <table class="table table-striped table-hover ">
+              <thead>
+                <tr>
+                  <th>Codigo</th>
+                  <th>Nombre</th>
+                  <th>Allowance</th>
+                  <th>Opciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="alumno in selectiondata">
+                  <td>{{$index + nextelement}}</td>
+                  <td>{{alumno.name}}</td>
+                  <td>{{alumno.allowance}}</td>
+                  <td>
+                    <button class="btn btn-primary">Ver</button>
+                    <button class="btn btn-info">Editar</button>
+                    <button class="btn btn-default">Eliminar</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+        </div> 
+    </div>
+
+</body>
+</html>

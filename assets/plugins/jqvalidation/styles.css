@@ -1,0 +1,34 @@
+  .borde-combo{
+	padding-top: 0px;
+  	padding-bottom: 0px;
+  }
+  
+  .w100{
+  	width: 100%;
+  }
+
+  .marg-l-t-b{
+  	margin-left: 10px;
+    margin-bottom: 20px;
+    margin-top: 5px;width:500px;
+  }
+
+  .btn-n-e-e{
+  	height: 34px;
+  	top: 0px;
+  }
+
+  .notification-jq{
+    position: fixed;
+    z-index: 10000;
+  }
+
+  form#form-nuevo label.error, label.error {
+    color: red;
+    font-style: italic;
+    font-weight: bold;
+  }
+
+  form#form-nuevo input.error, input.error {
+    border: 1px solid red;
+  }
