@@ -1,5 +1,4 @@
 angular.module( 'ngBoilerplate', [
-    'ngBoilerplate.client',
     'ui.router'
 ])
 
