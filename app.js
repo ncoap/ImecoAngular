@@ -1,6 +1,7 @@
-angular.module( 'ngBoilerplate', [
+angular.module( 'ngImeco', [
     'ui.router',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'ngImeco.enlace'
 ])
 
 .config( function myAppConfig ( $stateProvider, $urlRouterProvider ) {

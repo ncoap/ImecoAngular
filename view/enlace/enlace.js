@@ -1,11 +1,11 @@
-angular.module('ngBoilerplate.client', ['ui.router', 'ngResource', 'ui.bootstrap'])
+angular.module('ngImeco.enlace', ['ui.router', 'ngResource', 'ui.bootstrap'])
         .config(function config3($stateProvider) {
-            $stateProvider.state('client', {
+            $stateProvider.state('enlaces', {
                 url: '/enlaces',
                 views: {
                     'main': {
-                        templateUrl: 'enlace/enlace.tpl.html',
-                        controller: 'itemControler'
+                        templateUrl: 'view/enlace/enlace.tpl.html',
+                        controller: 'enlaceControler'
                     }
                 },
                 data: {
@@ -13,9 +13,9 @@ angular.module('ngBoilerplate.client', ['ui.router', 'ngResource', 'ui.bootstrap
                 }
             });
         })
-        .factory('clientService', function ($resource) {
+        .factory('enlaceService', function ($resource) {
             var service = {
-                getClients: function (success, failure) {
+                getEnlaces: function (success, failure) {
                     var Clients = $resource('/angular/rest/client');
                     var data = Clients.get(
                             {},
@@ -30,14 +30,14 @@ angular.module('ngBoilerplate.client', ['ui.router', 'ngResource', 'ui.bootstrap
                             failure
                             );
                 },
-                registerClient: function (client, success, failure) {
+                registerEnlace: function (client, success, failure) {
                     var Client = $resource('/basic-web-app/rest/client');
                     Client.save({}, client, success, failure);
                 }
             };
             return service;
         })
-        .controller('itemControler', function ($scope, clientService, $log, $http, $modal) {
+        .controller('enlaceControler', function ($scope, enlaceService, $log, $http, $modal) {
 
             $scope.maxSize = 10;
             $scope.bigTotalItems = 0;
@@ -56,7 +56,7 @@ angular.module('ngBoilerplate.client', ['ui.router', 'ngResource', 'ui.bootstrap
                 var a = confirm("¿Desea Eliminar el enlace?");
                 var objeto = {id: id_enlace};
                 if (a) {
-                    $http.post('php/controlador/delete.php', objeto).
+                    $http.post('php/controller/EnlaceController.php', objeto).
                             success(function (data, status, headers, config) {
                                 console.log(data);
                                 //validar el mensajes del data es "OK" no solo OK 
@@ -72,7 +72,7 @@ angular.module('ngBoilerplate.client', ['ui.router', 'ngResource', 'ui.bootstrap
 
                 $scope.bigCurrentPage = 1;
 
-                $http.get('php/controlador/controlador.php').
+                $http.get('php/controller/EnlaceController.php').
                         success(function (data, status, headers, config) {
 
                             $log.log("Registros " + data);
@@ -91,13 +91,13 @@ angular.module('ngBoilerplate.client', ['ui.router', 'ngResource', 'ui.bootstrap
             $scope.showModalNuevoEnlace = function () {
 
                 var modalInstance = $modal.open({
-                    templateUrl: 'client/newEnlace.html',
+                    templateUrl: 'view/enlace/newEnlace.html',
                     controller: 'NuevoEnlaceController'
                 });
 
                 modalInstance.result.then(function (selectedItem) {
 
-                    $http.post('php/controlador/services.php', selectedItem)
+                    $http.post('php/controller/EnlaceController.php', selectedItem)
                             .success(function (data, status, headers, config) {
                                 console.info(data);
                                 $scope.listarEnlaceInteres();
@@ -110,7 +110,7 @@ angular.module('ngBoilerplate.client', ['ui.router', 'ngResource', 'ui.bootstrap
 
             $scope.showModalVerEnlace = function (enlaceSeleccionado) {
                 var modalInstance = $modal.open({
-                    templateUrl: 'client/viewEnlace.html',
+                    templateUrl: 'view/enlace/viewEnlace.html',
                     controller: 'VerEnlaceController',
                     resolve: {
                         enlaceSeleccionado: function () {
@@ -124,7 +124,7 @@ angular.module('ngBoilerplate.client', ['ui.router', 'ngResource', 'ui.bootstrap
             $scope.showModalActualizarEnlace = function (enlaceSeleccionado) {
 
                 var modalInstance = $modal.open({
-                    templateUrl: 'client/updateEnlace.html',
+                    templateUrl: 'view/enlace/updateEnlace.html',
                     controller: 'ActualizarEnlaceController',
                     resolve: {
                         enlaceSeleccionado: function () {
@@ -134,7 +134,7 @@ angular.module('ngBoilerplate.client', ['ui.router', 'ngResource', 'ui.bootstrap
                 });
 
                 modalInstance.result.then(function (selectedItem) {
-                    $http.post('php/controlador/services.php', selectedItem)
+                    $http.post('php/controller/EnlaceController.php', selectedItem)
                             .success(function (data, status, headers, config) {
                                 console.info(data);
                                 $scope.listarEnlaceInteres();
