@@ -1,127 +1,117 @@
 <!DOCTYPE html>
-<html lang="es" ng-app="ngBoilerplate" ng-controller="AppCtrl">
+<html lang="es">
     <head>
         <meta charset="UTF-8">
-        <title ng-bind="pageTitle"></title>
+        <title>Admin></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="../assets/theme/admin.lte.css" />
-        <link rel="stylesheet" href="../assets/theme/_all-skins.min.css"/>
+        <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="../assets/theme/admin.lte.css"/>
+        <link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css'>
     </head>
-    <body class="skin-blue sidebar-mini">
-
-        <div class="wrapper">
-            <header class="main-header">
-                <a href="index.php" class="logo"> 
-                    <span class="logo-mini"><img src="assets/img/logo_ceptis3.JPG"></span>
-                    <span class="logo-lg"><img src="assets/img/logo_ceptis.png"></span>
-                </a>
-                <nav class="navbar navbar-static-top" role="navigation">
-                    <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+    <body>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" 
+                            data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                         <span class="sr-only">Toggle navigation</span>
-                    </a>
-                    <div class="navbar-custom-menu">
-                        <ul class="nav navbar-nav">
-                            <li class="dropdown user user-menu">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <img src="assets/dist/img/user2-160x160.jpg" class="user-image" alt="User Image"/>
-                                    <span class="hidden-xs"><?php echo $nomusu; ?></span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li class="user-header">
-                                        <img src="assets/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image" />
-                                        <p>
-                                            <small>Miembro Desde Nov. 2014</small>
-                                        </p>
-                                    </li>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Brand</a>
+                </div>
 
-                                    <li class="user-footer">
-                                        <div class="pull-left">
-                                            <a href="micuenta.php" class="btn btn-default btn-flat">Perfil</a>
-                                        </div>
-                                        <div class="pull-right">
-                                            <a href="../controlador/controlador.php?op=2" class="btn btn-default btn-flat">Salir</a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
-            </header>
-            <aside class="main-sidebar">
-                <section class="sidebar">
-                    <div class="user-panel">
-                        <div class="pull-left image">
-                            <img src="assets/dist/img/user2-160x160.jpg" 
-                                 class="img-circle" alt="User Image" />
-                        </div>
-                        <div class="pull-left info">
-                            <p><?php echo $nomusu; ?></p>
-                            <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-                        </div>
-                    </div>
-                    <ul class="sidebar-menu">
-                        <li class="header">Menu</li>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
                         <li class="active">
-                            <a href="index.php"><i class='fa fa-camera'></i> <span>Slider</span></a>
-                        </li>
-                        <li>
-                            <a href="institucional.php"><i class='fa fa-university'></i> 
-                                <span>Institucional</span>
+                            <a href="#">Link <span class="sr-only">(current)</span>
                             </a>
                         </li>
                         <li>
-                            <a href="staff.php">
-                                <i class='fa fa-users'></i> <span>Staff</span>
-                            </a></li>
-                        <li>
-                            <a href="contacto.php"><i class='fa fa-envelope'></i> <span>Contacto</span>
-                            </a>
+                            <a href="#">Link</a>
                         </li>
-                        <li class="treeview">
-                            <a href="Cursos">
-                                <i class='fa fa-book'></i> 
-                                <span>Enlace de Interés</span> 
-                                <i class="fa fa-angle-left pull-right"></i></a>
-                            <ul class="treeview-menu">
-                                <li>
-                                    <a href="agregar_enlace.php">
-                                        <i class="fa fa-circle-o"></i>
-                                        <span>Nuevo</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="lista_enlaces.php">
-                                        <i class="fa fa-circle-o"></i>
-                                        <span>Listar</span>
-                                    </a>
-                                </li>
+                        <li class="btn-group" dropdown>
+                            <a type="button" class="dropdown-toggle" dropdown-toggle>
+                                Button<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">Action</a></li>
+                                <li><a href="#">Another action</a></li>
+                                <li><a href="#">Something else here</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Separated link</a></li>
                             </ul>
                         </li>
                     </ul>
-                </section>
-            </aside>
-            <div class="content-wrapper">
-                <section class="content">
-                    <div ui-view="main">
-
-                    </div>
-                </section>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#">Link</a></li>
+                    </ul>
+                </div>
             </div>
-            <footer class="main-footer">
-                <strong>Desarrollado Por <a target="_blank" href="http://www.innovatechperusac.com/">INNOVATECHPERÚ.</a></strong> Copyright © 2015
-            </footer>
+        </nav>
+
+
+        <div class="container">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <i class="fa fa-users"></i> 
+                    <h3 class="box-title">Enlaces de Interés</h3>
+                </div>
+                <div class="box-body">
+                    dfsdfds
+                </div>
+            </div>
+
+            <a href="#" class="btn btn-default">Default</a>
+            <a href="#" class="btn btn-primary">Primary</a>
+            <a href="#" class="btn btn-danger">Pri</a>
+            <a href="#" class="btn btn-warning">Primary</a>
+            <a href="#" class="btn btn-success">Primary</a>
+
+            <div class="btn-group" dropdown>
+                <button type="button" class="btn btn-danger">Action</button>
+                <button type="button" class="btn btn-danger dropdown-toggle" dropdown-toggle>
+                    <span class="caret"></span>
+                    <span class="sr-only">Split button!</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">Separated link</a></li>
+                </ul>
+            </div>
+
+
 
         </div>
 
-        <script src="../assets/jquery/jQuery-2.1.4.min.js"></script>
-        <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
-        <script src="../assets/theme/app.min.js"></script>
+        <div ng-app="textAngularTest" ng-controller="wysiwygeditor" class="container app">
+            <h1>Editor</h1>
+            <div text-angular="text-angular" 
+                 name="htmlcontent" ng-model="htmlcontent" ta-disabled='disabled'>
+            </div>
+            <div ta-bind="text" ng-model="htmlcontent" ta-readonly='disabled'></div>
+        </div>
+
         <script src="../assets/angular/angular-1.2.js"></script>
         <script src="../assets/angular/ui-bootstrap-tpls-0.12.0.js"></script>
         <script src="../assets/angular/angular-ui-router.min.js"></script>
         <script src="../assets/angular/angular-resource.min.js"></script>
-        <script src="../app.js"></script>
+        <!--        <script src="../assets/angular/texteditor/textAngular-sanitize.min.js"></script>
+                <script src="../assets/angular/texteditor/textAngular.min.js"></script>  -->
+        <script src='http://cdnjs.cloudflare.com/ajax/libs/textAngular/1.2.2/textAngular-sanitize.min.js'></script>
+        <script src='http://cdnjs.cloudflare.com/ajax/libs/textAngular/1.2.2/textAngular.min.js'></script>
+        <script>
+                angular.module("textAngularTest", ['textAngular']);
+                function wysiwygeditor($scope) {
+                    $scope.orightml = '<h2>Try me!</h2><p>textAngular is a super cool WYSIWYG Text Editor directive for AngularJS</p><p><img class="ta-insert-video" ta-insert-video="http://www.youtube.com/embed/2maA1-mvicY" src="" allowfullscreen="true" width="300" frameborder="0" height="250"/></p><p><b>Features:</b></p><ol><li>Automatic Seamless Two-Way-Binding</li><li>Super Easy <b>Theming</b> Options</li><li style="color: green;">Simple Editor Instance Creation</li><li>Safely Parses Html for Custom Toolbar Icons</li><li class="text-danger">Doesn&apos;t Use an iFrame</li><li>Works with Firefox, Chrome, and IE8+</li></ol><p><b>Code at GitHub:</b> <a href="https://github.com/fraywing/textAngular">Here</a> </p><h4>Supports non-latin Characters</h4>';
+                    $scope.htmlcontent = $scope.orightml;
+                    $scope.disabled = false;
+                }
+                ;
+        </script>
     </body>
 </html>

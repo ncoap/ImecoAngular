@@ -1,5 +1,6 @@
 angular.module( 'ngBoilerplate', [
-    'ui.router'
+    'ui.router',
+    'ui.bootstrap'
 ])
 
 .config( function myAppConfig ( $stateProvider, $urlRouterProvider ) {
@@ -15,5 +16,5 @@ angular.module( 'ngBoilerplate', [
       $scope.pageTitle = toState.data.pageTitle + ' | Imeco' ;
     }
   });
-});
+})
 
