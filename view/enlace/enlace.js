@@ -1,4 +1,4 @@
-angular.module('ngImeco.enlace', ['ui.router', 'ngResource', 'ui.bootstrap'])
+angular.module('ngImeco.enlace', ['ui.router','ngAnimate', 'ngResource', 'ui.bootstrap'])
         .config(function config3($stateProvider) {
             $stateProvider.state('enlaces', {
                 url: '/enlaces',
@@ -13,52 +13,76 @@ angular.module('ngImeco.enlace', ['ui.router', 'ngResource', 'ui.bootstrap'])
                 }
             });
         })
-        .factory('enlaceService', function ($resource, $log, $http) {
-            var service = {
-                getEnlaces: function (success, error) {
-                    $http.get('php/controller/EnlaceController.php?accion=listar')
-                            .success(function (data, status, headers, config) {
-                                $log.info(data);
-
-                                success(data);
-
-                            })
-                            .error(function (data, status, headers, config) {
-                                console.log("Error");
-                            });
-
-                },
-                registerEnlace: function (client, success, failure) {
-                    var Client = $resource('/basic-web-app/rest/client');
-                    Client.save({}, client, success, failure);
-                }
-            };
-            return service;
-        })
-        .controller('enlaceControler', function ($scope, enlaceService, $log, $http, $modal) {
+        .controller('enlaceControler', function ($scope, $log, $http, $modal, $timeout) {
 
             $scope.maxSize = 10;
             $scope.bigTotalItems = 0;
             $scope.bigCurrentPage = 1;
-            $scope.pageSize = 10; //8 por registro
+            $scope.pageSize = 10;
 
             $scope.enlaces = [];
             // $scope.enlaces = data.slice((1 - 1) * $scope.pageSize, 1 * $scope.pageSize);
             $scope.currentEnlaces = [];
 
+            $scope.alert = {
+                type: '',
+                msg: ''
+            };
+
+            $scope.isRegister = false;
+
             $scope.pageChanged = function () {
                 $scope.currentEnlaces = $scope.enlaces.slice(($scope.bigCurrentPage - 1) * $scope.pageSize, $scope.bigCurrentPage * $scope.pageSize);
             };
 
+            $scope.listarEnlaceInteres = function () {
+
+                $scope.bigCurrentPage = 1;
+
+                $http.get('php/controller/EnlaceControllerGet.php?accion=listar')
+                        .success(function (data, status, headers, config) {
+                            $log.info(data);
+                            $scope.bigTotalItems = data.length;
+                            $scope.enlaces = data;
+                            $scope.pageChanged();
+                        })
+                        .error(function (data, status, headers, config) {
+                            console.log("Error");
+                        });
+
+
+            };
+
+            $scope.listarEnlaceInteres();
+
+
             $scope.deleteEnlace = function (id_enlace) {
-                var a = confirm("¿Desea Eliminar el enlace?");
-                var objeto = {id: id_enlace};
-                if (a) {
-                    $http.post('php/controller/EnlaceController.php', objeto).
+                var option = confirm("¿Desea Eliminar el enlace?");
+                var info = {
+                    accion: 'eliminar',
+                    data: {
+                        id: id_enlace
+                    }
+                };
+                if (option) {
+                    $http.post('php/controller/EnlaceControllerPost.php', info).
                             success(function (data, status, headers, config) {
-                                console.log(data);
-                                //validar el mensajes del data es "OK" no solo OK 
+
+                                //VALIDAR LA DATA EL OK???
+
+                                $scope.alert = {
+                                    type: 'danger',
+                                    msg: 'Enlace Eliminado'
+                                };
+
+                                $scope.isRegister = true;
+
+                                $timeout(function () {
+                                    $scope.isRegister = false;
+                                }, 3000);
+
                                 $scope.listarEnlaceInteres();
+
                             }).
                             error(function (data, status, headers, config) {
                                 $log.info("que paso aca");
@@ -66,22 +90,6 @@ angular.module('ngImeco.enlace', ['ui.router', 'ngResource', 'ui.bootstrap'])
                 }
             };
 
-            $scope.listarEnlaceInteres = function () {
-
-                $scope.bigCurrentPage = 1;
-
-                enlaceService.getEnlaces(
-                        function (data) {
-                            $scope.bigTotalItems = data.length;
-                            $scope.enlaces = data;
-                            $scope.pageChanged();
-                        }, function () {
-
-                });
-
-            };
-
-            $scope.listarEnlaceInteres();
 
             $scope.showModalNuevoEnlace = function () {
 
@@ -92,14 +100,17 @@ angular.module('ngImeco.enlace', ['ui.router', 'ngResource', 'ui.bootstrap'])
 
                 modalInstance.result.then(function (selectedItem) {
 
-                    $http.post('php/controller/EnlaceController.php', selectedItem)
-                            .success(function (data, status, headers, config) {
-                                console.info(data);
-                                $scope.listarEnlaceInteres();
-                            })
-                            .error(function (data, status, headers, config) {
-                                $log.info("que paso aca");
-                            });
+                    $scope.alert = {
+                        type: 'success',
+                        msg: 'Enlace Registrado Correctamente'
+                    };
+                    $scope.isRegister = true;
+
+                    $timeout(function () {
+                        $scope.isRegister = false;
+                    }, 3000);
+
+                    $scope.listarEnlaceInteres();
                 });
             };
 
@@ -129,18 +140,23 @@ angular.module('ngImeco.enlace', ['ui.router', 'ngResource', 'ui.bootstrap'])
                 });
 
                 modalInstance.result.then(function (selectedItem) {
-                    $http.post('php/controller/EnlaceController.php', selectedItem)
-                            .success(function (data, status, headers, config) {
-                                console.info(data);
-                                $scope.listarEnlaceInteres();
-                            })
-                            .error(function (data, status, headers, config) {
-                                $log.info("que paso aca");
-                            });
+
+
+                    $scope.alert = {
+                        type: 'info',
+                        msg: 'Enlace actualizado Correctamente'
+                    };
+                    $scope.isRegister = true;
+
+                    $timeout(function () {
+                        $scope.isRegister = false;
+                    }, 3000);
+
+                    $scope.listarEnlaceInteres();
                 });
             };
         })
-        .controller('NuevoEnlaceController', function ($scope, $modalInstance) {
+        .controller('NuevoEnlaceController', function ($scope, $modalInstance, $http, $log) {
 
             $scope.nuevoEnlace = {};
 
@@ -149,24 +165,45 @@ angular.module('ngImeco.enlace', ['ui.router', 'ngResource', 'ui.bootstrap'])
             };
 
             $scope.registerForm = function () {
-                $modalInstance.close($scope.nuevoEnlace);
+                //cerrar el modal
+                //
+                var info = {
+                    accion: 'registrar',
+                    data: $scope.nuevoEnlace
+                };
 
-//                $http.post('php/controlador/services.php', $scope.en)
-//                        .success(function (data, status, headers, config) {
-//                            console.info(data);
-//                        })
-//                        .error(function (data, status, headers, config) {
-//                            $log.info("que paso aca");
-//                        });
+                $http.post('php/controller/EnlaceControllerPost.php', info)
+                        .success(function (data, status, headers, config) {
+                            $modalInstance.close($scope.nuevoEnlace);
+                        })
+                        .error(function (data, status, headers, config) {
+                            //me quedo en el formulario
+                            $log.info("que paso aca");
+                        });
 
             };
         })
-        .controller('ActualizarEnlaceController', function ($scope, $modalInstance, enlaceSeleccionado) {
+        .controller('ActualizarEnlaceController', function ($scope, $modalInstance, $http, $log ,enlaceSeleccionado) {
 
             $scope.enlaceSeleccionado = enlaceSeleccionado;
 
             $scope.updateForm = function () {
-                $modalInstance.close($scope.enlaceSeleccionado);
+
+                var info = {
+                    accion: 'actualizar',
+                    data: $scope.enlaceSeleccionado
+                };
+
+                $http.post('php/controller/EnlaceControllerPost.php', info)
+                        .success(function (data, status, headers, config) {
+
+                            //validacion de data
+                            $modalInstance.close($scope.enlaceSeleccionado);
+                        })
+                        .error(function (data, status, headers, config) {
+                            //me quedo en el formulario
+                            $log.info("que paso aca");
+                        });
             };
 
             $scope.cancel = function () {
@@ -176,12 +213,13 @@ angular.module('ngImeco.enlace', ['ui.router', 'ngResource', 'ui.bootstrap'])
             };
 
 
-        }).controller('VerEnlaceController', function ($scope, $modalInstance, enlaceSeleccionado) {
+        })
+        .controller('VerEnlaceController', function ($scope, $modalInstance, enlaceSeleccionado) {
 
-    $scope.enlaceSeleccionado = enlaceSeleccionado;
-    $scope.cancel = function () {
+            $scope.enlaceSeleccionado = enlaceSeleccionado;
+            $scope.cancel = function () {
 
-        $modalInstance.dismiss('cancel');
+                $modalInstance.dismiss('cancel');
 
-    };
-});
+            };
+        });

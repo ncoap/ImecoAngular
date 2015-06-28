@@ -10,6 +10,11 @@
         <h3 class="box-title">Enlaces de Interés</h3>
     </div>
     <div class="box-body">
+
+        <alert type="{{alert.type}}" class="imeco-alert" ng-show="isRegister">
+            {{alert.msg}}
+        </alert>
+
         <table id="AS" class="table table-bordered table-striped">
             <thead>
                 <tr>
@@ -37,12 +42,12 @@
             </tbody>
         </table>
     </div>
+    <div class="imeco-right">
+        <pagination total-items="bigTotalItems" ng-model="bigCurrentPage" 
+                    max-size="maxSize" ng-change="pageChanged()"
+                    class="pagination-sm" 
+                    boundary-links="true" rotate="false">
+        </pagination>
+    </div>
 </div>
 
-<div>
-    <pagination total-items="bigTotalItems" ng-model="bigCurrentPage" 
-                max-size="maxSize" ng-change="pageChanged()"
-                class="pagination-sm" 
-                boundary-links="true" rotate="false">
-    </pagination>
-</div>

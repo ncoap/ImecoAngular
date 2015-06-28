@@ -1,7 +1,6 @@
 <?php
 
 $accion = $_GET['accion'];
-echo json_encode($accion);
 
 include '../dao/EnlaceDao.php';
 

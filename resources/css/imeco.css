@@ -14,3 +14,18 @@
 .imeco-center{
     text-align: center;
 }
+
+.imeco-alert{
+    padding: 0.3em;
+    margin-bottom: 1em;
+}
+
+.imeco-right{
+    text-align: right
+}
+.imeco-left{
+    text-align: left
+}
+.imeco-center{
+    text-align: center
+}
