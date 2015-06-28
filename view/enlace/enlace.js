@@ -13,22 +13,20 @@ angular.module('ngImeco.enlace', ['ui.router', 'ngResource', 'ui.bootstrap'])
                 }
             });
         })
-        .factory('enlaceService', function ($resource) {
+        .factory('enlaceService', function ($resource, $log, $http) {
             var service = {
-                getEnlaces: function (success, failure) {
-                    var Clients = $resource('/angular/rest/client');
-                    var data = Clients.get(
-                            {},
-                            function () {
-                                var clients = data.clients;
-                                if (clients.length !== 0) {
-                                    success(clients);
-                                } else {
-                                    failure();
-                                }
-                            },
-                            failure
-                            );
+                getEnlaces: function (success, error) {
+                    $http.get('php/controller/EnlaceController.php?accion=listar')
+                            .success(function (data, status, headers, config) {
+                                $log.info(data);
+
+                                success(data);
+
+                            })
+                            .error(function (data, status, headers, config) {
+                                console.log("Error");
+                            });
+
                 },
                 registerEnlace: function (client, success, failure) {
                     var Client = $resource('/basic-web-app/rest/client');
@@ -72,18 +70,15 @@ angular.module('ngImeco.enlace', ['ui.router', 'ngResource', 'ui.bootstrap'])
 
                 $scope.bigCurrentPage = 1;
 
-                $http.get('php/controller/EnlaceController.php').
-                        success(function (data, status, headers, config) {
-
-                            $log.log("Registros " + data);
+                enlaceService.getEnlaces(
+                        function (data) {
                             $scope.bigTotalItems = data.length;
                             $scope.enlaces = data;
                             $scope.pageChanged();
+                        }, function () {
 
-                        }).
-                        error(function (data, status, headers, config) {
-                            console.log("Error");
-                        });
+                });
+
             };
 
             $scope.listarEnlaceInteres();

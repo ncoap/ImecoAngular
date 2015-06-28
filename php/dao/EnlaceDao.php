@@ -2,7 +2,7 @@
 
 include '../conexion/Conexion.php';
 
-$tildes = $cn->query("SET NAMES 'utf8'");
+//$tildes = $cn->query("SET NAMES 'utf8'");
 
 class EnlaceDao {
 
