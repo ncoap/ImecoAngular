@@ -1,4 +1,4 @@
-angular.module('ngImeco.enlace', ['ui.router','ngAnimate', 'ngResource', 'ui.bootstrap'])
+angular.module('ngImeco.enlace', ['ui.router', 'ngAnimate', 'ngResource', 'ui.bootstrap'])
         .config(function config3($stateProvider) {
             $stateProvider.state('enlaces', {
                 url: '/enlaces',
@@ -183,7 +183,7 @@ angular.module('ngImeco.enlace', ['ui.router','ngAnimate', 'ngResource', 'ui.boo
 
             };
         })
-        .controller('ActualizarEnlaceController', function ($scope, $modalInstance, $http, $log ,enlaceSeleccionado) {
+        .controller('ActualizarEnlaceController', function ($scope, $modalInstance, $http, $log, enlaceSeleccionado) {
 
             $scope.enlaceSeleccionado = enlaceSeleccionado;
 

@@ -13,7 +13,7 @@
 
     <body>
 
-        <nav class="navbar navbar-default">
+        <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" 
@@ -28,16 +28,16 @@
 
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
-                        <li class="active">
+                        <li>
                             <a>Home</a>
                         </li>
-                        <li>
-                            <a href="#">Imagenes Slide Principal</a>
+                        <li ng-class="{active: estado === 'slides'}">
+                            <a href="#slides">Imagenes Slide Principal</a>
                         </li>
                         <li>
                             <a href="#">Nosotros</a>
                         </li>
-                        <li>
+                        <li ng-class="{active: estado === 'enlaces'}">
                             <a href="#enlaces">Enlaces de Interés</a>
                         </li>
                         <li class="btn-group" dropdown>
@@ -58,7 +58,7 @@
             </div>
         </nav>
 
-        <section class="content">
+        <section class="content" style="margin-top: 45px">
             <div ui-view="main">
 
             </div>
@@ -72,7 +72,7 @@
         </footer>
 
         <script src="resources/assets/angular/angular-1.3.min.js"></script>
-        <script src="resources/assets/angular/ui-bootstrap-tpls-0.12.0.js"></script>
+        <script src="resources/assets/angular/ui-bootstrap-tpls-0.13.0.min.js"></script>
         <script src="resources/assets/angular/angular-ui-router.min.js"></script>
         <script src="resources/assets/angular/angular-resource.min.js"></script>
         <script src="resources/assets/angular/angular-animate.min.js"></script>
@@ -80,5 +80,6 @@
         <script src="resources/assets/angular/texteditor/textAngular.min.js"></script>  
         <script src="app.js"></script>
         <script src="view/enlace/enlace.js"></script>
+        <script src="view/slide/slide.js"></script>
     </body>
 </html>

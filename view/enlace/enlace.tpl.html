@@ -1,4 +1,4 @@
-<div style="margin-bottom: 10px">
+<div style="margin-bottom: 5px">
     <input  class="btn btn-primary" type='submit' name='boton' 
             ng-click="showModalNuevoEnlace()"
             value='Nuevo' title="Nuevo Enlace de Interés">
@@ -10,6 +10,7 @@
         <h3 class="box-title">Enlaces de Interés</h3>
     </div>
     <div class="box-body">
+
 
         <alert type="{{alert.type}}" class="imeco-alert" ng-show="isRegister">
             {{alert.msg}}
@@ -42,12 +43,15 @@
             </tbody>
         </table>
     </div>
-    <div class="imeco-right">
-        <pagination total-items="bigTotalItems" ng-model="bigCurrentPage" 
-                    max-size="maxSize" ng-change="pageChanged()"
-                    class="pagination-sm" 
-                    boundary-links="true" rotate="false">
-        </pagination>
+    <div class="box-footer">
+        <div class="imeco-right">
+            <pagination total-items="bigTotalItems" ng-model="bigCurrentPage" 
+                        max-size="maxSize" ng-change="pageChanged()"
+                        class="pagination-sm" items-per-page = "10"
+                        boundary-links="true" rotate="false">
+            </pagination>
+        </div>
     </div>
+
 </div>
 

@@ -1,21 +1,24 @@
-angular.module( 'ngImeco', [
+angular.module('ngImeco', [
     'ui.router',
     'ui.bootstrap',
-    'ngImeco.enlace'
+    'ngAnimate',
+    'ngImeco.enlace',
+    'ngImeco.slide'
 ])
+        .config(function myAppConfig($stateProvider, $urlRouterProvider) {
+            $urlRouterProvider.otherwise('/home');
+        })
 
-.config( function myAppConfig ( $stateProvider, $urlRouterProvider ) {
-  $urlRouterProvider.otherwise( '/home' );
-})
+        .run(function run() {
+        })
 
-.run( function run () {
-})
-
-.controller( 'ImecoController', function AppCtrl ( $scope, $location ) {
-  $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
-    if ( angular.isDefined( toState.data.pageTitle ) ) {
-      $scope.pageTitle = toState.data.pageTitle + ' | Imeco' ;
-    }
-  });
-})
+        .controller('ImecoController', function AppCtrl($scope, $location) {
+            $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+                if (angular.isDefined(toState.data.pageTitle)) {
+//                    console.info(toState);
+                    $scope.estado = toState.name;
+                    $scope.pageTitle = toState.data.pageTitle + ' | Imeco';
+                }
+            });
+        })
 
