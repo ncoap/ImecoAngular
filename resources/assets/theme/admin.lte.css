@@ -132,11 +132,9 @@ body {
 /* Content */
 .content {
   min-height: 250px;
-  padding: 15px;
+  padding: 5px;
   margin-right: auto;
   margin-left: auto;
-  padding-left: 15px;
-  padding-right: 15px;
 }
 /* H1 - H6 font */
 h1,
@@ -1498,7 +1496,7 @@ a:focus {
   border-radius: 3px;
   background: #ffffff;
   border-top: 3px solid #d2d6de;
-  margin-bottom: 20px;
+  margin-bottom: 8px;
   width: 100%;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
@@ -1687,7 +1685,7 @@ a:focus {
 .box-header {
   color: #444;
   display: block;
-  padding: 10px;
+  padding: 5px;
   position: relative;
 }
 .box-header.with-border {

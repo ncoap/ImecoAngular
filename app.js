@@ -3,7 +3,9 @@ angular.module('ngImeco', [
     'ui.bootstrap',
     'ngAnimate',
     'ngImeco.enlace',
-    'ngImeco.slide'
+    'ngImeco.slide',
+    'ngImeco.intervenciones',
+    'ngImeco.incidente'
 ])
         .config(function myAppConfig($stateProvider, $urlRouterProvider) {
             $urlRouterProvider.otherwise('/home');
@@ -17,7 +19,7 @@ angular.module('ngImeco', [
                 if (angular.isDefined(toState.data.pageTitle)) {
 //                    console.info(toState);
                     $scope.estado = toState.name;
-                    $scope.pageTitle = toState.data.pageTitle + ' | Imeco';
+                    $scope.pageTitle = toState.data.pageTitle + ' | Odisea';
                 }
             });
         })

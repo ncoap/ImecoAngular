@@ -19,6 +19,7 @@
 
 .imeco-center{
     text-align: center;
+    padding: 0.2em;
 }
 
 .imeco-alert{
@@ -32,9 +33,6 @@
 .imeco-left{
     text-align: left
 }
-.imeco-center{
-    text-align: center
-}
 
 .imeco-imagen{
     width: 100px;
@@ -44,4 +42,9 @@
 .imeco-large{
     width: 500px;
     height: 400px;
+}
+.imeco-tab{
+    padding:1em 9%;
+    width: 32%;
+    text-align: center
 }
