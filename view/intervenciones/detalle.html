@@ -1,0 +1,83 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()"
+            data-dismiss="modal" aria-hidden="true">&times;
+    </button>
+    <h4>Intervención Seleccionada</h4>
+</div>
+
+<div class="modal-body"> 
+    <div class="box box-danger">
+        <div class="box-header">
+            <i class="fa fa-users"></i> 
+            <h3 class="box-title">Información del Tendero</h3>
+        </div>
+        <div class="box-body">
+            <div class="row">
+                <div class="col-xs-8">
+                    <div>
+                        <label>DNI: &nbsp;&nbsp;</label>
+                        <label style="color: #3c8dbc;font-size: 1.2em">{{intervencion.dni}}</label>
+                    </div>
+                    <div>
+                        <label>Nombre: &nbsp;&nbsp;</label>
+                        <label style="color: #3c8dbc;font-size: 1.2em">{{intervencion.tendero}}</label>
+                    </div>
+                    <div>
+                        <label>Tipo de Tendero: &nbsp;&nbsp;</label>
+                        <label style="color: #3c8dbc;font-size: 1.2em">{{intervencion.tipoTendero}}</label>
+                    </div>
+                    <div>
+                        <label>Edad: &nbsp;&nbsp;</label>
+                        <label style="color: #3c8dbc;font-size: 1.2em">{{intervencion.edad}}</label>
+                    </div>
+                    <div>
+                        <label>Sexo: &nbsp;&nbsp;</label>
+                        <label style="color: #3c8dbc;font-size: 1.2em">{{intervencion.sexo}}</label>
+                    </div>
+                </div>
+
+                <div class="col-xs-4" style="text-align: center">
+                    <img ng-src="{{intervencion.foto}}?random=323527528432525.24234" width="140" height="140" class="img-rounded">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box box-primary">
+        <div class="box-header">
+            <i class="fa fa-users"></i> 
+            <h3 class="box-title">Detalle de Productos</h3>
+        </div>
+        <div class="box-body table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Producto</th>
+                        <th>Marca</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="detalle in detalleIntervencion">
+                        <td>{{detalle.codigo}}</td>
+                        <td>{{detalle.producto}}</td>
+                        <td>{{detalle.marca}}</td>
+                        <td>{{detalle.cantidad}}</td>
+                        <td>{{detalle.precio}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="box-footer" style="text-align: right">
+            <label>Total:&nbsp;&nbsp;&nbsp; </label>
+            <label style="font-size: 1.5em" class="label label-info">
+                {{total}}
+            </label>
+        </div>        
+    </div>
+</div>
+
+
+
+

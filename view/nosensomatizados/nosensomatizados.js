@@ -1,46 +1,50 @@
-angular.module('ngImeco.intervenciones', ['ui.router', 'ngAnimate', 'ngResource', 'ui.bootstrap'])
-        .config(function config4($stateProvider) {
-            $stateProvider.state('intervenciones', {
-                url: '/intervenciones',
+angular.module('ngImeco.nosensomatizados',
+        ['ui.router', 'ngAnimate', 'ngResource', 'ui.bootstrap'])
+        .config(function config7($stateProvider) {
+            $stateProvider.state('nosensomatizados', {
+                url: '/nosensomatizados',
                 views: {
                     main: {
-                        templateUrl: 'view/intervenciones/template.html',
-                        controller: 'intervencionesController'
+                        templateUrl: 'view/nosensomatizados/template.html',
+                        controller: 'sensomatizadosController'
                     }
                 },
                 data: {
-                    pageTitle: 'Intervenciones'
+                    pageTitle: 'Productos No Sensomatizado'
                 }
             });
         })
-        .controller('intervencionesController', function ($scope, $log, $http, $modal, $timeout) {
+        .controller('sensomatizadosController', function ($scope, $log, $http, $modal, $timeout) {
 
             $scope.maxSize = 10;
             $scope.bigTotalItems = 0;
             $scope.bigCurrentPage = 1;
             $scope.pageSize = 10;
 
-            $scope.currentIntervenciones = [];
+            $scope.currentProductosNoSensomatizados = [];
 
-
-            $scope.intervenciones = [];
+            $scope.productosNoSensomatizados = [];
 
             $scope.pageChanged = function () {
-                $scope.currentIntervenciones = $scope.intervenciones.slice(($scope.bigCurrentPage - 1) * $scope.pageSize, $scope.bigCurrentPage * $scope.pageSize);
+                $scope.currentProductosNoSensomatizados =
+                        $scope.productosNoSensomatizados.slice(
+                                ($scope.bigCurrentPage - 1) * $scope.pageSize,
+                                $scope.bigCurrentPage * $scope.pageSize);
             };
 
             $scope.isLoadData = false;
-            $scope.listarIntervenciones = function () {
+
+            $scope.listarProdcutosNoSensomatizados = function () {
                 $scope.isLoadData = true;
                 $scope.bigCurrentPage = 1;
-                $http.get('php/controller/IntervencionControllerGet.php', {
+                $http.get('php/controller/SensomatizadoControllerGet.php', {
                     params: {
                         accion: 'listar'
                     }
                 }).success(function (data, status, headers, config) {
                     $log.info(data);
                     $scope.bigTotalItems = data.length;
-                    $scope.intervenciones = data;
+                    $scope.productosNoSensomatizados = data;
                     $scope.pageChanged();
                     $scope.isLoadData = false;
 
@@ -50,22 +54,20 @@ angular.module('ngImeco.intervenciones', ['ui.router', 'ngAnimate', 'ngResource'
 
             };
 
-            $scope.listarIntervenciones();
+            $scope.listarProdcutosNoSensomatizados();
 
 
-            $scope.showModalVerIntervencion = function (intervencionSelect) {
+            $scope.showModalDetalle = function (productoSelect) {
                 var modalInstance = $modal.open({
-                    templateUrl: 'view/intervenciones/detalle.html',
-                    controller: 'VerIntervencionController',
-                    size: 'lg',
+                    templateUrl: 'view/nosensomatizados/detalle.html',
+                    controller: 'verSensomatizadosController',
                     resolve: {
-                        intervencionSelect: function () {
-                            return intervencionSelect;
+                        productoSelect: function () {
+                            return productoSelect;
                         }
                     }
                 });
             };
-
 
             $scope.itemSearch = {
                 tienda: false,
@@ -115,10 +117,8 @@ angular.module('ngImeco.intervenciones', ['ui.router', 'ngAnimate', 'ngResource'
             }
 
             function getDateActual() {
-
                 //sumarle uno al mes si quiero mostrarle como string
                 //debemos de enviarle 
-
                 var today = new Date();
                 var dia = (today.getDate() < 10) ? '0' + today.getDate() : today.getDate();
                 var m = today.getMonth();
@@ -131,44 +131,12 @@ angular.module('ngImeco.intervenciones', ['ui.router', 'ngAnimate', 'ngResource'
             }
 
         })
-        .controller('VerIntervencionController', function ($log, $http, $scope, $modalInstance, intervencionSelect) {
+        .controller('verSensomatizadosController', function ($scope, $modalInstance, productoSelect) {
 
-            $scope.intervencion = intervencionSelect;
-
-            $log.log($scope.intervencion);
-
-            $scope.detalleIntervencion = [];
-
-            $scope.total = 0.0;
-
-            $scope.getDetailIntervencion = function (id) {
-
-                $http.get('php/controller/IntervencionControllerGet.php?accion=detalle&id=' + id)
-                        .success(function (data, status, headers, config) {
-                            $log.log("detalle ",data);
-                            $scope.detalleIntervencion = data;
-                            $scope.calcularTotal(data);
-                        })
-                        .error(function (data, status, headers, config) {
-                            console.log("Error");
-                        });
-            };
-
-            $scope.calcularTotal = function (data) {
-
-                var total = 0.0;
-
-                angular.forEach(data, function (item) {
-                    total = total + item.precio * item.cantidad;
-                });
-
-                $scope.total = total;
-            };
-
-            $scope.getDetailIntervencion($scope.intervencion.id);
+            $scope.productoSelect = productoSelect;
 
             $scope.cancel = function () {
                 $modalInstance.dismiss('cancel');
             };
-            
+
         });

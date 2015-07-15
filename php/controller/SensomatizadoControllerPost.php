@@ -1,23 +1,16 @@
 <?php
 
-include '../dao/IncidenteDao.php';
+include '../dao/SensomatizadoDao.php';
 
 $postdata = file_get_contents("php://input");
 $request = json_decode($postdata);
 $accion = $request->accion;
-$incidenteDao = new IncidenteDao();
+$sensomatizadoDao = new SensomatizadoDao();
 
 switch ($accion) {
     case 'registrar':
         $data = $request->data;
-        /*
-        data: {
-            dni: $scope.tendero.dni,
-            incidente: $scope.incidente,
-            productos: JSON.stringify($scope.productos)
-        }
-         */
-        $mensaje = $incidenteDao->sp_register_incidente($data);
+        $mensaje = $sensomatizadoDao->sp_register_producto_no_sensomatizado($data->producto);
         echo json_encode($mensaje);
         break;
     case 'actualizar':

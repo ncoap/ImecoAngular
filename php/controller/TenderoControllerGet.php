@@ -10,4 +10,8 @@ switch ($accion) {
         $dni = $_GET['dni'];
         echo json_encode($tenderoDao->exist_tendero_by_dni($dni));
         break;
+    case 'buscar':
+        $dni = $_GET['dni'];
+        echo json_encode($tenderoDao->get_tendero_by_dni($dni));
+        break;
 }

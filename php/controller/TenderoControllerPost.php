@@ -10,11 +10,13 @@ $tenderoDao = new TenderoDao();
 switch ($accion) {
     case 'registrar':
         $tendero = $request->tendero;
-        $mensaje = $enlaceDao->registrar_enlaces_interes($titulo, $url);
-        echo json_encode($mensaje);
+        $respuesta = $tenderoDao->sp_registrar_tendero($tendero);
+        echo json_encode($respuesta);
         break;
     case 'actualizar':
-
+        $tendero = $request->tendero;
+        $respuesta = $tenderoDao->sp_update_tendero($tendero);
+        echo json_encode($respuesta);
         break;
     case 'eliminar':
         break;

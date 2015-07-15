@@ -1,4 +1,0 @@
-Clases para el "ui-view" al cambiar -- agregarles envetos 
-
-.ng-enter 
-.ng-leave

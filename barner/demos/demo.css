@@ -1,0 +1,20 @@
+
+.scroll-img {
+  border: 0px solid red;
+  width: 80%;
+  height: 110px;
+  overflow: hidden;
+  font-size: 0;
+}
+.scroll-img ul {
+  width: 700px;
+  height: 600px;
+  margin: 0;
+}
+.scroll-img ul li {
+  display: inline-block;
+  margin: 10px 0 10px 10px;
+}
+#demo4.scroll-img ul {
+  width: 1500px;
+}

@@ -1,0 +1,39 @@
+<div class="box box-primary">
+    <div class="box-header">
+        <i class="fa fa-users"></i> 
+        <h3 class="box-title">Últimas Intervenciones</h3>
+    </div>
+    <div class="box-body table-responsive">
+        <div class="alert alert-info" style="padding: 3px" ng-show="isLoadData">
+            <i class="fa fa-refresh fa-spin"></i>
+            <spam> &nbsp;&nbsp; Cargando....</spam>                                        
+        </div>
+        <div>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Tienda</th>
+                        <th>Fecha</th>
+                        <th>Tendero</th>
+                        <th style="text-align: center">Foto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="tendero in tenderos">
+                        <td>{{tendero.tienda}}</td>
+                        <td>{{tendero.fecha}}</td>
+                        <td>{{tendero.tendero}}</td>
+
+                        <td style="text-align: center">
+                            <img class="img-rounded" ng-src="{{tendero.foto}}" ng-click="showModalDetalle(tendero)"
+                                 err-src='view/imagen_tendero/default.jpg' style="height: 45px;width: 45px;cursor: pointer">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div>
+                <label class="label label-warning" ng-if="tenderos.length == 0">No existen Intervenciones</label>
+            </div>
+        </div>
+    </div>
+</div>

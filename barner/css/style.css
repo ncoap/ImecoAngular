@@ -1,0 +1,129 @@
+body {
+  background: #434343 url("../img/fondo.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  font-family: "Roboto";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+body::before {
+  z-index: -1;
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #434343;
+  /* IE Fallback */
+  background: rgba(67, 67, 67, 0.8);
+  width: 100%;
+  height: 100%;
+}
+.form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: #fff;
+  width: 285px;
+  margin: -140px 0 0 -182px;
+  padding: 40px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+}
+.form h2 {
+  margin: 0 0 20px;
+  line-height: 1;
+  color: #434343;
+  font-size: 18px;
+  font-weight: 400;
+}
+.form input {
+  outline: none;
+  display: block;
+  width: 100%;
+  margin: 0 0 20px;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  color: #ccc;
+  font-family: "Roboto";
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  font-size: 14px;
+  font-wieght: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-transition: 0.2s linear;
+  -moz-transition: 0.2s linear;
+  -ms-transition: 0.2s linear;
+  -o-transition: 0.2s linear;
+  transition: 0.2s linear;
+}
+.form input:focus {
+  color: #333;
+  border: 1px solid #434343;
+}
+.form button {
+  cursor: pointer;
+  background: #434343;
+  width: 100%;
+  padding: 10px 15px;
+  border: 0;
+  color: #fff;
+  font-family: "Roboto";
+  font-size: 14px;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-transition: 0.2s linear;
+  -moz-transition: 0.2s linear;
+  -ms-transition: 0.2s linear;
+  -o-transition: 0.2s linear;
+  transition: 0.2s linear;
+}
+.form button:hover {
+  background: #C8AD4E !important;
+  color: white !important;
+}
+
+.logologin{
+  display: none;
+  margin-top: 1.8%;
+}
+
+@media screen and (max-height: 708px){
+ 
+  .logologin{
+    margin-top: 1.8%;
+  }
+
+}
+
+@media screen and (max-height: 658px){
+ 
+  .logologin{
+    margin-top: 3%;
+  }
+
+}
+@media screen and (max-height: 602px){
+ 
+  .logologin{
+    margin-top: 2%;
+  }
+
+}
+
+.victor-form{
+    background: none;
+    box-shadow: none;
+}
+
+.victor-button{
+    /*background-color: #98790d !important;*/
+    background-color: #9d8019 !important;
+    /*padding: 18px 15px !important;*/
+    /*color: #666360 !important;*/
+    color: white !important;
+    font-size: 1.3em !important;
+}

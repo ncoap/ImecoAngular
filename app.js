@@ -2,10 +2,11 @@ angular.module('ngImeco', [
     'ui.router',
     'ui.bootstrap',
     'ngAnimate',
-    'ngImeco.enlace',
-    'ngImeco.slide',
+    'ngImeco.home',
+    'ngImeco.intervencion',
     'ngImeco.intervenciones',
-    'ngImeco.incidente'
+    'ngImeco.nosensomatizados',
+    'ngImeco.nosensomatizado'
 ])
         .config(function myAppConfig($stateProvider, $urlRouterProvider) {
             $urlRouterProvider.otherwise('/home');

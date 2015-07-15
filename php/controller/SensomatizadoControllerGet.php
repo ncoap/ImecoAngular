@@ -6,12 +6,12 @@
 
 $accion = $_GET['accion'];
 
-include '../dao/IntervencionDao.php';
-$intervencionDao = new IntervencionDao();
+include '../dao/SensomatizadoDao.php';
+$sensomatizadoDao = new SensomatizadoDao();
 
 switch ($accion) {
     case 'listar':
-        echo json_encode($intervencionDao->sp_listar_intervenciones());
+        echo json_encode($sensomatizadoDao->sp_listar_productos_no_sensomatizados());
         break;
     case 'registrar':
 
@@ -21,9 +21,6 @@ switch ($accion) {
         break;
     case 'eliminar':
 
-        break;
-    case 'ultimos':
-        echo json_encode($intervencionDao->sp_get_ultimos_tenderos());
         break;
     case 'detalle':
         $id = $_GET['id'];

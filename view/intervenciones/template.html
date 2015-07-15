@@ -1,0 +1,146 @@
+<div class="box">
+    <div class="box-header">
+        <i class="fa fa-users"></i> 
+        <h3 class="box-title">Parámetros de Búsqueda</h3>
+    </div>
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-4 col-sm-6 col-xs-8">
+                <select class="form-control" ng-model="itemSelected" style="margin-bottom: 1em">
+                    <option value="tienda">TIENDA</option>
+                    <option value="nombre">NOMBRE DEL TENDERO</option>
+                    <option value="tipo">TIPO DE TENDERO</option>
+                    <option value="dni">DNI</option>
+                    <option value="sexo">SEXO</option>
+                    <option value="fecha">FECHA</option>
+                </select>
+            </div>
+            <div class="col-xs-4">
+                <button ng-click="toggleItemSearch()" class="btn btn-danger">Agregar/Quitar</button>
+            </div>
+        </div>
+
+        <form name="nameFormConsulta" ng-submit="consultar()">
+            <div class="row" ng-if="itemSearch.tienda">
+                <div class="col-sm-1 col-xs-2">
+                    <label>Tienda:</label>
+                </div>
+                <div  class="col-sm-3 col-xs-7" style="margin-bottom: 1em">
+                    <input type="text" ng-model="termSearch.tienda" class="form-control" placeholder="Ingrese La Tienda">
+                </div>
+            </div>
+
+            <div class="row" ng-if="itemSearch.nombre">
+                <div class="col-sm-1 col-xs-2">
+                    <label>Nombre:</label>
+                </div>
+                <div class="col-sm-3 col-xs-7" style="margin-bottom: 1em">
+                    <input type="text" ng-model="termSearch.nombre" required="" class="form-control" placeholder="Ingrese Nombre del Tendero">
+                </div>
+            </div>
+
+            <div class="row" ng-if="itemSearch.tipo">
+                <div class="col-sm-1 col-xs-2">
+                    <label>Tipo:</label>
+                </div>
+                <div class="col-sm-3 col-xs-7" style="margin-bottom: 1em">
+                    <input type="text" ng-model="termSearch.tipo" class="form-control" placeholder="Ingrese Tipo de Tendero">
+                </div>
+            </div>
+
+            <div class="row" ng-if="itemSearch.dni">
+                <div class="col-sm-1 col-xs-2">
+                    <label>DNI:</label>
+                </div>
+                <div class="col-sm-3 col-xs-7" style="margin-bottom: 1em">
+                    <input  type="text" ng-model="termSearch.dni" class="form-control" placeholder="Ingrese DNI">
+                </div>
+            </div>
+
+            <div class="row" ng-if="itemSearch.sexo">
+                <div class="col-sm-1 col-xs-2">
+                    <label>Sexo:</label>
+                </div>
+                <div class="col-sm-3 col-xs-7" style="margin-bottom: 1em">
+                    <input type="text" ng-model="termSearch.sexo" class="form-control" placeholder="Ingrese Sexo">
+                </div>
+            </div>
+
+            <div class="row" ng-if="itemSearch.fecha">
+                <div class="col-sm-1 col-xs-2">
+                    <label>Rango Fecha:</label>
+                </div>
+                <div class="col-sm-3 col-xs-7" style="margin-bottom: 1em">
+                    <input type="datetime-local" ng-model="termSearch.fechaInicial" class="form-control" style="margin-bottom: 1em" required/>
+                    <input type="datetime-local" ng-model="termSearch.fechaFinal" class="form-control" style="margin-bottom: 1em" required/>
+                    <!--<button id="id-buscar-rango-fecha" class="btn btn-primary">Buscar</button>-->
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <button class="btn btn-primary" type="submit" 
+                            ng-disabled='!nameFormConsulta.$valid'>Consultar</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="box box-primary">
+    <div class="box-header">
+        <i class="fa fa-users"></i> 
+        <h3 class="box-title">Intervenciones</h3>
+    </div>
+    <div class="box-body table-responsive">
+        <div class="alert alert-info" style="padding: 3px" ng-show="isLoadData">
+            <i class="fa fa-refresh fa-spin"></i>
+            <spam> &nbsp;&nbsp; Cargando....</spam>                                        
+        </div>
+        <div>
+            <table id="id-table-intervenciones" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Tienda</th>
+                        <th>Tendero</th>
+                        <th>Tipo</th>
+                        <th>DNI</th>
+                        <th>Edad</th>
+                        <th>Sexo</th>
+                        <th>Dia</th>
+                        <th>Hora</th>
+                        <th>Fecha</th>                                              
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="inter in currentIntervenciones">
+                        <td>{{inter.tienda}}</td>
+                        <td>{{inter.tendero}}</td>
+                        <td>{{inter.tipoTendero}}</td>
+                        <td>{{inter.dni}}</td>
+                        <td>{{inter.edad}}</td>
+                        <td>{{inter.sexo}}</td>
+                        <td>{{inter.dia}}</td>
+                        <td>{{inter.hora}}</td>
+                        <td>{{inter.fecha}}</td>                                              
+                        <td>
+                            <button class="btn btn-info btn-xs" ng-click="showModalVerIntervencion(inter)">
+                                Detalle
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="box-footer">
+        <div class="imeco-right">
+            <pagination total-items="bigTotalItems" ng-model="bigCurrentPage" 
+                        max-size="maxSize" ng-change="pageChanged()"
+                        class="pagination-sm" items-per-page = "10"
+                        boundary-links="true" rotate="false">
+            </pagination>
+        </div>
+    </div>
+</div>
