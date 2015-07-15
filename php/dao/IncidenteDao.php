@@ -1,6 +1,6 @@
 <?php
 
-include '../conexion/Conexion.php';
+include '../mysql/Conexion.php';
 
 //$tildes = $cn->query("SET NAMES 'utf8'");
 
@@ -10,7 +10,7 @@ class IncidenteDao {
 
     public function __CONSTRUCT() {
         $db_cone = new Conexion();
-        $this->pdo = $db_cone->getConexion2();
+        $this->pdo = $db_cone->getConexion();
     }
 
     public function sp_register_incidente($data) {
@@ -53,7 +53,7 @@ class IncidenteDao {
         $respuesta = array('res' => false, 'id' => 0);
         try {
             $db_conec = new Conexion();
-            $pdo = $db_conec->getConexion2();
+            $pdo = $db_conec->getConexion();
             $stm = $pdo->prepare("CALL sp_get_id_tendero_by_dni(?)");
             $stm->execute(array($dni));
             $res = $stm->fetch(PDO::FETCH_OBJ);

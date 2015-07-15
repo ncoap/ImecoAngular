@@ -1,6 +1,6 @@
 <?php
 
-include '../conexion/Conexion.php';
+include '../mysql/Conexion.php';
 
 //$tildes = $cn->query("SET NAMES 'utf8'");
 
@@ -10,7 +10,7 @@ class SensomatizadoDao {
 
     public function __CONSTRUCT() {
         $db_cone = new Conexion();
-        $this->pdo = $db_cone->getConexion2();
+        $this->pdo = $db_cone->getConexion();
     }
 
     public function listarNoSensomtizados($terminos) {

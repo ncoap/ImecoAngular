@@ -1,23 +1,23 @@
 <?php
 
-include '../conexion/Conexion.php';
+include '../mysql/Conexion.php';
 
 class LoginDao {
 
-    public function logeUsu() {
-        $cnx = new Conexion();
-        $cn = $cnx->getConexion();
-        $usu = $_SESSION['usu'];
-        $pass = $_SESSION['pass'];
-        $res = $cn->prepare("call sp_login_usuario (:p_username, :p_password)");
-        $res->bindParam(":p_username", $usu);
-        $res->bindParam(":p_password", $pass);
-        $res->execute();
+    private $pdo;
 
-        foreach ($res as $row) {
-            $logeusu[] = $row;
-        }
-        return $logeusu;
+    public function __CONSTRUCT() {
+        $db_cone = new util();
+        $this->pdo = $db_cone->getConexion();
+    }
+
+    public function logeUsu($usu, $pass) {
+        $result = array();
+
+        $stm = $this->pdo->prepare("call sp_login (?,?)");
+        $stm->execute(array($usu, $pass));
+
+        return $stm->fetchAll(PDO::FETCH_OBJ);
     }
 
 }
