@@ -523,3 +523,58 @@ where id_ten = p_id_tend;
 
 END ;;
 DELIMITER ;
+
+
+DELIMITER ;;
+CREATE PROCEDURE `sp_get_tiendas`(
+)
+BEGIN
+select id_tien as id, nom_tien as tienda from tienda;
+END ;;
+DELIMITER ;
+
+DELIMITER ;;
+CREATE PROCEDURE `sp_update_cab_interven`(
+p_num_inte INT(11),
+p_fec_inte DATETIME,
+p_id_ten INT(11),
+p_der_ten VARCHAR(25),
+p_lugar_derivacion VARCHAR(150),
+p_dni_prev VARCHAR(15),
+p_nom_prev VARCHAR(150),
+p_id_pues INT(11),
+p_mod_empl VARCHAR(500),
+p_det_inte VARCHAR(600),
+p_id_tien INT(11)
+)
+BEGIN
+
+update cab_interven set 
+fec_inte = p_fec_inte , 
+id_ten = p_id_ten, 
+der_ten = p_der_ten, 
+lugar_derivacion = p_lugar_derivacion, 
+dni_prev = p_dni_prev, 
+nom_prev = p_nom_prev,
+id_pues = p_id_pues,
+mod_empl = p_mod_empl,
+det_inte = p_det_inte, 
+id_tien = p_id_tien
+WHERE 
+num_inte = p_num_inte;
+
+
+END ;;
+DELIMITER ;
+
+
+DELIMITER ;;
+CREATE PROCEDURE `sp_delete_det_interven_by_num_inte`(
+p_num_inte INT(11),
+)
+BEGIN
+-- eliminamos el detalle para el nuevo registro
+delete from det_interven where num_inte = p_num_inte;
+
+END ;;
+DELIMITER ;
