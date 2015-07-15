@@ -35,7 +35,8 @@ angular.module('ngImeco.intervenciones', ['ui.router', 'ngAnimate', 'ngResource'
                 $scope.bigCurrentPage = 1;
                 $http.get('php/controller/IntervencionControllerGet.php', {
                     params: {
-                        accion: 'listar'
+                        accion: 'multiple',
+                        terminos: JSON.stringify($scope.termSearch)
                     }
                 }).success(function (data, status, headers, config) {
                     $log.info(data);
@@ -50,7 +51,7 @@ angular.module('ngImeco.intervenciones', ['ui.router', 'ngAnimate', 'ngResource'
 
             };
 
-            $scope.listarIntervenciones();
+
 
 
             $scope.showModalVerIntervencion = function (intervencionSelect) {
@@ -76,34 +77,54 @@ angular.module('ngImeco.intervenciones', ['ui.router', 'ngAnimate', 'ngResource'
                 fecha: false
             };
 
-            $scope.itemSelected = 'nombre';
-
-            $scope.toggleItemSearch = function () {
-                $scope.itemSearch[$scope.itemSelected] = !$scope.itemSearch[$scope.itemSelected];
-                //limpiarmos el modelo
-                $scope.termSearch[$scope.itemSelected] = '';
-
-                //return true false si esta visible o no
-                $log.log($scope.itemSearch[$scope.itemSelected]);
-
-
-            };
+            $scope.itemSelected = 'tienda';
 
             //Cual es el valor de cada termino de búsqueda
             $scope.termSearch = {
-                tienda: '',
+                tienda: '0',
                 nombre: '',
-                tipo: '',
+                tipo: '0',
                 dni: '',
                 sexo: '',
-                fechaInicial: getDateActual(),
-                fechaFinal: getDateActual()
+                fechaInicial: fechaDefault().ini,
+                fechaFinal: fechaDefault().fin
+            };
+
+            $scope.toggleItemSearch = function () {
+
+                //Cambiamos de visibilidad de true a false y viceversa
+                $scope.itemSearch[$scope.itemSelected] =
+                        !$scope.itemSearch[$scope.itemSelected];
+
+                //////////////////////////////
+
+                switch ($scope.itemSelected) {
+                    case "fecha":
+                        if ($scope.itemSearch.fecha) {
+                            $scope.termSearch.fechaInicial = getDateActual();
+                            $scope.termSearch.fechaFinal = getDateActual();
+                        } else {
+                            $scope.termSearch.fechaInicial = fechaDefault().ini;
+                            $scope.termSearch.fechaFinal = fechaDefault().fin;
+                        }
+                        break;
+                    case "tipo":
+                        $scope.termSearch.tipo = '0';
+                        break;
+                    case "tienda":
+                        $scope.termSearch.tienda = '0';
+                        break;
+                    default:
+                        $scope.termSearch[$scope.itemSelected] = '';
+                }
             };
 
             $scope.consultar = function () {
-                $log.info("Termino de Búsqueda: ", $scope.termSearch);
-                alert('Busqueda en implementación');
-                $log.info(fechaDefault().ini);
+                
+                $log.info("Termino de Búsqueda: ");
+                $log.info($scope.termSearch);
+                $scope.listarIntervenciones();
+            
             };
 
             //FUNCION GET RANGO DE FECHAS POR DEFAULT INICIO A FIN
@@ -115,10 +136,6 @@ angular.module('ngImeco.intervenciones', ['ui.router', 'ngAnimate', 'ngResource'
             }
 
             function getDateActual() {
-
-                //sumarle uno al mes si quiero mostrarle como string
-                //debemos de enviarle 
-
                 var today = new Date();
                 var dia = (today.getDate() < 10) ? '0' + today.getDate() : today.getDate();
                 var m = today.getMonth();
@@ -129,6 +146,8 @@ angular.module('ngImeco.intervenciones', ['ui.router', 'ngAnimate', 'ngResource'
                 var minuto = (p_minuto < 10) ? '0' + p_minuto : p_minuto;
                 return new Date(today.getFullYear(), mes, dia, hora, minuto);
             }
+
+            $scope.listarIntervenciones();
 
         })
         .controller('VerIntervencionController', function ($log, $http, $scope, $modalInstance, intervencionSelect) {
@@ -145,7 +164,7 @@ angular.module('ngImeco.intervenciones', ['ui.router', 'ngAnimate', 'ngResource'
 
                 $http.get('php/controller/IntervencionControllerGet.php?accion=detalle&id=' + id)
                         .success(function (data, status, headers, config) {
-                            $log.log("detalle ",data);
+                            $log.log("detalle ", data);
                             $scope.detalleIntervencion = data;
                             $scope.calcularTotal(data);
                         })
@@ -170,5 +189,5 @@ angular.module('ngImeco.intervenciones', ['ui.router', 'ngAnimate', 'ngResource'
             $scope.cancel = function () {
                 $modalInstance.dismiss('cancel');
             };
-            
+
         });

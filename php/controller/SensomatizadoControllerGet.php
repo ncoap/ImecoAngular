@@ -13,6 +13,10 @@ switch ($accion) {
     case 'listar':
         echo json_encode($sensomatizadoDao->sp_listar_productos_no_sensomatizados());
         break;
+    case 'multiple':
+        $terminos = json_decode($_REQUEST['terminos']);
+        echo json_encode($sensomatizadoDao->listarNoSensomtizados($terminos));
+        break;
     case 'registrar':
 
         break;

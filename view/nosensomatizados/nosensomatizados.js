@@ -39,7 +39,8 @@ angular.module('ngImeco.nosensomatizados',
                 $scope.bigCurrentPage = 1;
                 $http.get('php/controller/SensomatizadoControllerGet.php', {
                     params: {
-                        accion: 'listar'
+                        accion: 'multiple',
+                        terminos: JSON.stringify($scope.termSearch)
                     }
                 }).success(function (data, status, headers, config) {
                     $log.info(data);
@@ -53,8 +54,6 @@ angular.module('ngImeco.nosensomatizados',
                 });
 
             };
-
-            $scope.listarProdcutosNoSensomatizados();
 
 
             $scope.showModalDetalle = function (productoSelect) {
@@ -78,34 +77,45 @@ angular.module('ngImeco.nosensomatizados',
                 fecha: false
             };
 
-            $scope.itemSelected = 'nombre';
+            $scope.itemSelected = 'tienda';
+
+            $scope.termSearch = {
+                tienda: '0',
+                nombre: '',
+                dni: '',
+                fechaInicial: fechaDefault().ini,
+                fechaFinal: fechaDefault().fin
+            };
+
 
             $scope.toggleItemSearch = function () {
-                $scope.itemSearch[$scope.itemSelected] = !$scope.itemSearch[$scope.itemSelected];
-                //limpiarmos el modelo
-                $scope.termSearch[$scope.itemSelected] = '';
 
-                //return true false si esta visible o no
-                $log.log($scope.itemSearch[$scope.itemSelected]);
+                $scope.itemSearch[$scope.itemSelected] =
+                        !$scope.itemSearch[$scope.itemSelected];
 
+                //////////////////////////////
 
+                switch ($scope.itemSelected) {
+                    case "fecha":
+                        if ($scope.itemSearch.fecha) {
+                            $scope.termSearch.fechaInicial = getDateActual();
+                            $scope.termSearch.fechaFinal = getDateActual();
+                        } else {
+                            $scope.termSearch.fechaInicial = fechaDefault().ini;
+                            $scope.termSearch.fechaFinal = fechaDefault().fin;
+                        }
+                        break;
+                    case "tienda":
+                        $scope.termSearch.tienda = '0';
+                        break;
+                    default:
+                        $scope.termSearch[$scope.itemSelected] = '';
+                }
             };
 
             //Cual es el valor de cada termino de búsqueda
-            $scope.termSearch = {
-                tienda: '',
-                nombre: '',
-                tipo: '',
-                dni: '',
-                sexo: '',
-                fechaInicial: getDateActual(),
-                fechaFinal: getDateActual()
-            };
-
             $scope.consultar = function () {
-                $log.info("Termino de Búsqueda: ", $scope.termSearch);
-                alert('Busqueda en implementación');
-                $log.info(fechaDefault().ini);
+                $scope.listarProdcutosNoSensomatizados();
             };
 
             //FUNCION GET RANGO DE FECHAS POR DEFAULT INICIO A FIN
@@ -130,6 +140,8 @@ angular.module('ngImeco.nosensomatizados',
                 return new Date(today.getFullYear(), mes, dia, hora, minuto);
             }
 
+
+            $scope.listarProdcutosNoSensomatizados();
         })
         .controller('verSensomatizadosController', function ($scope, $modalInstance, productoSelect) {
 
