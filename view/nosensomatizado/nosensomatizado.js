@@ -66,6 +66,19 @@ angular.module('ngImeco.nosensomatizado',
 
         .controller('nosensomatizadoController', function ($rootScope, $window, $scope, $log, $http, $modal, $timeout, dialogs) {
 
+            $scope.tiendas = [];
+
+            $http.get('php/controller/TiendaControllerGet.php', {
+                    params: {
+                        accion: 'listar'
+                    }
+                }).success(function (data, status, headers, config) {
+                        $scope.tiendas = data;
+                        $log.log(data);
+                }).error(function (data, status, headers, config) {
+                    console.log("Error");
+                });
+
             $scope.image;
 
             $scope.isSaved = false;
@@ -73,7 +86,7 @@ angular.module('ngImeco.nosensomatizado',
             $scope.sensomatizado = {
                 dni: '',
                 intervencionista: '',
-                tienda: 1,
+                tienda: '1',
                 fecha: getDateActual(),
                 codigo: '',
                 descripcion: '',
@@ -106,6 +119,12 @@ angular.module('ngImeco.nosensomatizado',
                 });
 
             };
+            
+//            $scope.test = function(){
+//                
+//              $log.log($scope.sensomatizado);  
+//            
+//            };
 
             $scope.registrarProducto = function () {
 

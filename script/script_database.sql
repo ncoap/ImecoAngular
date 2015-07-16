@@ -529,7 +529,7 @@ DELIMITER ;;
 CREATE PROCEDURE `sp_get_tiendas`(
 )
 BEGIN
-select id_tien as id, nom_tien as tienda from tienda;
+select id_tien as id, nom_tien as tienda from tienda where id_tien > 0;;
 END ;;
 DELIMITER ;
 

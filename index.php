@@ -1,7 +1,11 @@
 <?php
 session_start();
 if (@$_SESSION['acceso'] == true) {
-    header('Location: admin2.php');
+    if (@$_SESSION['rol'] == 'ADMINISTRADOR') {
+        header('Location: admin.php');
+    } else {
+        header('Location: jefe.php');
+    }
 }
 ?>
 <!DOCTYPE html>

@@ -7,12 +7,17 @@
 //
 //$tenderoDao->sp_get_id_tendero_by_dni('46435523');
 
-include '../conexion/Conexion.php';
+include '../dao/LoginDao.php';
 
-$db_cone = new Conexion();
-$pdo = $db_cone->getConexion2();
-$stm = $pdo->prepare("call test(15)");
-$stm->execute();
-$res = $stm->fetch(PDO::FETCH_OBJ);
-//retorna el nuevo id de la funcoin
-echo $res->newid;
+$loginDao = new LoginDao();
+
+$res = $loginDao->logeUsu('admin', '1234');
+
+//json_encode .... print false
+if ($res == false) {
+    echo '00000';
+} else {
+    echo $res->usuario;
+}
+
+//echo json_encode($res[0]);

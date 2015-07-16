@@ -1,10 +1,14 @@
 <?php
 session_start();
+
 if (@$_SESSION['acceso'] != true) {
     header('Location: index.php');
+} else {
+    if (@$_SESSION['rol'] == 'JEFE DE TIENDA') {
+        header('Location: jefe.php');
+    } 
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es" ng-app="ngImeco" ng-controller="ImecoController">
 
@@ -26,7 +30,7 @@ if (@$_SESSION['acceso'] != true) {
             <header class="main-header">
                 <a href="index.php" class="logo">
                     <span class="logo-mini">
-                        <img style="width: 70px;" src="resources/img/otros/logo-mini.png">
+                        <img style="width: 40px;" src="resources/img/otros/logo-mini.png">
                     </span>
                     <span class="logo-lg">
                         <img src="resources/img/otros/logooes.png">
@@ -42,21 +46,20 @@ if (@$_SESSION['acceso'] != true) {
                             <li class="dropdown user user-menu">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     <img src="resources/img/otros/user2-160x160.jpg" class="user-image" alt="User Image"/>
-                                    <span class="hidden-xs"> Nombre Usuario </span>
+                                    <span class="hidden-xs"> Usuario </span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li class="user-header">
                                         <img src="resources/img/otros/user2-160x160.jpg" class="img-circle" alt="User Image" />
                                         <p>
-                                            Nombre Usuario - Administrador
-                                            <small>Miembro Desde Nov. 2014</small>
+                                            <?= $_SESSION['rol'] ?>
                                         </p>
                                     </li>
 
                                     <li class="user-footer">
-                                        <div class="pull-left">
-                                            <a href="" class="btn btn-default btn-flat">Perfil</a>
-                                        </div>
+                                        <!--                                        <div class="pull-left">
+                                                                                    <a href="" class="btn btn-default btn-flat">Perfil</a>
+                                                                                </div>-->
                                         <div class="pull-right">
                                             <a id="id-btn-exit" href="php/controller/LoginController.php?op=2" class="btn btn-default btn-flat">Salir</a>
                                         </div>
@@ -74,7 +77,7 @@ if (@$_SESSION['acceso'] != true) {
                             <img src="resources/img/otros/user2-160x160.jpg" class="img-circle" alt="User Image" />
                         </div>
                         <div class="pull-left info">
-                            <p> Nombre Usuario </p>
+                            <p> <?= $_SESSION['rol']?>  </p>
                             <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                         </div>
                     </div>
