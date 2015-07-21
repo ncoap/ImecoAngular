@@ -1,16 +1,16 @@
-angular.module('odisea.intervencion.registrar',
+angular.module('odisea.intervencion.actualizar',
         ['ui.router', 'ngAnimate', 'ngResource', 'ui.bootstrap', 'dialogs.main'])
-        .config(function config5($stateProvider) {
-            $stateProvider.state('intervencion', {
-                url: '/intervencion',
+        .config(function config11($stateProvider) {
+            $stateProvider.state('intervencionup', {
+                url: '/intervencionup',
                 views: {
                     main: {
-                        templateUrl: 'view/intervencion/registrar/registrar_intervencion.html',
-                        controller: 'intervencionController'
+                        templateUrl: 'view/intervencion/actualizar/actualizar_intervencion.html',
+                        controller: 'intervencionupController'
                     }
                 },
                 data: {
-                    pageTitle: 'Registrar Intervención'
+                    pageTitle: 'Actualizar Intervención'
                 }
             });
         })
@@ -63,43 +63,15 @@ angular.module('odisea.intervencion.registrar',
                     }
                 };
             }])
-        .controller('intervencionController', function ($rootScope, $window, $scope, $log, $http, $modal, $timeout, dialogs) {
-
+        .controller('intervencionupController', function ($rootScope, $window, $scope, $log, $http, $modal, $timeout, dialogs) {
 
             $scope.image = 'resources/imagen_tendero/default.jpg';
 
             $scope.isUpload = false;
+            
+            $scope.tendero = $rootScope.intervencionSeleccionda.tendero;
 
-            $scope.isWorkingDni = false;
-
-            $scope.dni = '';
-
-            $scope.incidente = {
-                fecha: getDateActual(),
-                derivacion: 'Comisaria',
-                lugarDerivacion: '',
-                prevencionista: {
-                    dni: '',
-                    nombre: ''
-                },
-                tienda: undefined,
-                puesto: '1',
-                modalidadEmpleada: '',
-                detalleIntevencion: ''
-
-            };
-
-            $scope.tendero = {
-                id: '',
-                dni: '',
-                nombre: '',
-                apellido: '',
-                tipo: 1,
-                direccion: '',
-                nacimiento: new Date(),
-                sexo: 'M',
-                foto: ''
-            };
+            $scope.intervencion = $rootScope.intervencionSeleccionda.intervencion;
 
             $scope.isRegisterDniDataBase = false;
 
@@ -198,9 +170,6 @@ angular.module('odisea.intervencion.registrar',
             };
 
 
-            //PASO 2 PASO 2 PASO 2
-            //PASO 2 PASO 2 PASO 2
-            //PASO 2 PASO 2 PASO 2
             $scope.producto = {
                 codigo: '',
                 descripcion: '',
@@ -291,7 +260,7 @@ angular.module('odisea.intervencion.registrar',
                 //se esta subiendo la info -- desactivar el boton
                 $scope.isUpload = true;
 
-                $http.post('php/controller/IntervencionControllerPost.php', postData)
+                $http.post('php/controller/IncidenteControllerPost.php', postData)
                         .success(function (data, status, headers, config) {
                             $log.log(data);
                             //subir la imagen si esta registrado y quiero actualizarlo

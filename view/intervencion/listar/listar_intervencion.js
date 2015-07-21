@@ -1,4 +1,5 @@
-angular.module('odisea.intervencion.listar', ['ui.router', 'ngAnimate', 'ngResource', 'ui.bootstrap'])
+angular.module('odisea.intervencion.listar',
+        ['ui.router', 'ngAnimate', 'ngResource', 'ui.bootstrap'])
         .config(function config4($stateProvider) {
             $stateProvider.state('intervenciones', {
                 url: '/intervenciones',
@@ -13,7 +14,7 @@ angular.module('odisea.intervencion.listar', ['ui.router', 'ngAnimate', 'ngResou
                 }
             });
         })
-        .controller('intervencionesController', function ($scope, $log, $http, $modal, $timeout) {
+        .controller('intervencionesController', function ($state, $rootScope, $scope, $log, $http, $modal, $timeout) {
 
             $scope.maxSize = 10;
             $scope.bigTotalItems = 0;
@@ -120,12 +121,94 @@ angular.module('odisea.intervencion.listar', ['ui.router', 'ngAnimate', 'ngResou
             };
 
             $scope.consultar = function () {
-                
+
                 $log.info("Termino de Búsqueda: ");
                 $log.info($scope.termSearch);
                 $scope.listarIntervenciones();
-            
+
             };
+
+
+            $scope.actualizarIntervencion = function (inter) {
+
+                $log.info(inter);
+                
+                var tendero = {
+                    idTendero: inter.idTendero,
+                    dniTendero: inter.dniTendero,
+                    nombreTendero: inter.nombreTendero,
+                    apellidoTendero: inter.apellidoTendero,
+                    idTipoTendero: inter.idTipoTendero,
+                    direccionTendero: inter.direccionTendero,
+                    nacimientoTendero: inter.nacimientoTendero, //FORMAT DATEDATEDATE
+                    sexoTendero: inter.sexoTendero,
+                    fotoTendero: inter.fotoTendero
+                };
+
+
+                var intervencion = {
+                    fechaCompletaIntervencion: inter.fechaCompletaIntervencion, //FORMAT FECHA
+                    derivacionIntervencion: inter.derivacionIntervencion,
+                    lugarDerivacion: inter.lugarDerivacion,
+                    dniPrevencionista: inter.dniPrevencionista,
+                    nombrePrevencionista: inter.nombrePrevencionista,
+                    tienda: {//TIENDA COMO OBJETO POR QUE TRABAJAMOS CON ng-options en los combos
+                        idTienda: inter.idTienda,
+                        nombreTienda: inter.nombreTienda
+                    },
+                    idPuesto: inter.idPuesto,
+                    modalidadEmpleada: inter.modalidadEmpleada,
+                    detalleIntervencion: inter.detalleIntervencion
+                };
+
+                $rootScope.intervencionSeleccionda = {
+                    tendero: tendero,
+                    intervencion: intervencion
+                };
+
+                $state.go('intervencionup');
+
+            };
+
+            $scope.eliminarIntervencion = function (id) {
+
+                var a = confirm("¿Desea Eliminar La Intervención y Detalle?");
+                if (a) {
+
+                    var postData = {
+                        accion: 'eliminar',
+                        data: {
+                            id: id
+                        }
+                    };
+
+                    $http.post('php/controller/IntervencionControllerPost.php', postData)
+                            .success(function (data, status, headers, config) {
+
+                                if (data.msj == 'OK') {
+
+                                    alert("Intervención Eliminada");
+                                    $scope.listarIntervenciones();
+
+                                } else {
+
+                                    alert("No se pudo Eliminar la Intervención");
+                                    $log.log("ADMIN ", data);
+
+                                }
+                            })
+                            .error(function (data, status, headers, config) {
+
+                                $log.info("que paso aca");
+
+                            });
+                }
+
+            };
+
+
+
+
 
             //FUNCION GET RANGO DE FECHAS POR DEFAULT INICIO A FIN
             function fechaDefault() {

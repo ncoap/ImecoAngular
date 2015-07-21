@@ -146,7 +146,7 @@ if (@$_SESSION['acceso'] != true) {
 
             <footer class="main-footer imeco-center" >
                 <strong>Desarrollado Por 
-                <a target="_blank" href="http://www.innovatechperusac.com/">INNOVATECHPERÚ.</a></strong>
+                    <a target="_blank" href="http://www.innovatechperusac.com/">INNOVATECHPERÚ.</a></strong>
                 Copyright © 2015
             </footer>
         </div>
@@ -170,12 +170,14 @@ if (@$_SESSION['acceso'] != true) {
         <script src="resources/assets/angular/texteditor/textAngular-sanitize.min.js"></script>
         <script src="resources/assets/angular/texteditor/textAngular.min.js"></script>  
 
+
         <!--modales personlizadas de angular-->
         <script src="resources/assets/dialog/dialogs.js"></script> 
         <script src="admin.js"></script>
         <script src="view/home/home.js"></script>
         <script src="view/intervencion/listar/listar_intervencion.js"></script>
         <script src="view/intervencion/registrar/registrar_intervencion.js"></script>
+        <script src="view/intervencion/actualizar/actualizar_intervencion.js"></script>
         <script src="view/sensomatizado/listar/listar_sensomatizado.js"></script>
         <script src="view/sensomatizado/registrar/registrar_sensomatizado.js"></script>
         <script src="view/sensomatizado/actualizar/actualizar_sensomatizado.js"></script>

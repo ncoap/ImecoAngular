@@ -17,15 +17,6 @@ switch ($accion) {
         $terminos = json_decode($_REQUEST['terminos']);
         echo json_encode($intervencionDao->listarIntervenciones($terminos));
         break;
-    case 'registrar':
-
-        break;
-    case 'actualizar':
-
-        break;
-    case 'eliminar':
-
-        break;
     case 'ultimos':
         echo json_encode($intervencionDao->sp_get_ultimos_tenderos());
         break;

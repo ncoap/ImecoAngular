@@ -12,133 +12,111 @@
     </ul>
     <div class="tab-content" style="overflow:hidden">
         <div class="tab-pane" ng-class="{'active': showTab.tab1 == true}">
-            <div class="box box-default">
+            <div class="box box-danger" style="background: #f9f9f9">
                 <div class="box-header">
-                    <h3 class="box-title">Datos del Tendero</h3>
+                    <h3 class="box-title">Actualizar Tendero</h3>
                 </div>
                 <div class="box-body">
-                    <form class="form-horizontal" name="nameFormDniTendero" ng-submit="buscarTendero()">
+                    <div style="text-align: center">
+                        <img ng-src="{{tendero.fotoTendero}}?random=323527528432525.24234" 
+                             width="100" height="100" style="margin-bottom: 1em" class="img-rounded">
+                    </div>
+                    <form class="form-horizontal" name="nameFormNuevoTendero" ng-submit="saveNewTendero()">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Dni del Tendero</label>
-                            <div class="col-sm-6">
-                                <input type="text" ng-model="dni" name="dni" ng-disabled="isWorkingDni"
-                                       class="form-control" ng-minlength="8" ng-maxlength="15" ng-pattern="/^[0-9]+$/"
-                                       required="true" placeholder="Documento de Identidad">
+                            <div class="col-sm-3">
+                                <label class="control-label">Dni:</label>
                             </div>
-                            <div class="col-xs-2">
-                                <button type="submit" ng-disabled="!nameFormDniTendero.$valid || isWorkingDni"
-                                        class="btn btn-primary btn-block glyphicon glyphicon-search"></button>
+                            <div class="col-sm-9">
+                                <input type="text" ng-model="tendero.dniTendero" ng-pattern="/^[0-9]+$/"
+                                       class="form-control" ng-minlength="8" ng-maxlength="15"
+                                       required="true" placeholder="Documento de Identidad">         
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Nombre:</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" ng-model="tendero.nombreTendero"
+                                       required="true" placeholder="Nombre del Tendero">             
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Apellidos:</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" ng-model="tendero.apellidoTendero"
+                                       placeholder="Apellido del Tendero">             
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Tipo:</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <select ng-model="tendero.idTipoTendero" class="form-control">
+                                    <option value="1">Oportunista</option>
+                                    <option value="2">Profesional</option>
+                                    <option value="3">Interno</option>
+                                </select>   
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Dirección:</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" ng-model="tendero.direccionTendero"
+                                       placeholder="Dirección Tendero">             
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Fecha Nacimiento:</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="date" class="form-control" ng-model="tendero.nacimientoTendero">             
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Sexo:</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="sexo" value="M" ng-model="tendero.sexoTendero">
+                                        Masculino
+                                    </label>
+                                    <label style="margin-left: 1em">
+                                        <input type="radio" name="sexo" value="f" ng-model="tendero.sexoTendero">
+                                        Femenino
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </form>
-
-                    <div ng-show="isWorkingDni" class="box box-danger" style="background-color: #FAFAFA">
-                        <div class="box-header">
-                            <h3 class="box-title" ng-hide="isRegisterDniDataBase">NUEVO TENDERO</h3>
-                            <h3 class="box-title" ng-show="isRegisterDniDataBase">ACTUALIZAR TENDERO</h3>
-                        </div>
-                        <div class="box-body">
-                            <div style="text-align: center">
-                                <img ng-src="{{tendero.foto}}?random=323527528432525.24234" width="100" height="100" style="margin-bottom: 1em" class="img-rounded">
-                            </div>
-                            <form class="form-horizontal" name="nameFormNuevoTendero" ng-submit="saveNewTendero()">
-                                <div class="form-group">
-                                    <div class="col-sm-3">
-                                        <label class="control-label">Dni:</label>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <input type="text" ng-model="tendero.dni" ng-pattern="/^[0-9]+$/"
-                                               class="form-control" ng-minlength="8" ng-maxlength="15"
-                                               required="true" placeholder="Documento de Identidad">         
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-3">
-                                        <label class="control-label">Nombre:</label>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control" ng-model="tendero.nombre"
-                                               required="true" placeholder="Nombre del Tendero">             
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-3">
-                                        <label class="control-label">Apellidos:</label>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control" ng-model="tendero.apellido"
-                                               placeholder="Apellido del Tendero">             
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-3">
-                                        <label class="control-label">Tipo:</label>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <select ng-model="tendero.tipo" class="form-control">
-                                            <option value="1">Oportunista</option>
-                                            <option value="2">Profesional</option>
-                                            <option value="3">Interno</option>
-                                        </select>   
-                                    </div>
-
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-3">
-                                        <label class="control-label">Dirección:</label>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control" ng-model="tendero.direccion"
-                                               placeholder="Dirección Tendero">             
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-3">
-                                        <label class="control-label">Fecha Nacimiento:</label>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <input type="date" class="form-control" ng-model="tendero.nacimiento">             
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-3">
-                                        <label class="control-label">Sexo:</label>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" name="sexo" value="M" ng-model="tendero.sexo">
-                                                Masculino
-                                            </label>
-                                            <label style="margin-left: 1em">
-                                                <input type="radio" name="sexo" value="f" ng-model="tendero.sexo">
-                                                Femenino
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
                 </div>
             </div>
 
-            <div ng-show="isWorkingDni" class="box box-danger" style="background: rgba(254, 248, 246, 0.75)">
+            <div  class="box box-danger" style="background: rgba(254, 248, 246, 0.75)">
                 <div class="box-header">
-                    <h3 class="box-title">Datos de la Nueva Intervención</h3>
+                    <h3 class="box-title">Actualizar Intervención</h3>
                 </div>
                 <div class="box-body">
                     <form class="form-horizontal" ng-submit="saveIntervencion()" name="nameFormIntervencion">
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Fecha de Intervención</label>
                             <div class="col-sm-9">
-                                <input type="datetime-local" ng-model="incidente.fecha" class="form-control">
+                                <input type="datetime-local" ng-model="intervencion.fechaCompletaIntervencion" class="form-control">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Derivación del Tendero</label>
                             <div class="col-sm-3">
-                                <select ng-model="incidente.derivacion" class="form-control">
+                                <select ng-model="intervencion.derivacionIntervencion" class="form-control">
                                     <option value="Comisaria">Comisaria</option>
                                     <option value="Dirincri">Dirincri</option>
                                     <option value="Interno">Interno</option>
@@ -146,8 +124,8 @@
                                 </select>
                             </div>
                             <div class="col-sm-6">
-                                <input type="text" ng-model="incidente.lugarDerivacion" 
-                                       class="form-control" ng-disabled="incidente.derivacion != 'Otros'"
+                                <input type="text" ng-model="intervencion.lugarDerivacion" 
+                                       class="form-control" ng-disabled="intervencion.lugarDerivacion != 'Otros'"
                                        placeholder="Lugar de Derivacion">
                             </div>
 
@@ -157,12 +135,12 @@
                             <label class="col-sm-3 control-label">Prevencionista</label>
                             <div class="col-sm-3">
                                 <input type="text" required="true" ng-minlength="8" ng-maxlength="15" ng-pattern="/^[0-9]+$/"
-                                       ng-pattern="onlyNumbers" ng-model="incidente.prevencionista.dni"
+                                       ng-pattern="onlyNumbers" ng-model="intervencion.dniPrevencionista"
                                        class="form-control" placeholder="DNI">
                             </div>
                             <div class="col-sm-6">
                                 <input type="text" required="true"
-                                       ng-model="incidente.prevencionista.nombre"
+                                       ng-model="intervencion.nombrePrevencionista"
                                        class="form-control" placeholder="Nombre del Prevencionista">
                             </div>
                         </div>
@@ -170,7 +148,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Puesto</label>
                             <div class="col-sm-9">
-                                <select class="form-control" ng-model="incidente.puesto">
+                                <select class="form-control" ng-model="intervencion.idPuesto">
                                     <option value="1">Tangos (Puerta)</option>
                                     <option value="2">Movil (Sala de Ventas)</option>
                                     <option value="3">Aguia (Cctv)</option>
@@ -184,8 +162,8 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Tienda</label>
                             <div class="col-sm-9">
-                                <select class="form-control" ng-model="incidente.tienda" required
-                                        ng-options="ti.tienda for ti in tiendas track by ti.id">
+                                <select class="form-control" ng-model="intervencion.tienda" required
+                                        ng-options="ti.nombreTienda for ti in tiendas track by ti.idTienda">
                                     <option value="">-Seleccione-</option>
                                 </select>
                             </div>
@@ -195,11 +173,11 @@
                             <label class="col-sm-3 control-label">Modalidad Empleada</label>
                             <div class="col-sm-9">
                                 <textarea class="form-control text-res" rows="5" maxlength="500" ng-trim='false'
-                                          ng-model="incidente.modalidadEmpleada" 
+                                          ng-model="intervencion.modalidadEmpleada" 
                                           style="resize: none">                                                           
                                 </textarea>
                                 <span class="label label-info">
-                                    {{500 - incidente.modalidadEmpleada.length}}         
+                                    {{500 - intervencion.modalidadEmpleada.length}}         
                                     Caracteres Restantes
                                 </span>
                             </div>
@@ -210,12 +188,12 @@
                             <div class="col-sm-9">
                                 <!--ng-trim = false Nos Contabiliza tambien los caracteres en blanco y los saltos de linea--> 
                                 <textarea  style="resize: none" maxlength="600" ng-trim='false'
-                                           ng-model="incidente.detalleIntevencion"
+                                           ng-model="intervencion.detalleIntervencion"
                                            class="form-control text-res" 
                                            rows="5">
                                 </textarea>
                                 <span class="label label-info">
-                                    {{600 - incidente.detalleIntevencion.length}}         
+                                    {{600 - intervencion.detalleIntervencion.length}}         
                                     Caracteres Restantes
                                 </span>
                             </div>
@@ -232,9 +210,9 @@
 
         <!-- PASO 2 -->
         <div class="tab-pane" ng-class="{'active': showTab.tab2 == true}">
-            <div class="box box-default">
+            <div class="box box-danger">
                 <div class="box-header">
-                    <h3 class="box-title">Ingrese Producto</h3>
+                    <h3 class="box-title">Actualizar Productos</h3>
                 </div>
                 <div class="box-body">
                     <form class="form-horizontal" name="nameFormProducto">

@@ -5,6 +5,7 @@ angular.module('ngOdisea', [
     'odisea.home',
     'odisea.intervencion.registrar',
     'odisea.intervencion.listar',
+    'odisea.intervencion.actualizar',
     'odisea.sensomatizado.registrar',
     'odisea.sensomatizado.listar',
     'odisea.sensomatizado.actualizar'
@@ -39,6 +40,17 @@ angular.module('ngOdisea', [
                     } else {
                         event.preventDefault();
                         $state.go('nosensomatizados');
+                    }
+
+                }
+                
+                if (toState.name === 'intervencionup') {
+
+                    if ($rootScope.intervencionSeleccionda) {
+                        
+                    } else {
+                        event.preventDefault();
+                        $state.go('intervenciones');
                     }
 
                 }
