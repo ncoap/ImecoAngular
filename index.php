@@ -13,10 +13,13 @@ if (@$_SESSION['acceso'] == true) {
     <head>
         <meta charset="UTF-8">
         <title>PREVENCION EN LINEA - GRUPO ODISEA</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+        <link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css'>
+        <link rel="stylesheet" href="resources/assets/bootstrap/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="resources/assets/theme/admin.lte.css"/>
         <link rel='stylesheet prefetch' href='http://daneden.github.io/animate.css/animate.min.css'>
-        <link rel='stylesheet prefetch' href='http://fonts.googleapis.com/css?family=Roboto:400,100,400italic,700italic,700'>
-        <link href="barner/demos/demo.css" rel="stylesheet">
-        <link rel="stylesheet" href="barner/css/style.css">
+        <link href="resources/barner/demos/demo.css" rel="stylesheet">
+        <link rel="stylesheet" href="resources/barner/css/style.css">
     </head>
 
     <body>
@@ -25,35 +28,47 @@ if (@$_SESSION['acceso'] == true) {
         <img class="logologin"  src="view/img/logo.png">
     </center>
 
-    <div class='form animated flipInX victor-form'>
-        <form action="php/controller/LoginController.php" method="post">
+    <div class='victor-form'>
+        <form class="form-horizontal" action="php/controller/LoginController.php" method="post">
             <input type="hidden" name="op" value="1">
-            <input placeholder='Username' type='text' name="user" >
-            <input placeholder='Password' type='password' name="pass">
-            <button class='animated infinite pulse victor-button'>Login</button>
+            <div class="form-group">       
+                <div class="col-xs-12">
+                    <input class="form-control victor-input" placeholder='Username' type='text' name="user" style="padding: 1.4em" >
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <input class="form-control victor-input" placeholder='Password' type='password' name="pass" style="padding: 1.4em">
+                </div>
+            </div>
+            <div>
+                <button class='animated infinite pulse btn btn-block victor-button'>Login</button>
+            </div>
+            
         </form>
     </div>
+
 
     <div id="demo4" class="scroll-img" style="
          position: absolute;
          bottom: 0;
-         left: 150px;">
+         left: 5%">
         <ul>
-            <li><img src="barner/img/1.jpg" width="140"></li>
-            <li><img src="barner/img/2.jpg" width="140"></li>
-            <li><img src="barner/img/3.jpg" width="140"></li>
-            <li><img src="barner/img/4.jpg" width="140"></li>
-            <li><img src="barner/img/5.jpg" width="140"></li>
-            <li><img src="barner/img/1.jpg" width="140"></li>
-            <li><img src="barner/img/2.jpg" width="140"></li>
-            <li><img src="barner/img/3.jpg" width="140"></li>
-            <li><img src="barner/img/4.jpg" width="140"></li>
-            <li><img src="barner/img/5.jpg" width="140"></li>
+            <li><img class="img-rounded" src="resources/barner/img/1.jpg" width="140"></li>
+            <li><img class="img-rounded" src="resources/barner/img/2.jpg" width="140"></li>
+            <li><img class="img-rounded" src="resources/barner/img/3.jpg" width="140"></li>
+            <li><img class="img-rounded" src="resources/barner/img/4.jpg" width="140"></li>
+            <li><img class="img-rounded" src="resources/barner/img/5.jpg" width="140"></li>
+            <li><img class="img-rounded" src="resources/barner/img/1.jpg" width="140"></li>
+            <li><img class="img-rounded" src="resources/barner/img/2.jpg" width="140"></li>
+            <li><img class="img-rounded" src="resources/barner/img/3.jpg" width="140"></li>
+            <li><img class="img-rounded" src="resources/barner/img/4.jpg" width="140"></li>
+            <li><img class="img-rounded" src="resources/barner/img/5.jpg" width="140"></li>
         </ul>
     </div>
 
-    <script src="barner/js/jquery.min.js"></script>
-    <script src="barner/jquery.scrollbox.js"></script>
+    <script src="resources/barner/js/jquery.min.js"></script>
+    <script src="resources/barner/jquery.scrollbox.js"></script>
 
     <script>
         $(function () {
@@ -72,6 +87,7 @@ if (@$_SESSION['acceso'] == true) {
         setTimeout(function () {
             $(".logologin").fadeIn(500);
         }, 600);
+
     </script>
 </body>
 </html>

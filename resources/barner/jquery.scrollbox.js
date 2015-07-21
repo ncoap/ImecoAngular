@@ -16,7 +16,7 @@ $.fn.scrollbox = function(config) {
     startDelay: 0,          // Start delay (in seconds)
     delay: 0,               // Delay after each scroll event (in seconds)
     step: 5,                // Distance of each single step (in pixels)
-    speed: 100,              // Delay after each single step (in milliseconds)
+    speed: 110,              // Delay after each single step (in milliseconds)
     switchItems: 1,         // Items to switch after each scroll event
     direction: 'vertical',
     distance: 'auto',

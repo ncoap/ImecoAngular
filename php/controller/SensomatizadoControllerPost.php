@@ -14,8 +14,14 @@ switch ($accion) {
         echo json_encode($mensaje);
         break;
     case 'actualizar':
-
+        $data = $request->data;
+        $mensaje = $sensomatizadoDao->sp_actualizar_producto_no_sensomatizado($data->producto);
+        echo json_encode($mensaje);
         break;
+
     case 'eliminar':
+        $data = $request->data;
+        $mensaje = $sensomatizadoDao->sp_delete_producto_no_sensomatizado($data->id);
+        echo json_encode($mensaje);
         break;
 }

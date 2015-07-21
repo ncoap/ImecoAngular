@@ -6,21 +6,22 @@ if (@$_SESSION['acceso'] != true) {
 } else {
     if (@$_SESSION['rol'] == 'JEFE DE TIENDA') {
         header('Location: jefe.php');
-    } 
+    }
 }
 ?>
 <!DOCTYPE html>
-<html lang="es" ng-app="ngImeco" ng-controller="ImecoController">
+<html lang="es" ng-app="ngOdisea" ng-controller="OdiseaController">
 
     <head>
         <meta charset="UTF-8">
         <title ng-bind="pageTitle"></title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
         <link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css'>
         <link rel="stylesheet" href="resources/assets/bootstrap/css/bootstrap.min.css"/>
         <link rel="stylesheet" href="resources/assets/theme/admin.lte.css"/>
         <link rel="stylesheet" href="resources/assets/theme/_all-skins.min.css"/>
         <link rel="stylesheet" href="resources/css/transition.css"/>
+        <link rel='stylesheet prefetch' href='http://daneden.github.io/animate.css/animate.min.css'>
         <link rel="stylesheet" href="resources/assets/dialog/dialogs.min.css"/>
         <link rel="stylesheet" href="resources/css/imeco.css"/>
     </head>
@@ -57,9 +58,6 @@ if (@$_SESSION['acceso'] != true) {
                                     </li>
 
                                     <li class="user-footer">
-                                        <!--                                        <div class="pull-left">
-                                                                                    <a href="" class="btn btn-default btn-flat">Perfil</a>
-                                                                                </div>-->
                                         <div class="pull-right">
                                             <a id="id-btn-exit" href="php/controller/LoginController.php?op=2" class="btn btn-default btn-flat">Salir</a>
                                         </div>
@@ -77,7 +75,7 @@ if (@$_SESSION['acceso'] != true) {
                             <img src="resources/img/otros/user2-160x160.jpg" class="img-circle" alt="User Image" />
                         </div>
                         <div class="pull-left info">
-                            <p> <?= $_SESSION['rol']?>  </p>
+                            <p> <?= $_SESSION['rol'] ?>  </p>
                             <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                         </div>
                     </div>
@@ -90,8 +88,8 @@ if (@$_SESSION['acceso'] != true) {
                             <ul class="treeview-menu">
                                 <li><a href="#intervencion"><i class="fa fa-file"></i><span>Registrar Intervención</span></a></li>
                                 <li><a href="#intervenciones"><i class="fa fa-file"></i><span>Visualizar Registros</span></a></li>
-                                <li><a href="#home"><i class='fa fa-book'></i><span>Gráficas por Mes</span></a></li>
-                                <li><a href="#enlaces"><i class='fa fa-file'></i><span>Enlaces</span></a></li>
+                                <li><a href="#"><i class='fa fa-book'></i><span>Gráficas por Mes</span></a></li>
+                                <li><a href="#"><i class='fa fa-file'></i><span>Enlaces</span></a></li>
                             </ul>
                         </li>
                         <li class="treeview">
@@ -148,8 +146,8 @@ if (@$_SESSION['acceso'] != true) {
 
             <footer class="main-footer imeco-center" >
                 <strong>Desarrollado Por 
-                    <a target="_blank" href="http://www.innovatechperusac.com/">INNOVATECHPERÚ.</a>
-                </strong> Copyright © 2015
+                <a target="_blank" href="http://www.innovatechperusac.com/">INNOVATECHPERÚ.</a></strong>
+                Copyright © 2015
             </footer>
         </div>
 
@@ -174,12 +172,13 @@ if (@$_SESSION['acceso'] != true) {
 
         <!--modales personlizadas de angular-->
         <script src="resources/assets/dialog/dialogs.js"></script> 
-        <script src="app.js"></script>
+        <script src="admin.js"></script>
         <script src="view/home/home.js"></script>
-        <script src="view/intervencion/intervencion.js"></script>
-        <script src="view/intervenciones/intervenciones.js"></script>
-        <script src="view/nosensomatizados/nosensomatizados.js"></script>
-        <script src="view/nosensomatizado/nosensomatizado.js"></script>
+        <script src="view/intervencion/listar/listar_intervencion.js"></script>
+        <script src="view/intervencion/registrar/registrar_intervencion.js"></script>
+        <script src="view/sensomatizado/listar/listar_sensomatizado.js"></script>
+        <script src="view/sensomatizado/registrar/registrar_sensomatizado.js"></script>
+        <script src="view/sensomatizado/actualizar/actualizar_sensomatizado.js"></script>
 
     </body>
 </html>

@@ -1,6 +1,5 @@
 <div class="box">
     <div class="box-header">
-        <i class="fa fa-users"></i> 
         <h3 class="box-title">Parámetros de Búsqueda</h3>
     </div>
     <div class="box-body">
@@ -24,29 +23,9 @@
                     <label>Tienda:</label>
                 </div>
                 <div  class="col-sm-3 col-xs-7" style="margin-bottom: 1em">
-                    <select class="form-control" ng-model="termSearch.tienda">
-                        <option value="0">Todas Las Tiendas</option>
-                        <option value="1">(OECHSLE) Salaverry</option>
-                        <option value="2">(OECHSLE) Jockey Plaza</option>
-                        <option value="3">(OECHSLE) Plaza Norte</option>
-                        <option value="4">(OECHSLE) Centro Civico</option>
-                        <option value="5">(OECHSLE) JR Union</option>
-                        <option value="6">(OECHSLE) Primavera</option>
-                        <option value="7">(OECHSLE) Plaza Lima Norte</option>
-                        <option value="8">(OECHSLE) CUSCO</option>
-                        <option value="9">(OECHSLE) AREQUIPA</option>
-                        <option value="10">(OECHSLE) JULIACA</option>
-                        <option value="11">(OECHSLE) HUANCAYO</option>
-                        <option value="12">(OECHSLE) BARRANCA</option>
-                        <option value="13">(OECHSLE) CAJAMARCA</option>
-                        <option value="14">(OECHSLE) CHICLAYO</option>
-                        <option value="15">(OECHSLE) PUCALLPA</option>
-                        <option value="16">(OECHSLE) TRUJILLO</option>
-                        <option value="17">(OECHSLE) PIURA</option>
-                        <option value="18">(OECHSLE) HUANCAYO</option>
-                        <option value="19">(OECHSLE) ICA</option>
-                        <option value="20">CARPA Pro</option>
-                        <option value="21">CARPA Santa Clara</option>
+                    <select class="form-control" ng-model="termSearch.tienda" required
+                            ng-options="ti.tienda for ti in tiendas track by ti.id">
+                        <option value="">-Seleccione-</option>
                     </select>
                 </div>
             </div>
@@ -83,7 +62,7 @@
             </div>
             <div class="row">
                 <div class="col-xs-12">
-                    <button class="btn btn-primary" type="submit" 
+                    <button class="btn btn-primary animated infinite pulse" type="submit" 
                             ng-disabled='!nameFormConsulta.$valid'>Consultar</button>
                 </div>
 
@@ -94,7 +73,7 @@
 
 <div class="box box-primary">
     <div class="box-header">
-        <i class="fa fa-users"></i> 
+        <i class="fa fa-book"></i> 
         <h3 class="box-title">Control de Productos No Sensomatizados</h3>
     </div>
     <div class="box-body table-responsive">
@@ -113,9 +92,9 @@
                         <th>Codigo</th>
                         <th>Descripción</th>
                         <th>Marca</th>
-                        <th>Cantidad</th>
-                        <th>Precio/Unid</th>
-                        <th>Total</th>
+                        <th style="text-align: right">Cantidad</th>
+                        <th style="text-align: right">Precio/Unid</th>
+                        <th style="text-align: right">Total</th>
                         <th>Observaciones</th>
                         <th style="text-align: center">Acciones</th>
                     </tr>
@@ -129,13 +108,19 @@
                         <td>{{producto.codigo}}</td>
                         <td>{{producto.descripcion}}</td>
                         <td>{{producto.marca}}</td>
-                        <td>{{producto.cantidad}}</td>
-                        <td>{{producto.precio}}</td>
-                        <td>{{producto.total}}</td>
+                        <td style="text-align: right">{{producto.cantidad}}</td>
+                        <td style="text-align: right">{{producto.precio| currency:"S/. "}}</td>
+                        <td style="text-align: right">{{producto.total| currency:"S/. "}}</td>
                         <td>{{producto.observaciones}}</td>
                         <td style="text-align: center">
                             <button class="btn btn-info btn-xs" ng-click="showModalDetalle(producto)">
                                 Foto
+                            </button>
+                            <button class="btn btn-primary btn-xs" ng-click="actualizarProducto(producto)">
+                                Actualizar
+                            </button>
+                            <button class="btn btn-danger btn-xs" ng-click="eliminarProducto(producto.id)">
+                                Eliminar
                             </button>
                         </td>
                     </tr>

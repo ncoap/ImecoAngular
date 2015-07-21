@@ -185,27 +185,9 @@
                             <label class="col-sm-3 control-label">Tienda</label>
                             <div class="col-sm-9">
                                 <select class="form-control" ng-model="incidente.tienda">
-                                    <option value="1">(OECHSLE) Salaverry</option>
-                                    <option value="2">(OECHSLE) Jockey Plaza</option>
-                                    <option value="3">(OECHSLE) Plaza Norte</option>
-                                    <option value="4">(OECHSLE) Centro Civico</option>
-                                    <option value="5">(OECHSLE) JR Union</option>
-                                    <option value="6">(OECHSLE) Primavera</option>
-                                    <option value="7">(OECHSLE) Plaza Lima Norte</option>
-                                    <option value="8">(OECHSLE) CUSCO</option>
-                                    <option value="9">(OECHSLE) AREQUIPA</option>
-                                    <option value="10">(OECHSLE) JULIACA</option>
-                                    <option value="11">(OECHSLE) HUANCAYO</option>
-                                    <option value="12">(OECHSLE) BARRANCA</option>
-                                    <option value="13">(OECHSLE) CAJAMARCA</option>
-                                    <option value="14">(OECHSLE) CHICLAYO</option>
-                                    <option value="15">(OECHSLE) PUCALLPA</option>
-                                    <option value="16">(OECHSLE) TRUJILLO</option>
-                                    <option value="17">(OECHSLE) PIURA</option>
-                                    <option value="18">(OECHSLE) HUANCAYO</option>
-                                    <option value="19">(OECHSLE) ICA</option>
-                                    <option value="20">CARPA Pro</option>
-                                    <option value="21">CARPA Santa Clara</option>
+                                    <option ng-repeat="ti in tiendas" value="{{ti.id}}">
+                                        {{ti.tienda}}
+                                    </option>
                                 </select>
                             </div>
                         </div>

@@ -1,4 +1,4 @@
-angular.module('ngImeco.home',
+angular.module('odisea.home',
         ['ui.router', 'ngAnimate', 'ngResource', 'ui.bootstrap'])
         .config(function config7($stateProvider) {
             $stateProvider.state('home', {

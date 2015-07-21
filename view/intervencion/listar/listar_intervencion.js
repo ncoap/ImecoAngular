@@ -1,10 +1,10 @@
-angular.module('ngImeco.intervenciones', ['ui.router', 'ngAnimate', 'ngResource', 'ui.bootstrap'])
+angular.module('odisea.intervencion.listar', ['ui.router', 'ngAnimate', 'ngResource', 'ui.bootstrap'])
         .config(function config4($stateProvider) {
             $stateProvider.state('intervenciones', {
                 url: '/intervenciones',
                 views: {
                     main: {
-                        templateUrl: 'view/intervenciones/template.html',
+                        templateUrl: 'view/intervencion/listar/listar_intervencion.html',
                         controller: 'intervencionesController'
                     }
                 },
@@ -56,7 +56,7 @@ angular.module('ngImeco.intervenciones', ['ui.router', 'ngAnimate', 'ngResource'
 
             $scope.showModalVerIntervencion = function (intervencionSelect) {
                 var modalInstance = $modal.open({
-                    templateUrl: 'view/intervenciones/detalle.html',
+                    templateUrl: 'view/intervencion/listar/detalle_intervencion.html',
                     controller: 'VerIntervencionController',
                     size: 'lg',
                     resolve: {

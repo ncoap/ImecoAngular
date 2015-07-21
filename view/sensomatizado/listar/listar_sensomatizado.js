@@ -1,20 +1,20 @@
-angular.module('ngImeco.nosensomatizados',
-        ['ui.router', 'ngAnimate', 'ngResource', 'ui.bootstrap'])
+angular.module('odisea.sensomatizado.listar',
+        ['ui.router', 'ngAnimate', 'ngResource', 'ui.bootstrap', 'dialogs.main'])
         .config(function config7($stateProvider) {
             $stateProvider.state('nosensomatizados', {
                 url: '/nosensomatizados',
                 views: {
                     main: {
-                        templateUrl: 'view/nosensomatizados/template.html',
-                        controller: 'sensomatizadosController'
+                        templateUrl: 'view/sensomatizado/listar/listar_sensomatizado.html',
+                        controller: 'nosensomatizadosController'
                     }
                 },
                 data: {
-                    pageTitle: 'Productos No Sensomatizado'
+                    pageTitle: 'Productos No Sensomatizados'
                 }
             });
         })
-        .controller('sensomatizadosController', function ($scope, $log, $http, $modal, $timeout) {
+        .controller('nosensomatizadosController', function ($state, $rootScope, $scope, $log, $window, $http, $modal, $timeout, dialogs) {
 
             $scope.maxSize = 10;
             $scope.bigTotalItems = 0;
@@ -37,10 +37,16 @@ angular.module('ngImeco.nosensomatizados',
             $scope.listarProdcutosNoSensomatizados = function () {
                 $scope.isLoadData = true;
                 $scope.bigCurrentPage = 1;
+
+                var termBusqueda = $scope.termSearch;
+                if (!$scope.termSearch.tienda) {
+                    termBusqueda.tienda = '0';
+                }
+
                 $http.get('php/controller/SensomatizadoControllerGet.php', {
                     params: {
                         accion: 'multiple',
-                        terminos: JSON.stringify($scope.termSearch)
+                        terminos: JSON.stringify(termBusqueda)
                     }
                 }).success(function (data, status, headers, config) {
                     $log.info(data);
@@ -58,7 +64,7 @@ angular.module('ngImeco.nosensomatizados',
 
             $scope.showModalDetalle = function (productoSelect) {
                 var modalInstance = $modal.open({
-                    templateUrl: 'view/nosensomatizados/detalle.html',
+                    templateUrl: 'view/sensomatizado/listar/detalle_sensomatizado.html',
                     controller: 'verSensomatizadosController',
                     resolve: {
                         productoSelect: function () {
@@ -80,7 +86,7 @@ angular.module('ngImeco.nosensomatizados',
             $scope.itemSelected = 'tienda';
 
             $scope.termSearch = {
-                tienda: '0',
+                tienda: undefined,
                 nombre: '',
                 dni: '',
                 fechaInicial: fechaDefault().ini,
@@ -106,15 +112,70 @@ angular.module('ngImeco.nosensomatizados',
                         }
                         break;
                     case "tienda":
-                        $scope.termSearch.tienda = '0';
+                        $scope.termSearch.tienda = undefined;
                         break;
                     default:
                         $scope.termSearch[$scope.itemSelected] = '';
                 }
             };
 
+            $scope.eliminarProducto = function (id_producto) {
+
+                var dlg = dialogs.confirm('Eliminar', '¿Desea eliminar el Producto Seleccionado?', {size: 'sm'});
+
+
+                dlg.result.then(
+                        function (btn) {
+
+                            var deleteData = {
+                                accion: 'eliminar',
+                                data: {
+                                    id: id_producto
+                                }
+                            };
+
+                            $http.post('php/controller/SensomatizadoControllerPost.php', deleteData)
+                                    .success(function (data, status, headers, config) {
+                                        if (data.msj == 'OK') {
+                                            $scope.listarProdcutosNoSensomatizados();
+                                        } else {
+                                            alert("No se pudo Eliminar");
+                                        }
+                                    })
+                                    .error(function (data, status, headers, config) {
+
+                                        $log.info("que paso aca");
+                                    });
+
+                        },
+                        function (btn) {
+                        }
+                );
+
+            };
+
+            $scope.actualizarProducto = function (producto) {
+
+
+
+                $rootScope.producto = producto;
+                //la propiedad tienda tiene que ser un objeto con id y tienda 
+                //por eso lo transformo de la lista
+                $rootScope.producto.tienda = {
+                    id: producto.idtienda,
+                    tienda: producto.tienda
+                };
+
+                //cambio la fecha string por fecha DATE
+                $log.log("Fechita ", getDateFromString($rootScope.producto.fechasin));
+                $rootScope.producto.fecha = getDateFromString($rootScope.producto.fechasin);
+
+                $state.go('nosensomatizadoup');
+            };
+
             //Cual es el valor de cada termino de búsqueda
             $scope.consultar = function () {
+                console.log($scope.termSearch);
                 $scope.listarProdcutosNoSensomatizados();
             };
 
@@ -138,6 +199,23 @@ angular.module('ngImeco.nosensomatizados',
                 var p_minuto = today.getMinutes();
                 var minuto = (p_minuto < 10) ? '0' + p_minuto : p_minuto;
                 return new Date(today.getFullYear(), mes, dia, hora, minuto);
+            }
+
+
+            function getDateFromString(fechahora) {
+
+                //separa el string 2015-07-05 00:00:00
+                var anio = parseInt(fechahora.substr(0, 4));
+                var mes = parseInt(fechahora.substr(5, 2)) - 1;
+                var dia = parseInt(fechahora.substr(8, 2));
+
+                var hora = parseInt(fechahora.substr(11, 2));
+                var minuto = parseInt(fechahora.substr(14, 2));
+
+
+
+                return new Date(anio, mes, dia, hora, minuto);
+
             }
 
 

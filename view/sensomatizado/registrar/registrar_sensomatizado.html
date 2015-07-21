@@ -1,0 +1,123 @@
+<div class="box box-default">
+    <div class="box-header">
+        <h3 class="box-title">Registrar Producto No Sensomatizado</h3>
+    </div>
+    <div class="box-body">
+        <!--<button ng-click="test()">TEST</button>-->
+        <form class="form-horizontal" name="nameFormProducto" enctype="multipart/form-data"
+              ng-submit="registrarProducto()">
+
+            <div class="form-group">
+                <label class="col-xs-2 control-label">Dni</label>
+                <div class="col-xs-10">  
+                    <input type="text" required="true" ng-model="sensomatizado.dni"
+                           class="form-control" placeholder="Dni Prevencionista">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-2 control-label">Nombre</label>
+                <div class="col-xs-10">
+                    <input type="text" required="true" ng-model="sensomatizado.prevencionista"
+                           class="form-control" placeholder="Nombre del Prevencionista">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-2 control-label">Tienda</label>
+                <div class="col-xs-10">
+                    <select class="form-control" ng-model="sensomatizado.tienda" required
+                            ng-options="ti.tienda for ti in tiendas track by ti.id">
+                        <option value="">-Seleccione-</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-2 control-label">Fecha:</label>
+                <div class="col-xs-10">
+                    <input type="datetime-local" ng-model="sensomatizado.fecha" class="form-control">
+                </div>
+            </div>
+
+            <!--PRODUCTOS-->
+            <div class="form-group">
+                <label class="col-xs-2 control-label">Codigo:</label>                
+                <div class="col-xs-5">
+                    <input type="text" class="form-control" ng-model="sensomatizado.codigo"
+                           required="true"
+                           placeholder="Código del Producto">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-2 control-label">Descripción:</label>
+                <div class="col-xs-10">
+                    <input type="text" class="form-control" required="true"
+                           ng-model="sensomatizado.descripcion"
+                           placeholder="Descripción del Producto">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-2 control-label">Marca:</label>
+                <div class="col-xs-5">
+                    <input type="text" class="form-control" 
+                           ng-model="sensomatizado.marca" placeholder="Marca del Producto">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-2 control-label">Cantidad:</label>
+                <div class="col-xs-3">
+                    <input type="number" step="0.01" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" 
+                           class="form-control" ng-model="sensomatizado.cantidad" 
+                           required="true" min="0">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label">Precio:</label>
+                <div class="col-xs-3">
+                    <input type="number" step="0.01" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" 
+                           class="form-control" ng-model="sensomatizado.precio" required="true" min="0">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-2 control-label">Observaciones:</label>
+                <div class="col-xs-10">
+                    <textarea class="form-control text-res" rows="5" 
+                              maxlength="600" ng-trim='false'
+                              ng-model="sensomatizado.observaciones" 
+                              style="resize: none">                                                           
+                    </textarea>
+                    <span class="label label-info">
+                        {{600 - sensomatizado.observaciones.length}}         
+                        Caracteres Restantes
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <input my-upload type="file" ng-model="document" 
+                           file-model="myFile" valid-file required>
+
+                </div>
+            </div>
+
+            <div style="text-align: center; background-color: #f9f9f9;padding: 1em">
+                <img style="margin-top: 10px" ng-src="{{image}}" 
+                     class="img-rounded" width="100" height="100" >
+            </div>
+
+            <div class="form-group">
+                <div class="col-xs-2">
+                    <button type="submit" style="margin-top: 1em" 
+                            ng-disabled="!(nameFormProducto.$valid && !isSaved)"
+                            class="btn btn-primary">Registrar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

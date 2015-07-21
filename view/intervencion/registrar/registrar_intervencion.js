@@ -1,16 +1,16 @@
-angular.module('ngImeco.intervencion', ['ui.router', 'ngAnimate', 'ngResource', 'ui.bootstrap',
-    'dialogs.main'])
+angular.module('odisea.intervencion.registrar',
+        ['ui.router', 'ngAnimate', 'ngResource', 'ui.bootstrap', 'dialogs.main'])
         .config(function config5($stateProvider) {
             $stateProvider.state('intervencion', {
                 url: '/intervencion',
                 views: {
-                    'main': {
-                        templateUrl: 'view/intervencion/template.html',
+                    main: {
+                        templateUrl: 'view/intervencion/registrar/registrar_intervencion.html',
                         controller: 'intervencionController'
                     }
                 },
                 data: {
-                    pageTitle: 'Intervencion'
+                    pageTitle: 'Registrar Intervención'
                 }
             });
         })
@@ -65,7 +65,8 @@ angular.module('ngImeco.intervencion', ['ui.router', 'ngAnimate', 'ngResource', 
             }])
         .controller('intervencionController', function ($rootScope, $window, $scope, $log, $http, $modal, $timeout, dialogs) {
 
-            $scope.image = 'resources/img/avatar_default.jpg';
+
+            $scope.image = 'resources/imagen_tendero/default.jpg';
 
             $scope.isUpload = false;
 
@@ -81,7 +82,7 @@ angular.module('ngImeco.intervencion', ['ui.router', 'ngAnimate', 'ngResource', 
                     dni: '',
                     nombre: ''
                 },
-                tienda: 1,
+                tienda: '1',
                 puesto: '1',
                 modalidadEmpleada: '',
                 detalleIntevencion: ''
@@ -113,10 +114,10 @@ angular.module('ngImeco.intervencion', ['ui.router', 'ngAnimate', 'ngResource', 
                     $log.log(data);
 
                     if (data.msj == 'OK') {
+
                         var dlg = dialogs.confirm('Búsqueda', 'Tendero Encontrado. ¿Continuar registrando la Intervención?');
 
                         dlg.result.then(function (btn) {
-
 
                             $scope.isWorkingDni = true;
                             $scope.isRegisterDniDataBase = true;
@@ -321,7 +322,7 @@ angular.module('ngImeco.intervencion', ['ui.router', 'ngAnimate', 'ngResource', 
                 var fd = new FormData();
                 fd.append('file', file);
                 fd.append('nombre', $scope.tendero.dni);
-                
+
                 $log.log(fd);
 
                 $http.post('php/controller/TenderoControllerLoad.php', fd, {

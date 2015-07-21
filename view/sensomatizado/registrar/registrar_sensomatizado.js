@@ -1,11 +1,11 @@
-angular.module('ngImeco.nosensomatizado',
+angular.module('odisea.sensomatizado.registrar',
         ['ui.router', 'ngAnimate', 'ngResource', 'ui.bootstrap', 'dialogs.main'])
         .config(function config8($stateProvider) {
             $stateProvider.state('nosensomatizado', {
                 url: '/nosensomatizado',
                 views: {
                     'main': {
-                        templateUrl: 'view/nosensomatizado/template.html',
+                        templateUrl: 'view/sensomatizado/registrar/registrar_sensomatizado.html',
                         controller: 'nosensomatizadoController'
                     }
                 },
@@ -66,18 +66,6 @@ angular.module('ngImeco.nosensomatizado',
 
         .controller('nosensomatizadoController', function ($rootScope, $window, $scope, $log, $http, $modal, $timeout, dialogs) {
 
-            $scope.tiendas = [];
-
-            $http.get('php/controller/TiendaControllerGet.php', {
-                    params: {
-                        accion: 'listar'
-                    }
-                }).success(function (data, status, headers, config) {
-                        $scope.tiendas = data;
-                        $log.log(data);
-                }).error(function (data, status, headers, config) {
-                    console.log("Error");
-                });
 
             $scope.image;
 
@@ -85,8 +73,8 @@ angular.module('ngImeco.nosensomatizado',
 
             $scope.sensomatizado = {
                 dni: '',
-                intervencionista: '',
-                tienda: '1',
+                prevencionista: '',
+                tienda: undefined,
                 fecha: getDateActual(),
                 codigo: '',
                 descripcion: '',
@@ -110,8 +98,6 @@ angular.module('ngImeco.nosensomatizado',
 
                     $log.log("IMAGES RESPONSE ", data);
 
-                    //Dialogs
-                    //locacion de anotaciones
                     $window.location.reload();
 
                 }).error(function (data, status, headers, config) {
@@ -119,7 +105,7 @@ angular.module('ngImeco.nosensomatizado',
                 });
 
             };
-            
+
 //            $scope.test = function(){
 //                
 //              $log.log($scope.sensomatizado);  
@@ -130,6 +116,8 @@ angular.module('ngImeco.nosensomatizado',
 
                 //ya Hizo Click
                 $scope.isSaved = true;
+
+                console.log($scope.myFile.name);
 
                 $scope.sensomatizado.foto = 'view/imagen_no_sensomatizados/' + $scope.myFile.name;
                 $scope.sensomatizado.total = $scope.sensomatizado.cantidad * $scope.sensomatizado.precio;

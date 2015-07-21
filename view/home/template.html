@@ -1,7 +1,7 @@
 <div class="box box-primary">
     <div class="box-header">
         <i class="fa fa-users"></i> 
-        <h3 class="box-title">Últimas Intervenciones</h3>
+        <h3 class="box-title animated infinite pulse">Últimas Intervenciones</h3>
     </div>
     <div class="box-body table-responsive">
         <div class="alert alert-info" style="padding: 3px" ng-show="isLoadData">
@@ -20,9 +20,9 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="tendero in tenderos">
-                        <td>{{tendero.tienda}}</td>
-                        <td>{{tendero.fecha}}</td>
-                        <td>{{tendero.tendero}}</td>
+                        <td style="vertical-align: middle">{{tendero.tienda}}</td>
+                        <td style="vertical-align: middle">{{tendero.fecha}}</td>
+                        <td style="vertical-align: middle">{{tendero.tendero}}</td>
 
                         <td style="text-align: center">
                             <img class="img-rounded" ng-src="{{tendero.foto}}" ng-click="showModalDetalle(tendero)"
