@@ -21,7 +21,16 @@ switch ($accion) {
         echo json_encode($mensaje);
         break;
     case 'actualizar':
-
+        $data = $request->data;
+        /*
+          data: {
+            idTendero: $scope.tendero.idTendero,
+            intervencion: $scope.intervencion,
+            productos: JSON.stringify($scope.productos)
+          }
+         */
+        $mensaje = $intervencionDao->sp_update_intervencion($data);
+        echo json_encode($mensaje);
         break;
     case 'eliminar':
         $data = $request->data;

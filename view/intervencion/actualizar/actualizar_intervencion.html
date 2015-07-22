@@ -18,42 +18,38 @@
                 </div>
                 <div class="box-body">
                     <div style="text-align: center">
-                        <img ng-src="{{tendero.fotoTendero}}?random=323527528432525.24234" 
-                             width="100" height="100" style="margin-bottom: 1em" class="img-rounded">
+                        <img ng-src="view/imagen_tendero/{{tendero.idTendero}}.jpg?random={{mirandom}}" 
+                             width="100" height="100" 
+                             err-src='view/imagen_tendero/default.jpg'
+                             style="margin-bottom: 1em" class="img-rounded">
                     </div>
                     <form class="form-horizontal" name="nameFormNuevoTendero" ng-submit="saveNewTendero()">
                         <div class="form-group">
-                            <div class="col-sm-3">
-                                <label class="control-label">Dni:</label>
-                            </div>
+                            <label class="col-sm-3 control-label">Dni:</label>
                             <div class="col-sm-9">
                                 <input type="text" ng-model="tendero.dniTendero" ng-pattern="/^[0-9]+$/"
-                                       class="form-control" ng-minlength="8" ng-maxlength="15"
+                                       class="form-control" ng-minlength="8" 
+                                       ng-maxlength="15" maxlength="15"
+                                       ng-blur="verificarDni()"
                                        required="true" placeholder="Documento de Identidad">         
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-3">
-                                <label class="control-label">Nombre:</label>
-                            </div>
+                            <label class="col-sm-3 control-label">Nombre:</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" ng-model="tendero.nombreTendero"
                                        required="true" placeholder="Nombre del Tendero">             
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-3">
-                                <label class="control-label">Apellidos:</label>
-                            </div>
+                            <label class="col-sm-3 control-label">Apellidos:</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" ng-model="tendero.apellidoTendero"
                                        placeholder="Apellido del Tendero">             
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-3">
-                                <label class="control-label">Tipo:</label>
-                            </div>
+                            <label class="col-sm-3 control-label">Tipo:</label>
                             <div class="col-sm-9">
                                 <select ng-model="tendero.idTipoTendero" class="form-control">
                                     <option value="1">Oportunista</option>
@@ -64,26 +60,20 @@
 
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-3">
-                                <label class="control-label">Dirección:</label>
-                            </div>
+                            <label class="col-sm-3 control-label">Dirección:</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" ng-model="tendero.direccionTendero"
                                        placeholder="Dirección Tendero">             
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-3">
-                                <label class="control-label">Fecha Nacimiento:</label>
-                            </div>
+                            <label class="col-sm-3 control-label">Fecha Nacimiento:</label>
                             <div class="col-sm-9">
                                 <input type="date" class="form-control" ng-model="tendero.nacimientoTendero">             
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-3">
-                                <label class="control-label">Sexo:</label>
-                            </div>
+                            <label class="col-sm-3 control-label">Sexo:</label>
                             <div class="col-sm-9">
                                 <div class="radio">
                                     <label>
@@ -108,13 +98,13 @@
                 <div class="box-body">
                     <form class="form-horizontal" ng-submit="saveIntervencion()" name="nameFormIntervencion">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Fecha de Intervención</label>
+                            <label class="col-sm-3 control-label">Fecha de Intervención:</label>
                             <div class="col-sm-9">
                                 <input type="datetime-local" ng-model="intervencion.fechaCompletaIntervencion" class="form-control">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Derivación del Tendero</label>
+                            <label class="col-sm-3 control-label">Derivación del Tendero:</label>
                             <div class="col-sm-3">
                                 <select ng-model="intervencion.derivacionIntervencion" class="form-control">
                                     <option value="Comisaria">Comisaria</option>
@@ -125,14 +115,14 @@
                             </div>
                             <div class="col-sm-6">
                                 <input type="text" ng-model="intervencion.lugarDerivacion" 
-                                       class="form-control" ng-disabled="intervencion.lugarDerivacion != 'Otros'"
+                                       class="form-control" ng-disabled="intervencion.derivacionIntervencion != 'Otros'"
                                        placeholder="Lugar de Derivacion">
                             </div>
 
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Prevencionista</label>
+                            <label class="col-sm-3 control-label">Prevencionista:</label>
                             <div class="col-sm-3">
                                 <input type="text" required="true" ng-minlength="8" ng-maxlength="15" ng-pattern="/^[0-9]+$/"
                                        ng-pattern="onlyNumbers" ng-model="intervencion.dniPrevencionista"
@@ -146,7 +136,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Puesto</label>
+                            <label class="col-sm-3 control-label">Puesto:</label>
                             <div class="col-sm-9">
                                 <select class="form-control" ng-model="intervencion.idPuesto">
                                     <option value="1">Tangos (Puerta)</option>
@@ -160,7 +150,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Tienda</label>
+                            <label class="col-sm-3 control-label">Tienda:</label>
                             <div class="col-sm-9">
                                 <select class="form-control" ng-model="intervencion.tienda" required
                                         ng-options="ti.nombreTienda for ti in tiendas track by ti.idTienda">
@@ -170,7 +160,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Modalidad Empleada</label>
+                            <label class="col-sm-3 control-label">Modalidad Empleada:</label>
                             <div class="col-sm-9">
                                 <textarea class="form-control text-res" rows="5" maxlength="500" ng-trim='false'
                                           ng-model="intervencion.modalidadEmpleada" 
@@ -184,7 +174,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Detalle de Intervención </label>
+                            <label class="col-sm-3 control-label">Detalle de Intervención:</label>
                             <div class="col-sm-9">
                                 <!--ng-trim = false Nos Contabiliza tambien los caracteres en blanco y los saltos de linea--> 
                                 <textarea  style="resize: none" maxlength="600" ng-trim='false'
@@ -304,26 +294,33 @@
         <!--PASO 3 PASO 3 PASO 3 PASO 3-->
         <div class="tab-pane" ng-class="{'active': showTab.tab3 == true}">
             <div class="row">
-                <div class="col-sm-7">
+                <div class="col-xs-6" style="text-align: center">
+                    <div>
+                        <label class="label label-danger" style="display: block" >FOTO ANTERIOR</label>
+                    </div>
+                    <img ng-src="view/imagen_tendero/{{tendero.idTendero}}.jpg?random={{mirandom}}" class="img-rounded" err-src='view/imagen_tendero/default.jpg' width="280px" height="300px" >
+                </div> 
+
+                <div class="col-xs-6" style="text-align: center">   
                     <form name="modelito" class="form-horizontal" enctype="multipart/form-data">
-                        <div class="col-sm-7">
-                            <div class="form-group">
-                                <div>
-                                    <label>Foto del Tendero Size <1MB</label>
-                                </div>
-                                <img ng-src="{{image}}" width="300px" height="300px" >
+                        <div class="form-group">
+                            <div>
+                                <label style="display: block" class="label label-success">FOTO NUEVA DEL TENDERO</label>
                             </div>
-                            <div class="form-group">
-                                <!--<input file-model="myFile" type="file">-->
-                                <input my-upload type="file" ng-model="document" file-model="myFile" valid-file required>
-                                <!--<input type="file" file-model="myFile">-->
-                            </div>
+                            <img ng-src="{{image}}" class="img-rounded" width="280px" height="300px">
+                        </div>
+                        <div>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" ng-model="isNewImage"><label>&nbsp;ACTUALIZAR FOTO?</label>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <input my-upload type="file" ng-model="document" file-model="myFile">
                         </div>
                     </form>
-                </div> 
-                <div class="col-sm-7">                             
                 </div>
             </div>
+
             <div>
                 <button ng-click="irPaso2()" class="pull-left btn btn-danger">Atrás</button> 
                 <button ng-click="SaveAll()" ng-disabled="!(modelito.$valid && !isUpload)" class="pull-right btn btn-primary btn-lg">

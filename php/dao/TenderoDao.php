@@ -46,13 +46,13 @@ class TenderoDao {
     public function sp_registrar_tendero($tendero) {
         $respuesta = array('msj' => 'OK', 'error' => '');
         try {
-            $stm = $this->pdo->prepare("CALL sp_register_tendero(?,?,?,?,?,?,?,?)");
+            $stm = $this->pdo->prepare("CALL sp_register_tendero(?,?,?,?,?,?,?)");
 
-            $foto = "view/imagen_tendero/" . $tendero->dni . ".jpg";
+           
             date_default_timezone_set('America/Lima');
             $fechita = date('Y-m-d', strtotime(urldecode($tendero->nacimiento)));
 
-            $stm->execute(array($tendero->nombre, $tendero->apellido, $tendero->direccion, $tendero->dni, $tendero->tipo, $fechita, $tendero->sexo, $foto));
+            $stm->execute(array($tendero->nombre, $tendero->apellido, $tendero->direccion, $tendero->dni, $tendero->tipo, $fechita, $tendero->sexo));
         } catch (PDOException $e) {
 
             $respuesta['msj'] = 'KO';
@@ -65,13 +65,13 @@ class TenderoDao {
     public function sp_update_tendero($tendero) {
         $respuesta = array('msj' => 'OK', 'error' => '');
         try {
-            $stm = $this->pdo->prepare("CALL sp_update_tendero(?,?,?,?,?,?,?,?,?)");
+            $stm = $this->pdo->prepare("CALL sp_update_tendero(?,?,?,?,?,?,?,?)");
 
-            $foto = "view/imagen_tendero/" . $tendero->dni . ".jpg";
             date_default_timezone_set('America/Lima');
-            $fechita = date('Y-m-d', strtotime(urldecode($tendero->nacimiento)));
+            $fechita = date('Y-m-d', strtotime(urldecode($tendero->nacimientoTendero)));
 
-            $stm->execute(array($tendero->id, $tendero->nombre, $tendero->apellido, $tendero->direccion, $tendero->dni, $tendero->tipo, $fechita, $tendero->sexo, $foto));
+            $stm->execute(array($tendero->idTendero, $tendero->nombreTendero, $tendero->apellidoTendero,
+                $tendero->direccionTendero, $tendero->dniTendero, $tendero->idTipoTendero, $fechita, $tendero->sexoTendero));
         } catch (PDOException $e) {
 
             $respuesta['msj'] = 'KO';

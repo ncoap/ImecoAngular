@@ -93,6 +93,49 @@ class IntervencionDao {
         return $respuesta;
     }
 
+    public function sp_update_intervencion($data) {
+
+        $respuesta = array('msj' => 'OK', 'error' => '');
+        try {
+            $stm = $this->pdo->prepare("CALL sp_update_cab_interven(?,?,?,?,?,?,?,?,?,?,?)");
+
+            $intervencion = $data->intervencion;
+            date_default_timezone_set('America/Lima');
+
+            $fechita = date('Y-m-d H:i:s', strtotime(urldecode($intervencion->fechaCompletaIntervencion)));
+
+            $stm->execute(array($intervencion->idIntervencion, $fechita, $data->idTendero, $intervencion->derivacionIntervencion, $intervencion->lugarDerivacion,
+                $intervencion->dniPrevencionista, $intervencion->nombrePrevencionista, $intervencion->idPuesto,
+                $intervencion->modalidadEmpleada, $intervencion->detalleIntervencion, $intervencion->tienda->idTienda));
+
+            $this->sp_delete_det_interven_by_num_inte($intervencion->idIntervencion);
+
+            $this->sp_register_detalle($intervencion->idIntervencion, $data->productos);
+        } catch (PDOException $e) {
+
+            $respuesta['msj'] = 'KO';
+            $respuesta['error'] = $e->getMessage();
+        }
+
+        return $respuesta;
+    }
+
+    public function sp_delete_det_interven_by_num_inte($idIntervencion) {
+
+        $msj = array('msj' => 'OK', 'error' => '');
+
+        //EL PDO COMINT ISRVE EN MOTORES INNODB
+        try {
+            $db_conect_det = new Conexion();
+            $pdo_det = $db_conect_det->getConexion();
+            $stm_det = $pdo_det->prepare("CALL sp_delete_det_interven_by_num_inte(?)");
+            $stm_det->execute(array($idIntervencion));
+        } catch (PDOException $e) {
+            $msj['msj'] = 'KO';
+            $msj['error'] = $e->getMessage();
+        }
+    }
+
     //INCIDENTE DAO 
     public function sp_get_id_tendero_by_dni($dni) {
 
@@ -117,7 +160,7 @@ class IntervencionDao {
     }
 
     //SI GRABO LA CABECERA DEBEMOS DE GUARDAR EN ESE MOMENTO EL DETALLE
-    public function sp_register_detalle($id_incidencia, $productos_json) {
+    public function sp_register_detalle($id_intervencion, $productos_json) {
 
         //convertimos el stringify a un array creo??
         $productos = json_decode($productos_json);
@@ -128,12 +171,12 @@ class IntervencionDao {
         try {
 
             $db_conect_det = new Conexion();
-            $pdo_det = $db_conect_det->getConexion2();
+            $pdo_det = $db_conect_det->getConexion();
 
             $stm_det = $pdo_det->prepare("CALL sp_register_det_interven(?,?,?,?,?,?)");
             $pdo_det->beginTransaction();
             foreach ($productos as $pro) {
-                $stm_det->execute(array($id_incidencia, $pro->codigo, $pro->descripcion, $pro->marca, $pro->cantidad, $pro->precio));
+                $stm_det->execute(array($id_intervencion, $pro->codigo, $pro->descripcion, $pro->marca, $pro->cantidad, $pro->precio));
             }
             $pdo_det->commit();
         } catch (PDOException $e) {
@@ -147,13 +190,12 @@ class IntervencionDao {
     function sp_delete_intervencion($id_intervencion) {
 
         $respuesta = array('msj' => 'OK', 'error' => '');
-        
+
         try {
 
             $stm = $this->pdo->prepare("CALL sp_delete_intervencion(?)");
 
             $stm->execute(array($id_intervencion));
-            
         } catch (PDOException $e) {
 
             $respuesta['msj'] = 'KO';

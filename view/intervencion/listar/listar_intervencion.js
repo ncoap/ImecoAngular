@@ -34,10 +34,16 @@ angular.module('odisea.intervencion.listar',
             $scope.listarIntervenciones = function () {
                 $scope.isLoadData = true;
                 $scope.bigCurrentPage = 1;
+                
+                var termBusqueda = $scope.termSearch;
+                if (!$scope.termSearch.tienda) {
+                    termBusqueda.tienda = '0';
+                }
+                
                 $http.get('php/controller/IntervencionControllerGet.php', {
                     params: {
                         accion: 'multiple',
-                        terminos: JSON.stringify($scope.termSearch)
+                        terminos: JSON.stringify(termBusqueda)
                     }
                 }).success(function (data, status, headers, config) {
                     $log.info(data);
@@ -82,7 +88,7 @@ angular.module('odisea.intervencion.listar',
 
             //Cual es el valor de cada termino de búsqueda
             $scope.termSearch = {
-                tienda: '0',
+                tienda: undefined,
                 nombre: '',
                 tipo: '0',
                 dni: '',
@@ -131,8 +137,10 @@ angular.module('odisea.intervencion.listar',
 
             $scope.actualizarIntervencion = function (inter) {
 
+                //SETEAMOS LA INFORMACION Y BUSCAMOS EL DETALLE DE LOS PRODUCTOS
+
                 $log.info(inter);
-                
+
                 var tendero = {
                     idTendero: inter.idTendero,
                     dniTendero: inter.dniTendero,
@@ -140,19 +148,20 @@ angular.module('odisea.intervencion.listar',
                     apellidoTendero: inter.apellidoTendero,
                     idTipoTendero: inter.idTipoTendero,
                     direccionTendero: inter.direccionTendero,
-                    nacimientoTendero: inter.nacimientoTendero, //FORMAT DATEDATEDATE
+                    nacimientoTendero: getDateFromString2(inter.nacimientoTendero),
                     sexoTendero: inter.sexoTendero,
                     fotoTendero: inter.fotoTendero
                 };
 
 
                 var intervencion = {
-                    fechaCompletaIntervencion: inter.fechaCompletaIntervencion, //FORMAT FECHA
+                    idIntervencion : inter.idIntervencion,
+                    fechaCompletaIntervencion: getDateFromString(inter.fechaCompletaIntervencion),
                     derivacionIntervencion: inter.derivacionIntervencion,
                     lugarDerivacion: inter.lugarDerivacion,
                     dniPrevencionista: inter.dniPrevencionista,
                     nombrePrevencionista: inter.nombrePrevencionista,
-                    tienda: {//TIENDA COMO OBJETO POR QUE TRABAJAMOS CON ng-options en los combos
+                    tienda: {
                         idTienda: inter.idTienda,
                         nombreTienda: inter.nombreTienda
                     },
@@ -161,14 +170,24 @@ angular.module('odisea.intervencion.listar',
                     detalleIntervencion: inter.detalleIntervencion
                 };
 
-                $rootScope.intervencionSeleccionda = {
-                    tendero: tendero,
-                    intervencion: intervencion
-                };
+                $http.get('php/controller/IntervencionControllerGet.php?accion=detalle&id=' + inter.idIntervencion)
+                        .success(function (data, status, headers, config) {
 
-                $state.go('intervencionup');
+                            $rootScope.intervencionSeleccionada = {
+                                tendero: tendero,
+                                intervencion: intervencion,
+                                productos: data
+                            };
+
+                            $state.go('intervencionup');
+
+                        })
+                        .error(function (data, status, headers, config) {
+                            console.log("Error");
+                        });
 
             };
+
 
             $scope.eliminarIntervencion = function (id) {
 
@@ -207,7 +226,23 @@ angular.module('odisea.intervencion.listar',
             };
 
 
+            function getDateFromString(fechahora) {
+                //separa el string 2015-07-05 00:00:00
+                var anio = parseInt(fechahora.substr(0, 4));
+                var mes = parseInt(fechahora.substr(5, 2)) - 1;
+                var dia = parseInt(fechahora.substr(8, 2));
+                var hora = parseInt(fechahora.substr(11, 2));
+                var minuto = parseInt(fechahora.substr(14, 2));
+                return new Date(anio, mes, dia, hora, minuto);
+            }
 
+            function getDateFromString2(fechahora) {
+                //separa el string 2015-07-05
+                var anio = parseInt(fechahora.substr(0, 4));
+                var mes = parseInt(fechahora.substr(5, 2)) - 1;
+                var dia = parseInt(fechahora.substr(8, 2));
+                return new Date(anio, mes, dia);
+            }
 
 
             //FUNCION GET RANGO DE FECHAS POR DEFAULT INICIO A FIN
@@ -228,6 +263,17 @@ angular.module('odisea.intervencion.listar',
                 var p_minuto = today.getMinutes();
                 var minuto = (p_minuto < 10) ? '0' + p_minuto : p_minuto;
                 return new Date(today.getFullYear(), mes, dia, hora, minuto);
+            }
+
+            function getDateFromString(fechahora) {
+
+                //separa el string 2015-07-05 00:00:00
+                var anio = parseInt(fechahora.substr(0, 4));
+                var mes = parseInt(fechahora.substr(5, 2)) - 1;
+                var dia = parseInt(fechahora.substr(8, 2));
+                var hora = parseInt(fechahora.substr(11, 2));
+                var minuto = parseInt(fechahora.substr(14, 2));
+                return new Date(anio, mes, dia, hora, minuto);
             }
 
             $scope.listarIntervenciones();

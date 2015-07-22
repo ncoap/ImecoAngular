@@ -66,7 +66,7 @@ angular.module('odisea.intervencion.registrar',
         .controller('intervencionController', function ($rootScope, $window, $scope, $log, $http, $modal, $timeout, dialogs) {
 
 
-            $scope.image = 'resources/imagen_tendero/default.jpg';
+            $scope.image = 'view/imagen_tendero/default.jpg';
 
             $scope.isUpload = false;
 

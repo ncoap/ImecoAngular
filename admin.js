@@ -24,7 +24,6 @@ angular.module('ngOdisea', [
                     accion: 'listar'
                 }
             }).success(function (data, status, headers, config) {
-
                 $scope.tiendas = data;
 
             }).error(function (data, status, headers, config) {
@@ -46,7 +45,7 @@ angular.module('ngOdisea', [
                 
                 if (toState.name === 'intervencionup') {
 
-                    if ($rootScope.intervencionSeleccionda) {
+                    if ($rootScope.intervencionSeleccionada) {
                         
                     } else {
                         event.preventDefault();

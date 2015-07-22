@@ -20,14 +20,14 @@
             </div>
         </div>
 
-        <form name="nameFormConsulta" ng-submit="consultar()">
+        <form name="nameFormConsulta2" ng-submit="consultar()">
             <div class="row" ng-if="itemSearch.tienda">
                 <div class="col-sm-1 col-xs-2">
                     <label>Tienda:</label>
                 </div>
                 <div  class="col-sm-3 col-xs-7" style="margin-bottom: 1em">    
                     <select class="form-control" ng-model="termSearch.tienda" required
-                            ng-options="ti.tienda for ti in tiendas track by ti.id">
+                            ng-options="ti.nombreTienda for ti in tiendas track by ti.idTienda">
                         <option value="">-Seleccione-</option>
                     </select>
                 </div>
@@ -64,7 +64,7 @@
                 </div>
                 <div class="col-sm-3 col-xs-7" style="margin-bottom: 1em">
                     <input  type="text" ng-model="termSearch.dni"
-                            ng-maxlength="15"
+                            ng-maxlength="15" maxlength="15"
                             class="form-control" 
                             placeholder="Ingrese DNI">
                 </div>
@@ -97,7 +97,7 @@
             <div class="row">
                 <div class="col-xs-12">
                     <button class="btn btn-primary" type="submit" 
-                            ng-disabled='!nameFormConsulta.$valid'>Consultar</button>
+                            ng-disabled='!nameFormConsulta2.$valid'>Consultar</button>
                 </div>
 
             </div>
@@ -113,7 +113,7 @@
     <div class="box-body table-responsive">
         <div class="alert alert-info" style="padding: 3px" ng-show="isLoadData">
             <i class="fa fa-refresh fa-spin"></i>
-            <spam> &nbsp;&nbsp; Cargando....</spam>                                        
+            <span> &nbsp;&nbsp; Cargando....</span>                                        
         </div>
         <div>
             <table id="id-table-intervenciones" class="table table-bordered table-striped">
@@ -147,10 +147,10 @@
                                 Detalle
                             </button>
                             <button class="btn btn-primary btn-xs" ng-click="actualizarIntervencion(inter)">
-                                Update
+                                Actualizar
                             </button>
                             <button class="btn btn-danger btn-xs" ng-click="eliminarIntervencion(inter.idIntervencion)">
-                                Delete
+                                Eliminar
                             </button>
                         </td>
                     </tr>
