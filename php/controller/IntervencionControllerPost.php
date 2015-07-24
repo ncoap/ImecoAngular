@@ -17,7 +17,7 @@ switch ($accion) {
           productos: JSON.stringify($scope.productos)
           }
          */
-        $mensaje = $intervencionDao->sp_register_incidente($data);
+        $mensaje = $intervencionDao->sp_register_intervencion($data);
         echo json_encode($mensaje);
         break;
     case 'actualizar':

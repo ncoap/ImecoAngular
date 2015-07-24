@@ -80,9 +80,23 @@ angular.module('odisea.intervencion.registrar',
                     }
                 };
             }])
-        .controller('intervencionController', function ($rootScope, $window, $scope, $log, $http, $modal, $timeout, dialogs) {
+        .controller('intervencionController', function ($rootScope, $state, $window, $scope, $log, $http, $modal, $timeout, dialogs) {
 
             $scope.mirandom = Math.random();
+
+            $scope.tab = {tab1: true, tab2: false, tab3: false};
+
+            $scope.irPaso1 = function () {
+                $scope.tab = {tab1: true, tab2: false, tab3: false};
+            };
+
+            $scope.irPaso2 = function () {
+                $scope.tab = {tab1: false, tab2: true, tab3: false};
+            };
+
+            $scope.irPaso3 = function () {
+                $scope.tab = {tab1: false, tab2: false, tab3: true};
+            };
 
             $scope.image = 'view/imagen_tendero/default.jpg';
 
@@ -92,20 +106,6 @@ angular.module('odisea.intervencion.registrar',
 
             $scope.dni = '';
 
-            $scope.intervencion = {
-                fecha: getDateActual(),
-                derivacion: 'Comisaria',
-                lugarDerivacion: '',
-                prevencionista: {
-                    dni: '',
-                    nombre: ''
-                },
-                tienda: undefined,
-                puesto: '1',
-                tipoHurto: '1',
-                modalidadEmpleada: '',
-                detalleIntevencion: ''
-            };
 
             $scope.tendero = {
                 idTendero: '',
@@ -118,6 +118,43 @@ angular.module('odisea.intervencion.registrar',
                 sexoTendero: 'M'
             };
 
+            $scope.intervencion = {
+                idTendero: '',
+                fechaCompletaIntervencion: getDateActual(),
+                derivacionIntervencion: 'Comisaria',
+                lugarDerivacion: '',
+                dniPrevencionista: '',
+                nombrePrevencionista: '',
+                tienda: undefined,
+                idPuesto: '1',
+                tipoHurto: '1',
+                modalidadEmpleada: '',
+                detalleIntervencion: '',
+                totalRecuperado: 0.0
+            };
+
+            $scope.buscarNombrePrevencionista = function () {
+
+                $http.get('php/controller/TenderoControllerGet.php', {
+                    params: {
+                        accion: 'get_name_prevencionista_by_dni',
+                        dni: $scope.intervencion.dniPrevencionista
+                    }
+                }).success(function (data, status, headers, config) {
+
+                    if (data.msj == 'OK') {
+                        $log.log(data);
+                        $scope.intervencion.nombrePrevencionista = data.nombre;
+                    } else {
+                        $scope.intervencion.nombrePrevencionista = '';
+                    }
+                }).error(function (data, status, headers, config) {
+
+                    console.log("Error");
+                });
+            };
+
+
             $scope.isRegisterDniDataBase = false;
 
             //buscar el tendero en base al dni incertado
@@ -128,23 +165,23 @@ angular.module('odisea.intervencion.registrar',
                         dni: $scope.dni
                     }
                 }).success(function (data, status, headers, config) {
-                    $log.log(data);
 
                     if (data.msj == 'OK') {
 
                         var dlg = dialogs.confirm('Búsqueda', 'Tendero Encontrado. ¿Continuar registrando la Intervención?');
 
-                        dlg.result.then(function (btn) {
-
-                            $scope.isWorkingDni = true;
-                            $scope.isRegisterDniDataBase = true;
-
-                            $scope.tendero = data.tendero;
-                            $scope.tendero.nacimientoTendero = convertStringToDate(data.tendero.nacimientoTendero);
-
-                        }, function (btn) {
-                            $scope.tendero.dniTendero = '';
-                        });
+                        dlg.result.then(
+                                function (btn) {
+                                    $scope.isWorkingDni = true;
+                                    $scope.isRegisterDniDataBase = true;
+                                    $scope.tendero = data.tendero;
+                                    $scope.intervencion.idTendero = data.tendero.idTendero;
+                                    $scope.tendero.nacimientoTendero = convertStringToDate(data.tendero.nacimientoTendero);
+                                },
+                                function (btn) {
+                                    $scope.dni = '';
+                                }
+                        );
 
                     } else {
                         //NUEVO TENDERO
@@ -152,12 +189,12 @@ angular.module('odisea.intervencion.registrar',
                         dlg.result.then(
                                 function (btn) {
                                     $scope.isWorkingDni = true;
-                                    $scope.tendero.foto = 'resources/img/avatar_default.jpg';
-                                    $scope.tendero.dni = $scope.dni;
+                                    $scope.tendero.dniTendero = $scope.dni;
                                 },
                                 function (btn) {
-                                    $scope.tendero.dni = '';
-                                });
+                                    $scope.dni = '';
+                                }
+                        );
                     }
                 }).error(function (data, status, headers, config) {
 
@@ -166,36 +203,6 @@ angular.module('odisea.intervencion.registrar',
                 });
             };
 
-            $scope.saveIntervencion = function () {
-                //solo lo guarda localmente
-            };
-
-            $scope.saveNewTendero = function () {
-
-            };
-
-            //Visibilidad de los tabs
-            $scope.tab = {tab1: true, tab2: false, tab3: false
-            };
-
-            $scope.irPaso1 = function () {
-                $scope.tab = {tab1: true, tab2: false, tab3: false};
-            };
-
-            $scope.irPaso2 = function () {
-                $scope.tab = {tab1: false, tab2: true, tab3: false
-                };
-            };
-
-            $scope.irPaso3 = function () {
-                $scope.tab = {tab1: false, tab2: false, tab3: true
-                };
-            };
-
-
-            //PASO 2 PASO 2 PASO 2
-            //PASO 2 PASO 2 PASO 2
-            //PASO 2 PASO 2 PASO 2
             $scope.producto = {
                 codigo: '',
                 descripcion: '',
@@ -209,18 +216,34 @@ angular.module('odisea.intervencion.registrar',
             $scope.addProduct = function () {
 
                 var producto = angular.copy($scope.producto);
+
                 $scope.productos.push(producto);
-                //ES CONVENIENTE QUITAR LOS VALORES
-                $scope.producto = {codigo: '', descripcion: '', marca: '', cantidad: 0, precio: 0.0
-                };
+
+                calcularTotalRecuperado();
+
+                $scope.producto = {codigo: '', descripcion: '', marca: '', cantidad: 0, precio: 0.0};
+
+
             };
 
             $scope.removeProduct = function (indice) {
                 $scope.productos.splice(indice, 1);
+                calcularTotalRecuperado();
             };
 
 
+            function calcularTotalRecuperado() {
+                var total = 0.0;
+
+                angular.forEach($scope.productos, function (item) {
+                    total = total + item.cantidad * item.precio;
+                });
+
+                $scope.intervencion.totalRecuperado = total;
+            }
+
             function saveTendero() {
+
                 var postData = {
                     accion: 'registrar',
                     tendero: $scope.tendero
@@ -230,12 +253,15 @@ angular.module('odisea.intervencion.registrar',
                         .success(function (data, status, headers, config) {
 
                             $log.log("ON SAVED ", data);
+
                             if (data.msj == 'OK') {
-                                saveIncidente();
+                                $scope.tendero.idTendero = data.newid;
+                                $scope.intervencion.idTendero = data.newid;
+                                saveIntervencion();
                                 var dlg = dialogs.wait(undefined, undefined, _progress);
                                 _fakeWaitProgress();
                             } else {
-                                alert("El Dni ya se encuentra registrado con otro tendero");
+                                alert("El Dni ya se encuentra registrado con otro Tendero, Verifique");
                             }
                         })
                         .error(function (data, status, headers, config) {
@@ -255,13 +281,12 @@ angular.module('odisea.intervencion.registrar',
 
                             $log.log("ON UPDATED", data);
                             if (data.msj == 'OK') {
-                                saveIncidente();
+                                saveIntervencion();
                                 var dlg = dialogs.wait(undefined, undefined, _progress);
                                 _fakeWaitProgress();
                             } else {
-                                alert("El Dni ya se encuentra registrado con otro tendero");
+                                alert("El Dni ya se encuentra registrado con otro tendero. Verifique DNI");
                             }
-//                            
 
                         })
                         .error(function (data, status, headers, config) {
@@ -273,12 +298,12 @@ angular.module('odisea.intervencion.registrar',
             //save cab_incidente
             //enviamos el dni del tendero y buscamos en php el id del tendero en base al DNI
             //antes de guardar la incidencia
-            function saveIncidente() {
+            function saveIntervencion() {
+                
                 var postData = {
                     accion: 'registrar',
                     data: {
-                        dni: $scope.tendero.dni,
-                        incidente: $scope.intervencion,
+                        intervencion: $scope.intervencion,
                         productos: JSON.stringify($scope.productos)
                     }
                 };
@@ -289,19 +314,8 @@ angular.module('odisea.intervencion.registrar',
                 $http.post('php/controller/IntervencionControllerPost.php', postData)
                         .success(function (data, status, headers, config) {
                             $log.log(data);
-                            //subir la imagen si esta registrado y quiero actualizarlo
-                            //o subir la imagen si no esta registrado
 
-                            if ($scope.isRegisterDniDataBase) {
-                                console.log("11111");
-                                loadImagen();
-                            } else if (!$scope.isRegisterDniDataBase) {
-                                console.log("22222");
-                                loadImagen();
-                            } else {
-                                console.log("33333");
-                                $window.location.reload();
-                            }
+//                            loadImagen();
 
                         })
                         .error(function (data, status, headers, config) {
@@ -316,15 +330,15 @@ angular.module('odisea.intervencion.registrar',
                 var file = $scope.myFile;
                 var fd = new FormData();
                 fd.append('file', file);
-                fd.append('nombre', $scope.tendero.dni);
+                fd.append('nombre', $scope.tendero.idTendero);
 
-                $log.log(fd);
+                $log.log("FILE ZISE", file);
 
                 $http.post('php/controller/TenderoControllerLoad.php', fd, {
                     headers: {'Content-Type': undefined}
                 }).success(function (data, status, headers, config) {
                     $log.log("IMAGES RESPONSE ", data);
-                    $window.location.reload();
+//                    $state.go('intervenciones');
                 }).error(function (data, status, headers, config) {
 
                     $log.log("que paso acacacaca");
@@ -339,8 +353,8 @@ angular.module('odisea.intervencion.registrar',
                 $log.log("incidente: ", $scope.intervencion);
                 $log.log("productos: ", $scope.productos);
 
-                if (!$scope.isRegisterDniDataBase) {
 
+                if (!$scope.isRegisterDniDataBase) {
                     saveTendero();
                 } else {
                     updateTendero();

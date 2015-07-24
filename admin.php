@@ -96,9 +96,9 @@ if (@$_SESSION['acceso'] != true) {
                         <li class="treeview">
                             <a href=""><i class='fa fa-book'></i> <span>Reporte de Riesgos </span> <i class="fa fa-angle-left pull-right"></i></a>
                             <ul class="treeview-menu">
-                                <li><a href=""><i class="fa fa-file"></i><span>Registro de accidentes</span></a></li>
-                                <li><a href=""><i class="fa fa-file"></i><span>Registro de incidentes</span></a></li>                 
-                                <li><a href=""><i class='area-chart'></i><span>Graficas por mes</span></a></li>
+                                <li><a href="#"><i class="fa fa-file"></i><span>Registro de accidentes</span></a></li>
+                                <li><a href="#"><i class="fa fa-file"></i><span>Registro de incidentes</span></a></li>                 
+                                <li><a href="#"><i class='area-chart'></i><span>Graficas por mes</span></a></li>
 
                             </ul>
                         </li>
@@ -109,10 +109,10 @@ if (@$_SESSION['acceso'] != true) {
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="p"><i class="fa fa-circle-o"></i><span>Cctv</span></a></li>
-                                <li><a href="p"><i class="fa fa-circle-o"></i><span>Lci</span></a></li>
-                                <li><a href="p"><i class="fa fa-circle-o"></i><span>Antenas</span></a></li>
-                                <li><a href="p"><i class="fa fa-circle-o"></i><span>Radios</span></a></li>
+                                <li><a href="#"><i class="fa fa-circle-o"></i><span>Cctv</span></a></li>
+                                <li><a href="#"><i class="fa fa-circle-o"></i><span>Lci</span></a></li>
+                                <li><a href="#"><i class="fa fa-circle-o"></i><span>Antenas</span></a></li>
+                                <li><a href="#"><i class="fa fa-circle-o"></i><span>Radios</span></a></li>
                             </ul>
                         </li>
                         <li class="treeview">
@@ -122,17 +122,8 @@ if (@$_SESSION['acceso'] != true) {
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li>
-                                    <a href="#nosensomatizado"><i class="fa fa-circle-o"></i>
-                                        <span>Registro de Producto</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#nosensomatizados">
-                                        <i class="fa fa-circle-o"></i>
-                                        <span>Visualizar Registros</span>
-                                    </a>
-                                </li>
+                                <li><a href="#nosensomatizado"><i class="fa fa-circle-o"></i><span>Registro de Producto</span></a></li>
+                                <li><a href="#nosensomatizados"><i class="fa fa-circle-o"></i><span>Visualizar Registros</span></a></li>
                             </ul>
                         </li>
                         <li class="header"><center> <img src="resources/img/otros/logo.png" width="90%"></center> </li>
@@ -174,12 +165,12 @@ if (@$_SESSION['acceso'] != true) {
 
         <!--modales personlizadas de angular-->
         <script src="resources/assets/dialog/dialogs.js"></script> 
-        
+
         <!--CHART-->
         <script src="resources/assets/chart/Chart.min.js"></script>
         <script src="resources/assets/chart/angular-chart.min.js"></script>
-        
-        
+
+
         <script src="admin.js"></script>
         <script src="view/home/home.js"></script>
         <script src="view/intervencion/listar/listar_intervencion.js"></script>

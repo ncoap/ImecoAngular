@@ -16,13 +16,13 @@ angular.module('odisea.intervencion.listar',
         })
         .controller('intervencionesController', function ($state, $rootScope, $scope, $log, $http, $modal, $timeout) {
 
+
             $scope.maxSize = 10;
             $scope.bigTotalItems = 0;
             $scope.bigCurrentPage = 1;
             $scope.pageSize = 10;
 
             $scope.currentIntervenciones = [];
-
 
             $scope.intervenciones = [];
 
@@ -31,49 +31,6 @@ angular.module('odisea.intervencion.listar',
             };
 
             $scope.isLoadData = false;
-            $scope.listarIntervenciones = function () {
-                $scope.isLoadData = true;
-                $scope.bigCurrentPage = 1;
-                
-                var termBusqueda = $scope.termSearch;
-                if (!$scope.termSearch.tienda) {
-                    termBusqueda.tienda = '0';
-                }
-                
-                $http.get('php/controller/IntervencionControllerGet.php', {
-                    params: {
-                        accion: 'multiple',
-                        terminos: JSON.stringify(termBusqueda)
-                    }
-                }).success(function (data, status, headers, config) {
-                    $log.info(data);
-                    $scope.bigTotalItems = data.length;
-                    $scope.intervenciones = data;
-                    $scope.pageChanged();
-                    $scope.isLoadData = false;
-
-                }).error(function (data, status, headers, config) {
-                    console.log("Error");
-                });
-
-            };
-
-
-
-
-            $scope.showModalVerIntervencion = function (intervencionSelect) {
-                var modalInstance = $modal.open({
-                    templateUrl: 'view/intervencion/listar/detalle_intervencion.html',
-                    controller: 'VerIntervencionController',
-                    size: 'lg',
-                    resolve: {
-                        intervencionSelect: function () {
-                            return intervencionSelect;
-                        }
-                    }
-                });
-            };
-
 
             $scope.itemSearch = {
                 tienda: false,
@@ -96,6 +53,49 @@ angular.module('odisea.intervencion.listar',
                 fechaInicial: fechaDefault().ini,
                 fechaFinal: fechaDefault().fin
             };
+
+
+            $scope.listarIntervenciones = function () {
+                $scope.isLoadData = true;
+                $scope.bigCurrentPage = 1;
+
+                var termBusqueda = $scope.termSearch;
+
+                if (!$scope.termSearch.tienda) {
+                    termBusqueda.tienda = '0';
+                }
+
+                $http.get('php/controller/IntervencionControllerGet.php', {
+                    params: {
+                        accion: 'multiple',
+                        terminos: JSON.stringify(termBusqueda)
+                    }
+                }).success(function (data, status, headers, config) {
+                    $log.info(data);
+                    $scope.bigTotalItems = data.length;
+                    $scope.intervenciones = data;
+                    $scope.pageChanged();
+                    $scope.isLoadData = false;
+
+                }).error(function (data, status, headers, config) {
+                    console.log("Error");
+                });
+
+            };
+
+            $scope.showModalVerIntervencion = function (intervencionSelect) {
+                var modalInstance = $modal.open({
+                    templateUrl: 'view/intervencion/listar/detalle_intervencion.html',
+                    controller: 'VerIntervencionController',
+                    size: 'lg',
+                    resolve: {
+                        intervencionSelect: function () {
+                            return intervencionSelect;
+                        }
+                    }
+                });
+            };
+
 
             $scope.toggleItemSearch = function () {
 
@@ -155,7 +155,7 @@ angular.module('odisea.intervencion.listar',
 
 
                 var intervencion = {
-                    idIntervencion : inter.idIntervencion,
+                    idIntervencion: inter.idIntervencion,
                     fechaCompletaIntervencion: getDateFromString(inter.fechaCompletaIntervencion),
                     derivacionIntervencion: inter.derivacionIntervencion,
                     lugarDerivacion: inter.lugarDerivacion,
@@ -167,7 +167,9 @@ angular.module('odisea.intervencion.listar',
                     },
                     idPuesto: inter.idPuesto,
                     modalidadEmpleada: inter.modalidadEmpleada,
-                    detalleIntervencion: inter.detalleIntervencion
+                    detalleIntervencion: inter.detalleIntervencion,
+                    totalRecuperado: inter.totalRecuperado,
+                    tipoHurto: inter.tipoHurto
                 };
 
                 $http.get('php/controller/IntervencionControllerGet.php?accion=detalle&id=' + inter.idIntervencion)
@@ -281,39 +283,21 @@ angular.module('odisea.intervencion.listar',
         })
         .controller('VerIntervencionController', function ($log, $http, $scope, $modalInstance, intervencionSelect) {
 
-            $scope.intervencion = intervencionSelect;
+            $log.log("SELLECCIONADAD", intervencionSelect);
+            $scope.intervencionSelect = intervencionSelect;
 
-            $log.log($scope.intervencion);
+            $scope.mirandom = Math.random();
 
             $scope.detalleIntervencion = [];
 
-            $scope.total = 0.0;
-
-            $scope.getDetailIntervencion = function (id) {
-
-                $http.get('php/controller/IntervencionControllerGet.php?accion=detalle&id=' + id)
-                        .success(function (data, status, headers, config) {
-                            $log.log("detalle ", data);
-                            $scope.detalleIntervencion = data;
-                            $scope.calcularTotal(data);
-                        })
-                        .error(function (data, status, headers, config) {
-                            console.log("Error");
-                        });
-            };
-
-            $scope.calcularTotal = function (data) {
-
-                var total = 0.0;
-
-                angular.forEach(data, function (item) {
-                    total = total + item.precio * item.cantidad;
-                });
-
-                $scope.total = total;
-            };
-
-            $scope.getDetailIntervencion($scope.intervencion.id);
+            $http.get('php/controller/IntervencionControllerGet.php?accion=detalle&id=' + $scope.intervencionSelect.idIntervencion)
+                    .success(function (data, status, headers, config) {
+                        $log.log("detalle ", data);
+                        $scope.detalleIntervencion = data;
+                    })
+                    .error(function (data, status, headers, config) {
+                        console.log("Error");
+                    });
 
             $scope.cancel = function () {
                 $modalInstance.dismiss('cancel');

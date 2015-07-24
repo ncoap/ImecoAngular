@@ -44,17 +44,22 @@ class TenderoDao {
     }
 
     public function sp_registrar_tendero($tendero) {
-        $respuesta = array('msj' => 'OK', 'error' => '');
+        $respuesta = array('msj' => 'OK', 'error' => '','newid'=>'');
         try {
             $stm = $this->pdo->prepare("CALL sp_register_tendero(?,?,?,?,?,?,?)");
 
-           
             date_default_timezone_set('America/Lima');
-            $fechita = date('Y-m-d', strtotime(urldecode($tendero->nacimiento)));
+            $nacimientoTendero = date('Y-m-d', strtotime(urldecode($tendero->nacimientoTendero)));
 
-            $stm->execute(array($tendero->nombre, $tendero->apellido, $tendero->direccion, $tendero->dni, $tendero->tipo, $fechita, $tendero->sexo));
+            $stm->execute(array($tendero->nombreTendero, $tendero->apellidoTendero,$tendero->direccionTendero, $tendero->dniTendero, $tendero->idTipoTendero, $nacimientoTendero, $tendero->sexoTendero));
+        
+            $res = $stm->fetch(PDO::FETCH_OBJ); 
+            
+            $respuesta['newid'] = $res->newid;
+            
         } catch (PDOException $e) {
 
+            //EXCEPTION SI EL DNI NO LO VA A USAR
             $respuesta['msj'] = 'KO';
             $respuesta['error'] = $e->getMessage();
         }
@@ -68,14 +73,36 @@ class TenderoDao {
             $stm = $this->pdo->prepare("CALL sp_update_tendero(?,?,?,?,?,?,?,?)");
 
             date_default_timezone_set('America/Lima');
-            $fechita = date('Y-m-d', strtotime(urldecode($tendero->nacimientoTendero)));
+            $nacimientoTendero = date('Y-m-d', strtotime(urldecode($tendero->nacimientoTendero)));
 
             $stm->execute(array($tendero->idTendero, $tendero->nombreTendero, $tendero->apellidoTendero,
-                $tendero->direccionTendero, $tendero->dniTendero, $tendero->idTipoTendero, $fechita, $tendero->sexoTendero));
+                $tendero->direccionTendero, $tendero->dniTendero, $tendero->idTipoTendero, $nacimientoTendero, $tendero->sexoTendero));
         } catch (PDOException $e) {
 
             $respuesta['msj'] = 'KO';
             $respuesta['error'] = $e->getMessage();
+        }
+
+        return $respuesta;
+    }
+    
+     public function get_name_prevencionista_by_dni($dni) {
+        $respuesta = array('msj' => 'KO', 'nombre' => null);
+        try {
+            $stm = $this->pdo->prepare("CALL get_name_prevencionista_by_dni(?)");
+
+            $stm->execute(array($dni));
+
+            $res = $stm->fetch(PDO::FETCH_OBJ);
+            if ($res == false) {
+                
+            } else {
+                $respuesta['msj'] = 'OK';
+                $respuesta['nombre'] = $res->nombre;
+            }
+        } catch (PDOException $e) {
+
+            $respuesta['msj'] = 'KO' . $e->getMessage();
         }
 
         return $respuesta;

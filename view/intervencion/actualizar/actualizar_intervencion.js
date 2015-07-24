@@ -80,12 +80,12 @@ angular.module('odisea.intervencion.actualizar',
                     }
                 };
             }])
-        .controller('intervencionupController', function ($rootScope, $window, $scope, $log, $http, $modal, $timeout, dialogs) {
+        .controller('intervencionupController', function ($rootScope, $state, $window, $scope, $log, $http, $modal, $timeout, dialogs) {
 
             if ($rootScope.intervencionSeleccionada) {
 
                 $scope.image = 'view/imagen_tendero/default.jpg';
-        
+
                 $scope.mirandom = Math.random();
 
                 $scope.isUpload = false;
@@ -145,14 +145,25 @@ angular.module('odisea.intervencion.actualizar',
 
                     var producto = angular.copy($scope.producto);
                     $scope.productos.push(producto);
-                    //ES CONVENIENTE QUITAR LOS VALORES
+                    calcularTotalRecuperado();
                     $scope.producto = {codigo: '', descripcion: '', marca: '', cantidad: 0, precio: 0.0
                     };
                 };
 
                 $scope.removeProduct = function (indice) {
                     $scope.productos.splice(indice, 1);
+                    calcularTotalRecuperado();
                 };
+
+                function calcularTotalRecuperado() {
+                    var total = 0.0;
+
+                    angular.forEach($scope.productos, function (item) {
+                        total = total + item.cantidad * item.precio;
+                    });
+
+                    $scope.intervencion.totalRecuperado = total;
+                }
 
                 function updateTendero() {
 
@@ -166,9 +177,9 @@ angular.module('odisea.intervencion.actualizar',
                                 console.log(data);
 
                                 if (data.msj == 'OK') {
+                                    var dlg = dialogs.wait(undefined, undefined, 100);
+                                    $rootScope.$broadcast('dialogs.wait.progress', {'progress': 100});
                                     updateIntervencion();
-                                    var dlg = dialogs.wait(undefined, undefined, _progress);
-                                    _fakeWaitProgress();
                                 } else {
                                     alert("No se pudo actualizar al tendero");
                                     console.log(data);
@@ -204,6 +215,9 @@ angular.module('odisea.intervencion.actualizar',
                                 $log.log("RESPONSE UPDATE INTERVENCION", data);
                                 if ($scope.isNewImage) {
                                     loadImagen();
+                                } else {
+                                    $rootScope.$broadcast('dialogs.wait.complete');
+                                    $state.go('intervenciones');
                                 }
                             })
                             .error(function (data, status, headers, config) {
@@ -226,14 +240,12 @@ angular.module('odisea.intervencion.actualizar',
                     $http.post('php/controller/TenderoControllerLoad.php', fd, {
                         headers: {'Content-Type': undefined}
                     }).success(function (data, status, headers, config) {
-                        $log.log("IMAGES RESPONSE ", data);
-//                        $window.location.reload();
+                        $rootScope.$broadcast('dialogs.wait.complete');
+                        $state.go('intervenciones');
                     }).error(function (data, status, headers, config) {
                         $log.log("que paso acacacaca");
                     });
                 }
-
-                var _progress = 33;
 
                 $scope.SaveAll = function () {
 
@@ -242,7 +254,6 @@ angular.module('odisea.intervencion.actualizar',
                     $log.log("productos: ", $scope.productos);
 
                     if ($scope.isNewImage) {
-                        //verificar el model
                         if (!$scope.myFile) {
                             alert("Cargue una foto o deseleccione la opción");
                         } else {
@@ -307,21 +318,6 @@ angular.module('odisea.intervencion.actualizar',
                     return new Date(separate[0], separate[1] - 1, separate[2]);
                 }
 
-
-                ////funciones para el dialogo
-                var _fakeWaitProgress = function () {
-                    $timeout(function () {
-                        if (_progress < 100) {
-                            _progress += 33;
-                            $rootScope.$broadcast('dialogs.wait.progress', {'progress': _progress});
-                            _fakeWaitProgress();
-                        } else {
-                            $rootScope.$broadcast('dialogs.wait.complete');
-                            _progress = 0;
-
-                        }
-                    }, 1000);
-                };
 
             }
         });

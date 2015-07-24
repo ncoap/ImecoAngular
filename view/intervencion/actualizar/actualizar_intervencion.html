@@ -57,7 +57,6 @@
                                     <option value="3">Interno</option>
                                 </select>   
                             </div>
-
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Dirección:</label>
@@ -155,6 +154,16 @@
                                 <select class="form-control" ng-model="intervencion.tienda" required
                                         ng-options="ti.nombreTienda for ti in tiendas track by ti.idTienda">
                                     <option value="">-Seleccione-</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Tipo de Hurto</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" ng-model="intervencion.tipoHurto">
+                                    <option value="1">INTERNO</option>
+                                    <option value="2">EXTERNO</option>
                                 </select>
                             </div>
                         </div>
@@ -261,9 +270,9 @@
                                     <th>Código</th>
                                     <th>Descripción</th>
                                     <th>Marca</th>
-                                    <th>Cantidad</th>
-                                    <th>Precio</th>                                            
-                                    <th>Acción</th>
+                                    <th style="text-align: right">Cantidad</th>
+                                    <th style="text-align: right">Precio</th>                                            
+                                    <th style="text-align: center">Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -271,14 +280,20 @@
                                     <td>{{pro.codigo}}</td>
                                     <td>{{pro.descripcion}}</td>
                                     <td>{{pro.marca}}</td>
-                                    <td>{{pro.cantidad}}</td>
-                                    <td>{{pro.precio}}</td>                                            
-                                    <td>
+                                    <td style="text-align: right">{{pro.cantidad| currency:'S/. '}}</td>
+                                    <td style="text-align: right">{{pro.precio| currency:'S/. '}}</td>                                            
+                                    <td style="text-align: center">
                                         <button class="btn btn-danger btn-xs" ng-click="removeProduct($index)">Quitar</button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
+                        <div>
+                            <div class="pull-right">
+                                <strong>Total:</strong>
+                                <label style="font-size: 1em" class="label label-info">{{intervencion.totalRecuperado| currency:'S/. '}}</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

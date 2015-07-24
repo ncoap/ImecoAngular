@@ -10,7 +10,7 @@
             PASO 3
         </li>
     </ul>
-    
+
     <div class="tab-content" style="overflow:hidden">       
         <!--PASO 1-->
         <div class="tab-pane" ng-class="{'active': tab.tab1 == true}">
@@ -41,8 +41,8 @@
                         </div>
                         <div class="box-body">
                             <div style="text-align: center">
-                                <!--<img ng-src="{{tendero.foto}}?random=323527528432525.24234" width="100" height="100" style="margin-bottom: 1em" class="img-rounded">-->
-                                <img ng-src="view/imagen_tendero/{{tendero.idTendero}}.jpg?mirandom={{mirandom}}" err-src="view/imagen_tendero/default.jpg"
+                                <img ng-src="view/imagen_tendero/{{tendero.idTendero}}.jpg?mirandom={{mirandom}}" 
+                                     err-src="view/imagen_tendero/default.jpg"
                                      width="100" height="100" style="margin-bottom: 1em" class="img-rounded">
                             </div>
                             <form class="form-horizontal" name="nameFormNuevoTendero" ng-submit="saveNewTendero()">
@@ -138,13 +138,13 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Fecha de Intervención</label>
                             <div class="col-sm-9">
-                                <input type="datetime-local" ng-model="intervencion.fecha" class="form-control">
+                                <input type="datetime-local" ng-model="intervencion.fechaCompletaIntervencion" class="form-control">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Derivación del Tendero</label>
                             <div class="col-sm-3">
-                                <select ng-model="intervencion.derivacion" class="form-control">
+                                <select ng-model="intervencion.derivacionIntervencion" class="form-control">
                                     <option value="Comisaria">Comisaria</option>
                                     <option value="Dirincri">Dirincri</option>
                                     <option value="Interno">Interno</option>
@@ -153,7 +153,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <input type="text" ng-model="intervencion.lugarDerivacion" 
-                                       class="form-control" ng-disabled="intervencion.derivacion != 'Otros'"
+                                       class="form-control" ng-disabled="intervencion.derivacionIntervencion != 'Otros'"
                                        placeholder="Lugar de Derivacion">
                             </div>
 
@@ -162,21 +162,23 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Prevencionista</label>
                             <div class="col-sm-3">
-                                <input type="text" required="true" ng-minlength="8" ng-maxlength="15" ng-pattern="/^[0-9]+$/"
-                                       ng-pattern="onlyNumbers" ng-model="intervencion.prevencionista.dni"
+                                <input type="text" required="true" 
+                                       ng-minlength="8" ng-maxlength="15" maxlength="15" 
+                                       ng-pattern="/^[0-9]+$/" ng-blur="buscarNombrePrevencionista()"
+                                       ng-pattern="onlyNumbers" ng-model="intervencion.dniPrevencionista"
                                        class="form-control" placeholder="DNI">
                             </div>
                             <div class="col-sm-6">
                                 <input type="text" required="true"
-                                       ng-model="intervencion.prevencionista.nombre"
-                                       class="form-control" placeholder="Nombre del Prevencionista">
+                                       ng-model="intervencion.nombrePrevencionista"
+                                       class="form-control" placeholder="Apellidos y  Nombre">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Puesto</label>
                             <div class="col-sm-9">
-                                <select class="form-control" ng-model="intervencion.puesto">
+                                <select class="form-control" ng-model="intervencion.idPuesto">
                                     <option value="1">Tangos (Puerta)</option>
                                     <option value="2">Movil (Sala de Ventas)</option>
                                     <option value="3">Aguia (Cctv)</option>
@@ -224,12 +226,12 @@
                             <div class="col-sm-9">
                                 <!--ng-trim = false Nos Contabiliza tambien los caracteres en blanco y los saltos de linea--> 
                                 <textarea  style="resize: none" maxlength="600" ng-trim='false'
-                                           ng-model="intervencion.detalleIntevencion"
+                                           ng-model="intervencion.detalleIntervencion"
                                            class="form-control text-res" 
                                            rows="5">
                                 </textarea>
                                 <span class="label label-info">
-                                    {{600 - intervencion.detalleIntevencion.length}}         
+                                    {{600 - intervencion.detalleIntervencion.length}}         
                                     Caracteres Restantes
                                 </span>
                             </div>
@@ -246,48 +248,56 @@
 
         <!-- PASO 2 -->
         <div class="tab-pane" ng-class="{'active': tab.tab2 == true}">
-            <div class="box box-default">
+            <div class="box box-danger">
                 <div class="box-header">
                     <h3 class="box-title">Ingrese Producto</h3>
                 </div>
                 <div class="box-body">
                     <form class="form-horizontal" name="nameFormProducto">
                         <div class="form-group">
-                            <label class="col-xs-2 control-label">Codigo:</label>
-                            <div class="col-xs-5">
+                            <label class="col-md-2 control-label">Código:</label>
+                            <div class="col-md-4">
                                 <input type="text" class="form-control" ng-model="producto.codigo"
-                                       required="true"
+                                       required maxlength="30"
                                        placeholder="Código del Producto">
                             </div>
 
                         </div>
                         <div class="form-group">
-                            <label class="col-xs-2 control-label">Descripción:</label>
-                            <div class="col-xs-10">
-                                <input type="text" class="form-control" required="true" ng-model="producto.descripcion"
+                            <label class="col-md-2 control-label">Descripción:</label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" required
+                                       ng-model="producto.descripcion" maxlength="100"
                                        placeholder="Descripción del Producto">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-xs-2 control-label">Marca</label>
-                            <div class="col-xs-5">
-                                <input type="text" class="form-control" ng-model="producto.marca" placeholder="Marca del Producto">
+                            <label class="col-md-2 control-label">Marca:</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" maxlength="50" 
+                                       ng-model="producto.marca" placeholder="Marca del Producto">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-xs-2 control-label">Cantidad</label>
-                            <div class="col-xs-3">
-                                <input type="number" step="0.01" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" class="form-control" ng-model="producto.cantidad" required="true" min="0">
+                            <label class="col-md-2 control-label">Cantidad:</label>
+                            <div class="col-md-3">
+                                <input type="text" 
+                                       ng-pattern="/^(\d)+$/" 
+                                       class="form-control" 
+                                       ng-model="producto.cantidad" required="true" min="0">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-xs-2 control-label">Precio</label>
-                            <div class="col-xs-3">
-                                <input type="number" step="0.01" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" class="form-control" ng-model="producto.precio" required="true" min="0">
+                            <label class="col-md-2 control-label">Precio:</label>
+                            <div class="col-md-3">
+                                <input type="number" step="0.01" 
+                                       ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" 
+                                       class="form-control" ng-model="producto.precio" required min="0">
                             </div>
-                            <div class="col-xs-7">
-                                <button  class="btn btn-primary pull-right" ng-click="addProduct()" ng-disabled="!nameFormProducto.$valid"
+                            <div class="col-md-7">
+                                <button  class="btn btn-primary pull-right" 
+                                         ng-click="addProduct()" ng-disabled="!nameFormProducto.$valid"
                                          title="Agrege Producto a la Lista">Agregar</button>
                             </div>
                         </div>
@@ -307,9 +317,9 @@
                                     <th>Código</th>
                                     <th>Descripción</th>
                                     <th>Marca</th>
-                                    <th>Cantidad</th>
-                                    <th>Precio</th>                                            
-                                    <th>Acción</th>
+                                    <th style="text-align: right">Cantidad</th>
+                                    <th style="text-align: right">Precio</th>                                            
+                                    <th style="text-align: center">Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -317,14 +327,20 @@
                                     <td>{{pro.codigo}}</td>
                                     <td>{{pro.descripcion}}</td>
                                     <td>{{pro.marca}}</td>
-                                    <td>{{pro.cantidad}}</td>
-                                    <td>{{pro.precio}}</td>                                            
-                                    <td>
+                                    <td style="text-align: right">{{pro.cantidad | currency:'S/. '}}</td>
+                                    <td style="text-align: right">{{pro.precio | currency:'S/. '}}</td>                                            
+                                    <td style="text-align: center">
                                         <button class="btn btn-danger btn-xs" ng-click="removeProduct($index)">Quitar</button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
+                        <div>
+                            <div class="pull-right">
+                                <strong>Total:</strong>
+                                <label style="font-size: 1em" class="label label-info">{{intervencion.totalRecuperado | currency:'S/. '}}</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -347,12 +363,10 @@
                                 <div>
                                     <label>Foto del Tendero Size <1MB</label>
                                 </div>
-                                <img ng-src="{{image}}" width="300px" height="300px" >
+                                <img ng-src="{{image}}" width="300px" height="300px" class="img-rounded">
                             </div>
                             <div class="form-group">
-                                <!--<input file-model="myFile" type="file">-->
                                 <input my-upload type="file" ng-model="document" file-model="myFile" valid-file required>
-                                <!--<input type="file" file-model="myFile">-->
                             </div>
                         </div>
                     </form>
@@ -363,7 +377,7 @@
             <div>
                 <button ng-click="irPaso2()" class="pull-left btn btn-danger">Atrás</button> 
                 <button ng-click="SaveAll()" ng-disabled="!(modelito.$valid && !isUpload)" class="pull-right btn btn-primary btn-lg">
-                    Registrar Incidente</button>
+                    Registrar Intervención</button>
             </div>
         </div>
         <!--FIN PASO 3-->

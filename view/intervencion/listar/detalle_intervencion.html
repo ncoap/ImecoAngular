@@ -4,7 +4,6 @@
     </button>
     <h4>Intervención Seleccionada</h4>
 </div>
-
 <div class="modal-body"> 
     <div class="box box-danger">
         <div class="box-header">
@@ -16,28 +15,29 @@
                 <div class="col-xs-8">
                     <div>
                         <label>DNI: &nbsp;&nbsp;</label>
-                        <label style="color: #3c8dbc;font-size: 1.2em">{{intervencion.dni}}</label>
+                        <label style="color: #3c8dbc;font-size: 1.2em">{{intervencionSelect.dniTendero}}</label>
                     </div>
                     <div>
                         <label>Nombre: &nbsp;&nbsp;</label>
-                        <label style="color: #3c8dbc;font-size: 1.2em">{{intervencion.tendero}}</label>
+                        <label style="color: #3c8dbc;font-size: 1.2em">{{intervencionSelect.nombreCompletoTendero}}</label>
                     </div>
                     <div>
                         <label>Tipo de Tendero: &nbsp;&nbsp;</label>
-                        <label style="color: #3c8dbc;font-size: 1.2em">{{intervencion.tipoTendero}}</label>
+                        <label style="color: #3c8dbc;font-size: 1.2em">{{intervencionSelect.tipoTendero}}</label>
                     </div>
                     <div>
                         <label>Edad: &nbsp;&nbsp;</label>
-                        <label style="color: #3c8dbc;font-size: 1.2em">{{intervencion.edad}}</label>
+                        <label style="color: #3c8dbc;font-size: 1.2em">{{intervencionSelect.edadTendero}}</label>
                     </div>
                     <div>
                         <label>Sexo: &nbsp;&nbsp;</label>
-                        <label style="color: #3c8dbc;font-size: 1.2em">{{intervencion.sexo}}</label>
+                        <label style="color: #3c8dbc;font-size: 1.2em">{{intervencionSelect.sexoTendero}}</label>
                     </div>
                 </div>
 
                 <div class="col-xs-4" style="text-align: center">
-                    <img ng-src="view/imagen_tendero/{{intervencion.foto}}.jpg?random=323527528432525.24234" width="140" height="140" class="img-rounded">
+                    <img ng-src="view/imagen_tendero/{{intervencionSelect.idTendero}}.jpg?random={{mirandom}}" 
+                         width="140" height="140" class="img-rounded">
                 </div>
             </div>
         </div>
@@ -54,17 +54,17 @@
                         <th>Código</th>
                         <th>Producto</th>
                         <th>Marca</th>
-                        <th>Cantidad</th>
-                        <th>Precio</th>
+                        <th style="text-align: right">Cantidad</th>
+                        <th style="text-align: right">Precio</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="detalle in detalleIntervencion">
                         <td>{{detalle.codigo}}</td>
-                        <td>{{detalle.producto}}</td>
+                        <td>{{detalle.descripcion}}</td>
                         <td>{{detalle.marca}}</td>
-                        <td>{{detalle.cantidad}}</td>
-                        <td>{{detalle.precio}}</td>
+                        <td style="text-align: right">{{detalle.cantidad}}</td>
+                        <td style="text-align: right">{{detalle.precio | currency:'S/. '}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -72,7 +72,7 @@
         <div class="box-footer" style="text-align: right">
             <label>Total:&nbsp;&nbsp;&nbsp; </label>
             <label style="font-size: 1.5em" class="label label-info">
-                {{total}}
+                {{intervencionSelect.totalRecuperado | currency:'S/. '}}
             </label>
         </div>        
     </div>

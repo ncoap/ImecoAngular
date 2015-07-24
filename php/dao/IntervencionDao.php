@@ -19,7 +19,7 @@ class IntervencionDao {
         $col_tipoTendero = "tipo.id_tip_ten like '%%'";
 
         if ($terminos->tienda != '0') {
-            $col_tienda = "ti.id_tien = " . $terminos->tienda;
+            $col_tienda = "ti.id_tien = " . $terminos->tienda->idTienda;
         }
 
         if ($terminos->tipo != '0') {
@@ -59,31 +59,26 @@ class IntervencionDao {
         return $stm->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function sp_register_incidente($data) {
+    public function sp_register_intervencion($data) {
 
         $respuesta = array('msj' => 'OK', 'error' => '');
         try {
-            $stm = $this->pdo->prepare("CALL sp_register_cab_interven(?,?,?,?,?,?,?,?,?,?)");
+            $stm = $this->pdo->prepare("CALL sp_register_cab_interven(?,?,?,?,?,?,?,?,?,?,?,?)");
 
-            //validar dni
-            $resDni = $this->sp_get_id_tendero_by_dni($data->dni);
-            if ($resDni['res'] == true) {
-                $incidente = $data->incidente;
-                date_default_timezone_set('America/Lima');
-                //$fechitit = new DateTime($incidente->fecha);
-                //$fechita = $fechitit->format('Y-m-d H:i:s');
-                $fechita = date('Y-m-d H:i:s', strtotime(urldecode($incidente->fecha)));
+            $intervencion = $data->intervencion;
+            date_default_timezone_set('America/Lima');
+            $fechaCompletaIntervencion = date('Y-m-d H:i:s', strtotime(urldecode($intervencion->fechaCompletaIntervencion)));
 
-                $stm->execute(array($fechita, $resDni['id'], $incidente->derivacion, $incidente->lugarDerivacion, $incidente->prevencionista->dni, $incidente->prevencionista->nombre, $incidente->puesto, $incidente->modalidadEmpleada, $incidente->detalleIntevencion, $incidente->tienda));
+            $stm->execute(array(
+                $fechaCompletaIntervencion, $intervencion->idTendero, $intervencion->derivacionIntervencion, 
+                $intervencion->lugarDerivacion,$intervencion->dniPrevencionista, $intervencion->nombrePrevencionista, 
+                $intervencion->idPuesto,$intervencion->modalidadEmpleada, $intervencion->detalleIntervencion, 
+                $intervencion->tienda->idTienda, $intervencion->totalRecuperado, $intervencion->tipoHurto));
 
-                $res = $stm->fetch(PDO::FETCH_OBJ); //retorna el nuevo id
+            $res = $stm->fetch(PDO::FETCH_OBJ);
 
-                $this->sp_register_detalle($res->newid, $data->productos);
-            } else {
-                //
-                $respuesta['msj'] = 'KO';
-                $respuesta['error'] = 'Problemas al buscar al DNI';
-            }
+            $this->sp_register_detalle($res->newid, $data->productos);
+            
         } catch (PDOException $e) {
 
             $respuesta['msj'] = 'KO';
@@ -97,7 +92,7 @@ class IntervencionDao {
 
         $respuesta = array('msj' => 'OK', 'error' => '');
         try {
-            $stm = $this->pdo->prepare("CALL sp_update_cab_interven(?,?,?,?,?,?,?,?,?,?,?)");
+            $stm = $this->pdo->prepare("CALL sp_update_cab_interven(?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
             $intervencion = $data->intervencion;
             date_default_timezone_set('America/Lima');
@@ -106,7 +101,8 @@ class IntervencionDao {
 
             $stm->execute(array($intervencion->idIntervencion, $fechita, $data->idTendero, $intervencion->derivacionIntervencion, $intervencion->lugarDerivacion,
                 $intervencion->dniPrevencionista, $intervencion->nombrePrevencionista, $intervencion->idPuesto,
-                $intervencion->modalidadEmpleada, $intervencion->detalleIntervencion, $intervencion->tienda->idTienda));
+                $intervencion->modalidadEmpleada, $intervencion->detalleIntervencion, $intervencion->tienda->idTienda,
+                $intervencion->totalRecuperado,$intervencion->tipoHurto));
 
             $this->sp_delete_det_interven_by_num_inte($intervencion->idIntervencion);
 
@@ -162,12 +158,11 @@ class IntervencionDao {
     //SI GRABO LA CABECERA DEBEMOS DE GUARDAR EN ESE MOMENTO EL DETALLE
     public function sp_register_detalle($id_intervencion, $productos_json) {
 
-        //convertimos el stringify a un array creo??
         $productos = json_decode($productos_json);
 
         $msj = array('msj' => 'OK', 'error' => '');
 
-        //EL PDO COMINT ISRVE EN MOTORES INNODB
+        //EL PDO COMINT SIRVE EN MOTORES INNODB
         try {
 
             $db_conect_det = new Conexion();
