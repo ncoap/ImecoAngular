@@ -33,8 +33,10 @@ angular.module('odisea.home',
             };
         })
         .controller('homeController', function ($scope, $log, $http, $modal, $timeout) {
+            
+            $scope.mirandom = Math.random();
 
-            $scope.tenderos = [];
+            $scope.ultimasintervenciones = [];
 
             $scope.isLoadData = false;
 
@@ -47,7 +49,7 @@ angular.module('odisea.home',
                     }
                 }).success(function (data, status, headers, config) {
                     $log.info(data);
-                    $scope.tenderos = data;
+                    $scope.ultimasintervenciones = data;
                     $scope.isLoadData = false;
 
                 }).error(function (data, status, headers, config) {
@@ -56,9 +58,6 @@ angular.module('odisea.home',
             };
 
             $scope.listarUltimosTenderos();
-
-
-
 
             $scope.showModalDetalle = function (tenderoSelect) {
                 var modalInstance = $modal.open({

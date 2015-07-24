@@ -13,20 +13,22 @@
                 <thead>
                     <tr>
                         <th>Tienda</th>
-                        <th>Fecha</th>
+                        <th>Fecha de Intervención</th>
                         <th>Tendero</th>
                         <th style="text-align: center">Foto</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="tendero in tenderos">
-                        <td style="vertical-align: middle">{{tendero.tienda}}</td>
-                        <td style="vertical-align: middle">{{tendero.fecha}}</td>
-                        <td style="vertical-align: middle">{{tendero.tendero}}</td>
-
+                    <tr ng-repeat="intervencion in ultimasintervenciones">
+                        <td style="vertical-align: middle">{{intervencion.nombreTienda}}</td>
+                        <td style="vertical-align: middle">{{intervencion.fechaIntervencion}}</td>
+                        <td style="vertical-align: middle">{{intervencion.nombreCompletoTendero}}</td>
+                        
                         <td style="text-align: center">
-                            <img class="img-rounded" ng-src="{{tendero.foto}}" ng-click="showModalDetalle(tendero)"
-                                 err-src='view/imagen_tendero/default.jpg' style="height: 45px;width: 45px;cursor: pointer">
+                            <img class="img-rounded" ng-src="view/imagen_tendero/{{intervencion.idTendero}}.jpg?random={{mirandom}}" 
+                                 ng-click="showModalDetalle(intervencion)"
+                                 err-src='view/imagen_tendero/default.jpg' 
+                                 style="height: 45px;width: 45px;cursor: pointer">
                         </td>
                     </tr>
                 </tbody>

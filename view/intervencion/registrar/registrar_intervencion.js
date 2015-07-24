@@ -14,6 +14,23 @@ angular.module('odisea.intervencion.registrar',
                 }
             });
         })
+        .directive('errSrc', function () {
+            return {
+                link: function (scope, element, attrs) {
+                    scope.$watch(function () {
+                        return attrs['ngSrc'];
+                    }, function (value) {
+                        if (!value) {
+                            element.attr('src', attrs.errSrc);
+                        }
+                    });
+
+                    element.bind('error', function () {
+                        element.attr('src', attrs.errSrc);
+                    });
+                }
+            };
+        })
         .directive('validFile', function () {
             return {
                 require: 'ngModel',
@@ -65,6 +82,7 @@ angular.module('odisea.intervencion.registrar',
             }])
         .controller('intervencionController', function ($rootScope, $window, $scope, $log, $http, $modal, $timeout, dialogs) {
 
+            $scope.mirandom = Math.random();
 
             $scope.image = 'view/imagen_tendero/default.jpg';
 
@@ -74,7 +92,7 @@ angular.module('odisea.intervencion.registrar',
 
             $scope.dni = '';
 
-            $scope.incidente = {
+            $scope.intervencion = {
                 fecha: getDateActual(),
                 derivacion: 'Comisaria',
                 lugarDerivacion: '',
@@ -84,21 +102,20 @@ angular.module('odisea.intervencion.registrar',
                 },
                 tienda: undefined,
                 puesto: '1',
+                tipoHurto: '1',
                 modalidadEmpleada: '',
                 detalleIntevencion: ''
-
             };
 
             $scope.tendero = {
-                id: '',
-                dni: '',
-                nombre: '',
-                apellido: '',
-                tipo: 1,
-                direccion: '',
-                nacimiento: new Date(),
-                sexo: 'M',
-                foto: ''
+                idTendero: '',
+                dniTendero: '',
+                nombreTendero: '',
+                apellidoTendero: '',
+                idTipoTendero: 1,
+                direccionTendero: '',
+                nacimientoTendero: new Date(),
+                sexoTendero: 'M'
             };
 
             $scope.isRegisterDniDataBase = false;
@@ -122,20 +139,11 @@ angular.module('odisea.intervencion.registrar',
                             $scope.isWorkingDni = true;
                             $scope.isRegisterDniDataBase = true;
 
-                            $scope.tendero = {
-                                id: data.tendero.id,
-                                dni: data.tendero.dni,
-                                nombre: data.tendero.nombre,
-                                apellido: data.tendero.apellido,
-                                tipo: data.tendero.tipo,
-                                direccion: data.tendero.direccion,
-                                nacimiento: convertStringToDate(data.tendero.nacimiento),
-                                sexo: data.tendero.sexo,
-                                foto: data.tendero.foto
-                            };
+                            $scope.tendero = data.tendero;
+                            $scope.tendero.nacimientoTendero = convertStringToDate(data.tendero.nacimientoTendero);
 
                         }, function (btn) {
-                            $scope.tendero.dni = '';
+                            $scope.tendero.dniTendero = '';
                         });
 
                     } else {
@@ -167,33 +175,20 @@ angular.module('odisea.intervencion.registrar',
             };
 
             //Visibilidad de los tabs
-            $scope.showTab = {
-                tab1: true,
-                tab2: false,
-                tab3: false
+            $scope.tab = {tab1: true, tab2: false, tab3: false
             };
 
             $scope.irPaso1 = function () {
-                $scope.showTab = {
-                    tab1: true,
-                    tab2: false,
-                    tab3: false
-                };
+                $scope.tab = {tab1: true, tab2: false, tab3: false};
             };
 
             $scope.irPaso2 = function () {
-                $scope.showTab = {
-                    tab1: false,
-                    tab2: true,
-                    tab3: false
+                $scope.tab = {tab1: false, tab2: true, tab3: false
                 };
             };
 
             $scope.irPaso3 = function () {
-                $scope.showTab = {
-                    tab1: false,
-                    tab2: false,
-                    tab3: true
+                $scope.tab = {tab1: false, tab2: false, tab3: true
                 };
             };
 
@@ -283,7 +278,7 @@ angular.module('odisea.intervencion.registrar',
                     accion: 'registrar',
                     data: {
                         dni: $scope.tendero.dni,
-                        incidente: $scope.incidente,
+                        incidente: $scope.intervencion,
                         productos: JSON.stringify($scope.productos)
                     }
                 };
@@ -341,22 +336,15 @@ angular.module('odisea.intervencion.registrar',
             $scope.SaveAll = function () {
 
                 $log.log("tendero", $scope.tendero);
-                $log.log("incidente: ", $scope.incidente);
+                $log.log("incidente: ", $scope.intervencion);
                 $log.log("productos: ", $scope.productos);
 
-//                $log.log($scope.isRegisterDniDataBase);
                 if (!$scope.isRegisterDniDataBase) {
 
                     saveTendero();
-//                    loadImagen();
-
                 } else {
-
                     updateTendero();
-//                    loadImagen();
                 }
-
-
 
             };
 
@@ -383,8 +371,6 @@ angular.module('odisea.intervencion.registrar',
                 return new Date(separate[0], separate[1] - 1, separate[2]);
             }
 
-
-
             ////funciones para el dialogo
             var _fakeWaitProgress = function () {
                 $timeout(function () {
@@ -400,5 +386,5 @@ angular.module('odisea.intervencion.registrar',
                 }, 1000);
             };
 
-
         });
+        

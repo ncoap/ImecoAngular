@@ -6,6 +6,7 @@ angular.module('ngOdisea', [
     'odisea.intervencion.registrar',
     'odisea.intervencion.listar',
     'odisea.intervencion.actualizar',
+    'odisea.intervencion.consolidado',
     'odisea.sensomatizado.registrar',
     'odisea.sensomatizado.listar',
     'odisea.sensomatizado.actualizar'

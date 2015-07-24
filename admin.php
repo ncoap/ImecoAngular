@@ -22,6 +22,7 @@ if (@$_SESSION['acceso'] != true) {
         <link rel="stylesheet" href="resources/assets/theme/_all-skins.min.css"/>
         <link rel="stylesheet" href="resources/css/transition.css"/>
         <link rel='stylesheet prefetch' href='http://daneden.github.io/animate.css/animate.min.css'>
+        <link rel="stylesheet" href="resources/assets/chart/angular-chart.css"/>
         <link rel="stylesheet" href="resources/assets/dialog/dialogs.min.css"/>
         <link rel="stylesheet" href="resources/css/imeco.css"/>
     </head>
@@ -88,7 +89,7 @@ if (@$_SESSION['acceso'] != true) {
                             <ul class="treeview-menu">
                                 <li><a href="#intervencion"><i class="fa fa-file"></i><span>Registrar Intervención</span></a></li>
                                 <li><a href="#intervenciones"><i class="fa fa-file"></i><span>Visualizar Registros</span></a></li>
-                                <li><a href="#"><i class='fa fa-book'></i><span>Gráficas por Mes</span></a></li>
+                                <li><a href="#consolidado"><i class='fa fa-book'></i><span>Gráficas por Mes</span></a></li>
                                 <li><a href="#"><i class='fa fa-file'></i><span>Enlaces</span></a></li>
                             </ul>
                         </li>
@@ -173,11 +174,18 @@ if (@$_SESSION['acceso'] != true) {
 
         <!--modales personlizadas de angular-->
         <script src="resources/assets/dialog/dialogs.js"></script> 
+        
+        <!--CHART-->
+        <script src="resources/assets/chart/Chart.min.js"></script>
+        <script src="resources/assets/chart/angular-chart.min.js"></script>
+        
+        
         <script src="admin.js"></script>
         <script src="view/home/home.js"></script>
         <script src="view/intervencion/listar/listar_intervencion.js"></script>
         <script src="view/intervencion/registrar/registrar_intervencion.js"></script>
         <script src="view/intervencion/actualizar/actualizar_intervencion.js"></script>
+        <script src="view/intervencion/consolidado/consolidado.js"></script>
         <script src="view/sensomatizado/listar/listar_sensomatizado.js"></script>
         <script src="view/sensomatizado/registrar/registrar_sensomatizado.js"></script>
         <script src="view/sensomatizado/actualizar/actualizar_sensomatizado.js"></script>

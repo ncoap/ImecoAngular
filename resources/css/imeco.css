@@ -47,3 +47,14 @@
     width: 30%;
     text-align: center
 }
+
+.imeco-tab-2{
+    padding:1em 2em;
+    text-align: center;
+    cursor: pointer;
+    color: #0072b1;
+    font-weight: bold;
+    /*background-color: #d6e0f5;*/
+    background-color: #f3f3f3;
+    border: 1px solid #3c8dbc;
+}
