@@ -1,16 +1,16 @@
-angular.module('odisea.intervencion.consolidado',
+angular.module('odisea.intervencion.ejecutivo',
         ['ui.router', 'ngAnimate', 'ngResource', 'ui.bootstrap', 'chart.js'])
         .config(function config8($stateProvider) {
-            $stateProvider.state('consolidado', {
-                url: '/consolidado',
+            $stateProvider.state('ejecutivo', {
+                url: '/ejecutivo',
                 views: {
                     'main': {
-                        templateUrl: 'view/intervencion/consolidado/consolidado.html',
-                        controller: 'consolidadoController'
+                        templateUrl: 'view/intervencion/reporte/ejecutivo.html',
+                        controller: 'ejecutivoController'
                     }
                 },
                 data: {
-                    pageTitle: 'Consolidado Intervenciones'
+                    pageTitle: 'Reporte Ejecutivo'
                 }
             });
         })
@@ -25,7 +25,15 @@ angular.module('odisea.intervencion.consolidado',
                     datasetFill: false
                 });
             }])
-        .controller('consolidadoController', function ($scope, $log, $http) {
+        .controller('ejecutivoController', function ($scope, $log, $http) {
+
+            $scope.busqueda = {
+                fecha: new Date(),
+                opcion: '1',
+                tipoFecha: 'ANUAL',
+                horario: '00:00:00 23:59:59',
+                sexo: ''
+            };
 
             $scope.total = {
                 cantidadInternos: 0,
@@ -62,7 +70,6 @@ angular.module('odisea.intervencion.consolidado',
 
             $scope.allData = [];
             $scope.allData2 = [];
-            $scope.fechaBusqueda = new Date();
             $scope.tituloMes = "";
             $scope.tituloAnio = "";
             $scope.tienda = {
@@ -101,13 +108,26 @@ angular.module('odisea.intervencion.consolidado',
             //PETICION AL SERVER
             $scope.buscarData = function () {
 
-                $scope.tituloMes = nombreMeses[$scope.fechaBusqueda.getMonth()];
-                $scope.tituloAnio = $scope.fechaBusqueda.getFullYear();
+                if ($scope.busqueda.tipoFecha == 'ANUAL') {
+
+                    $scope.busqueda.opcion = '2';
+                    $scope.tituloMes = 'REPORTE EJECUTIVO ANUAL : AÑO';
+                    $scope.tituloAnio = $scope.busqueda.fecha.getFullYear();
+
+                } else {
+                    $scope.busqueda.opcion = '1';
+                    $scope.tituloMes = 'REPORTE EJECUTIVO MENSUAL : '+ nombreMeses[$scope.busqueda.fecha.getMonth()];
+                    $scope.tituloAnio = $scope.busqueda.fecha.getFullYear();
+                }
 
                 $http.get('php/controller/GraficasControllerGet.php', {
                     params: {
-                        accion: 'consolidados',
-                        fecha: $scope.fechaBusqueda
+                        accion: 'ejecutivo',
+                        opcion: $scope.busqueda.opcion,
+                        fecha: $scope.busqueda.fecha,
+                        horaInicial: $scope.busqueda.horario.split(' ')[0],
+                        horaFinal: $scope.busqueda.horario.split(' ')[1],
+                        sexo: $scope.busqueda.sexo
                     }})
                         .success(function (data, status, headers, config) {
 

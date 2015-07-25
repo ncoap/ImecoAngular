@@ -26,12 +26,15 @@ switch ($op) {
             $_SESSION['acceso'] = true;
             $_SESSION['usuario'] = $respuesta->usuario;
             $_SESSION['rol'] = $respuesta->rol;
-
+            
             if ($respuesta->rol == 'ADMINISTRADOR') {
                 header('Location: ../../admin.php');
-            } else {
-//                JEFE DE TIENDA
-                header('Location: ../../jefe.php');
+            } else if ($respuesta->rol == 'JEFE DE ODISEA') {
+                header('Location: ../../odisea.php');
+            } else if ($respuesta->rol == 'GERENTE DE PREVENCION') {
+                header('Location: ../../oeschle1.php');
+            } else if ($respuesta->rol == 'JEFE DE PREVENCION') {
+                header('Location: ../../oeschle2.php');
             }
         }
         break;

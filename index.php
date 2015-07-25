@@ -1,11 +1,17 @@
 <?php
 session_start();
 if (@$_SESSION['acceso'] == true) {
+    
     if (@$_SESSION['rol'] == 'ADMINISTRADOR') {
         header('Location: admin.php');
-    } else {
-        header('Location: jefe.php');
+    } else if (@$_SESSION['rol'] == 'JEFE DE ODISEA') {
+        header('Location: odisea.php');
+    } else if (@$_SESSION['rol'] == 'GERENTE DE PREVENCION') {
+        header('Location: oeschle1.php');
+    } else if (@$_SESSION['rol'] == 'JEFE DE PREVENCION') {
+        header('Location: oeschle2.php');
     }
+    
 }
 ?>
 <!DOCTYPE html>
@@ -25,7 +31,7 @@ if (@$_SESSION['acceso'] == true) {
     <body>
 
     <center>
-        <img class="logologin"  src="view/img/logo.png">
+        <img style="margin-top: 32px" class="loologin animated infinite pulse"  src="view/img/logo.png">
     </center>
 
     <div class='victor-form'>
@@ -44,7 +50,7 @@ if (@$_SESSION['acceso'] == true) {
             <div>
                 <button class='animated infinite pulse btn btn-block victor-button'>Login</button>
             </div>
-            
+
         </form>
     </div>
 

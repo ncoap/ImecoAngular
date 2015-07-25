@@ -27,23 +27,23 @@ class GraficaDao {
         $tiendas = array();
         $intervenciones = array();
         $recuperado = array();
-        
+
         foreach ($rs as $inter) {
-            array_push($tiendas,$inter->tienda);
-            array_push($intervenciones,$inter->intervenciones);
-            array_push($recuperado,$inter->recuperado);
+            array_push($tiendas, $inter->tienda);
+            array_push($intervenciones, $inter->intervenciones);
+            array_push($recuperado, $inter->recuperado);
         }
-        
-        array_push($total, $tiendas,$intervenciones,$recuperado,$rs);
+
+        array_push($total, $tiendas, $intervenciones, $recuperado, $rs);
 
         return $total;
     }
-    
+
     public function chart_recuperos_por_prevencionista($idtienda, $fecha) {
         date_default_timezone_set('America/Lima');
         $fechaActual = date('Y-m-d', strtotime(urldecode($fecha)));
         $stm = $this->pdo->prepare("CALL chart_recuperos_por_prevencionista(?,?)");
-        $stm->execute(array($idtienda , $fechaActual));
+        $stm->execute(array($idtienda, $fechaActual));
 
         $rs = $stm->fetchAll(PDO::FETCH_OBJ);
 
@@ -51,18 +51,66 @@ class GraficaDao {
         $label = array();
         $cantidades = array();
         $montos = array();
-        
+
         //falta concatener
-        
-        foreach ($rs as $key=>$inter) {
+
+        foreach ($rs as $key => $inter) {
 //            array_push($label,$inter->nombrePrevencionista . $inter->descripcionProducto);
 //            array_push($label,$inter->descripcionProducto.' - '.$inter->nombrePrevencionista);
-            array_push($label,$key+1);
-            array_push($cantidades,$inter->cantidadProducto);
-            array_push($montos,$inter->totalProducto);
+            array_push($label, $key + 1);
+            array_push($cantidades, $inter->cantidadProducto);
+            array_push($montos, $inter->totalProducto);
         }
-        
-        array_push($total, $label,$cantidades,$montos,$rs);
+
+        array_push($total, $label, $cantidades, $montos, $rs);
+
+        return $total;
+    }
+
+    public function chart_ejecutivo($opcion, $fecha, $hora_inicial, $hora_final, $sexo) {
+        date_default_timezone_set('America/Lima');
+        $fechaActual = date('Y-m-d', strtotime(urldecode($fecha)));
+        $stm = $this->pdo->prepare("CALL char_ejecutivo_anual(?,?,?,?,?)");
+        $stm->execute(array($opcion, $fechaActual, $hora_inicial, $hora_final, $sexo));
+
+        $rs = $stm->fetchAll(PDO::FETCH_OBJ);
+
+        $total = array();
+        $tiendas = array();
+        $intervenciones = array();
+        $recuperado = array();
+
+        foreach ($rs as $inter) {
+            array_push($tiendas, $inter->tienda);
+            array_push($intervenciones, $inter->intervenciones);
+            array_push($recuperado, $inter->recuperado);
+        }
+
+        array_push($total, $tiendas, $intervenciones, $recuperado, $rs);
+
+        return $total;
+    }
+    
+    public function chart_ejecutivo_2($opcion, $fecha, $hora_inicial, $hora_final, $sexo) {
+        date_default_timezone_set('America/Lima');
+        $fechaActual = date('Y-m-d', strtotime(urldecode($fecha)));
+        $stm = $this->pdo->prepare("CALL char_ejecutivo_anual(?,?,?,?,?)");
+        $stm->execute(array($opcion, $fechaActual, $hora_inicial, $hora_final, $sexo));
+
+        $rs = $stm->fetchAll(PDO::FETCH_OBJ);
+
+        $total = array();
+        $tiendas = array();
+        $intervenciones = array();
+        $recuperado = array();
+
+        foreach ($rs as $inter) {
+            array_push($tiendas, $inter->tienda);
+            array_push($intervenciones, $inter->intervenciones);
+            array_push($recuperado, $inter->recuperado);
+        }
+
+        array_push($total, $tiendas, $intervenciones, $recuperado, $rs);
 
         return $total;
     }

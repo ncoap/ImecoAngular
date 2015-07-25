@@ -4,8 +4,8 @@ session_start();
 if (@$_SESSION['acceso'] != true) {
     header('Location: index.php');
 } else {
-    if (@$_SESSION['rol'] == 'JEFE DE ODISEA') {
-        header('Location: odisea.php');
+    if (@$_SESSION['rol'] == 'ADMINISTRADOR') {
+        header('Location: admin.php');
     } else if (@$_SESSION['rol'] == 'GERENTE DE PREVENCION') {
         header('Location: oeschle1.php');
     } else if (@$_SESSION['rol'] == 'JEFE DE PREVENCION') {
@@ -31,7 +31,7 @@ if (@$_SESSION['acceso'] != true) {
         <link rel="stylesheet" href="resources/css/imeco.css"/>
     </head>
 
-    <body class="skin-red sidebar-mini">
+    <body class="skin-blue sidebar-mini">
         <div class="wrapper">
             <header class="main-header">
                 <a href="index.php" class="logo">
@@ -94,7 +94,7 @@ if (@$_SESSION['acceso'] != true) {
                                 <li><a href="#intervencion"><i class="fa fa-file"></i><span>Registrar Intervención</span></a></li>
                                 <li><a href="#intervenciones"><i class="fa fa-file"></i><span>Visualizar Registros</span></a></li>
                                 <li><a href="#consolidado"><i class='fa fa-book'></i><span>Gráficas por Mes</span></a></li>
-                                <li><a href="#ejecutivo"><i class='fa fa-file'></i><span>Reporte Ejecutivo</span></a></li>
+                                <li><a href="#"><i class='fa fa-file'></i><span>Enlaces</span></a></li>
                             </ul>
                         </li>
                         <li class="treeview">
@@ -181,7 +181,6 @@ if (@$_SESSION['acceso'] != true) {
         <script src="view/intervencion/registrar/registrar_intervencion.js"></script>
         <script src="view/intervencion/actualizar/actualizar_intervencion.js"></script>
         <script src="view/intervencion/consolidado/consolidado.js"></script>
-        <script src="view/intervencion/reporte/ejecutivo.js"></script>
         <script src="view/sensomatizado/listar/listar_sensomatizado.js"></script>
         <script src="view/sensomatizado/registrar/registrar_sensomatizado.js"></script>
         <script src="view/sensomatizado/actualizar/actualizar_sensomatizado.js"></script>

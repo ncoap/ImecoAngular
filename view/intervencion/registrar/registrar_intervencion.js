@@ -315,7 +315,7 @@ angular.module('odisea.intervencion.registrar',
                         .success(function (data, status, headers, config) {
                             $log.log(data);
 
-//                            loadImagen();
+                            loadImagen();
 
                         })
                         .error(function (data, status, headers, config) {

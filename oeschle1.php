@@ -4,29 +4,34 @@ session_start();
 if (@$_SESSION['acceso'] != true) {
     header('Location: index.php');
 } else {
-   if (@$_SESSION['rol'] == 'ADMINISTRADOR') {
+    if (@$_SESSION['rol'] == 'ADMINISTRADOR') {
         header('Location: admin.php');
-    } 
+    } else if (@$_SESSION['rol'] == 'JEFE DE ODISEA') {
+        header('Location: odisea.php');
+    } else if (@$_SESSION['rol'] == 'JEFE DE PREVENCION') {
+        header('Location: oeschle2.php');
+    }
 }
 ?>
-
 <!DOCTYPE html>
-<html lang="es" ng-app="ngImeco" ng-controller="ImecoController">
+<html lang="es" ng-app="ngOdisea" ng-controller="OdiseaController">
 
     <head>
         <meta charset="UTF-8">
         <title ng-bind="pageTitle"></title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
         <link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css'>
         <link rel="stylesheet" href="resources/assets/bootstrap/css/bootstrap.min.css"/>
         <link rel="stylesheet" href="resources/assets/theme/admin.lte.css"/>
         <link rel="stylesheet" href="resources/assets/theme/_all-skins.min.css"/>
         <link rel="stylesheet" href="resources/css/transition.css"/>
+        <link rel='stylesheet prefetch' href='http://daneden.github.io/animate.css/animate.min.css'>
+        <link rel="stylesheet" href="resources/assets/chart/angular-chart.css"/>
         <link rel="stylesheet" href="resources/assets/dialog/dialogs.min.css"/>
         <link rel="stylesheet" href="resources/css/imeco.css"/>
     </head>
 
-    <body class="skin-blue sidebar-mini">
+    <body class="skin-red sidebar-mini">
         <div class="wrapper">
             <header class="main-header">
                 <a href="index.php" class="logo">
@@ -58,9 +63,6 @@ if (@$_SESSION['acceso'] != true) {
                                     </li>
 
                                     <li class="user-footer">
-                                        <div class="pull-left">
-                                            <a href="" class="btn btn-default btn-flat">Perfil</a>
-                                        </div>
                                         <div class="pull-right">
                                             <a id="id-btn-exit" href="php/controller/LoginController.php?op=2" class="btn btn-default btn-flat">Salir</a>
                                         </div>
@@ -78,7 +80,7 @@ if (@$_SESSION['acceso'] != true) {
                             <img src="resources/img/otros/user2-160x160.jpg" class="img-circle" alt="User Image" />
                         </div>
                         <div class="pull-left info">
-                            <p> <?= $_SESSION['rol'] ?> </p>
+                            <p> <?= $_SESSION['rol'] ?>  </p>
                             <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                         </div>
                     </div>
@@ -89,18 +91,18 @@ if (@$_SESSION['acceso'] != true) {
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="#intervencion"><i class="fa fa-file"></i><span>Registrar Intervención</span></a></li>
+                                <li><a href="#"><i class="fa fa-file"></i><span>Registrar Intervención</span></a></li>
                                 <li><a href="#intervenciones"><i class="fa fa-file"></i><span>Visualizar Registros</span></a></li>
-                                <li><a href="#home"><i class='fa fa-book'></i><span>Gráficas por Mes</span></a></li>
-                                <li><a href="#enlaces"><i class='fa fa-file'></i><span>Enlaces</span></a></li>
+                                <li><a href="#consolidado"><i class='fa fa-book'></i><span>Gráficas por Mes</span></a></li>
+                                <li><a href="#"><i class='fa fa-file'></i><span>Enlaces</span></a></li>
                             </ul>
                         </li>
                         <li class="treeview">
                             <a href=""><i class='fa fa-book'></i> <span>Reporte de Riesgos </span> <i class="fa fa-angle-left pull-right"></i></a>
                             <ul class="treeview-menu">
-                                <li><a href=""><i class="fa fa-file"></i><span>Registro de accidentes</span></a></li>
-                                <li><a href=""><i class="fa fa-file"></i><span>Registro de incidentes</span></a></li>                 
-                                <li><a href=""><i class='area-chart'></i><span>Graficas por mes</span></a></li>
+                                <li><a href="#"><i class="fa fa-file"></i><span>Registro de accidentes</span></a></li>
+                                <li><a href="#"><i class="fa fa-file"></i><span>Registro de incidentes</span></a></li>                 
+                                <li><a href="#"><i class='area-chart'></i><span>Graficas por mes</span></a></li>
 
                             </ul>
                         </li>
@@ -111,10 +113,10 @@ if (@$_SESSION['acceso'] != true) {
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="p"><i class="fa fa-circle-o"></i><span>Cctv</span></a></li>
-                                <li><a href="p"><i class="fa fa-circle-o"></i><span>Lci</span></a></li>
-                                <li><a href="p"><i class="fa fa-circle-o"></i><span>Antenas</span></a></li>
-                                <li><a href="p"><i class="fa fa-circle-o"></i><span>Radios</span></a></li>
+                                <li><a href="#"><i class="fa fa-circle-o"></i><span>Cctv</span></a></li>
+                                <li><a href="#"><i class="fa fa-circle-o"></i><span>Lci</span></a></li>
+                                <li><a href="#"><i class="fa fa-circle-o"></i><span>Antenas</span></a></li>
+                                <li><a href="#"><i class="fa fa-circle-o"></i><span>Radios</span></a></li>
                             </ul>
                         </li>
                         <li class="treeview">
@@ -124,17 +126,8 @@ if (@$_SESSION['acceso'] != true) {
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li>
-                                    <a href="#nosensomatizado"><i class="fa fa-circle-o"></i>
-                                        <span>Registro de Producto</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#nosensomatizados">
-                                        <i class="fa fa-circle-o"></i>
-                                        <span>Visualizar Registros</span>
-                                    </a>
-                                </li>
+                                <li><a href="#"><i class="fa fa-circle-o"></i><span>Registro de Producto</span></a></li>
+                                <li><a href="#nosensomatizados"><i class="fa fa-circle-o"></i><span>Visualizar Registros</span></a></li>
                             </ul>
                         </li>
                         <li class="header"><center> <img src="resources/img/otros/logo.png" width="90%"></center> </li>
@@ -149,8 +142,8 @@ if (@$_SESSION['acceso'] != true) {
 
             <footer class="main-footer imeco-center" >
                 <strong>Desarrollado Por 
-                    <a target="_blank" href="http://www.innovatechperusac.com/">INNOVATECHPERÚ.</a>
-                </strong> Copyright © 2015
+                    <a target="_blank" href="http://www.innovatechperusac.com/">INNOVATECHPERÚ.</a></strong>
+                Copyright © 2015
             </footer>
         </div>
 
@@ -173,14 +166,24 @@ if (@$_SESSION['acceso'] != true) {
         <script src="resources/assets/angular/texteditor/textAngular-sanitize.min.js"></script>
         <script src="resources/assets/angular/texteditor/textAngular.min.js"></script>  
 
+
         <!--modales personlizadas de angular-->
         <script src="resources/assets/dialog/dialogs.js"></script> 
-        <script src="app.js"></script>
+
+        <!--CHART-->
+        <script src="resources/assets/chart/Chart.min.js"></script>
+        <script src="resources/assets/chart/angular-chart.min.js"></script>
+
+
+        <script src="admin.js"></script>
         <script src="view/home/home.js"></script>
-        <script src="view/intervencion/intervencion.js"></script>
-        <script src="view/intervenciones/intervenciones.js"></script>
-        <script src="view/nosensomatizados/nosensomatizados.js"></script>
-        <script src="view/nosensomatizado/nosensomatizado.js"></script>
+        <script src="view/intervencion/listar/listar_intervencion.js"></script>
+        <script src="view/intervencion/registrar/registrar_intervencion.js"></script>
+        <script src="view/intervencion/actualizar/actualizar_intervencion.js"></script>
+        <script src="view/intervencion/consolidado/consolidado.js"></script>
+        <script src="view/sensomatizado/listar/listar_sensomatizado.js"></script>
+        <script src="view/sensomatizado/registrar/registrar_sensomatizado.js"></script>
+        <script src="view/sensomatizado/actualizar/actualizar_sensomatizado.js"></script>
 
     </body>
 </html>
