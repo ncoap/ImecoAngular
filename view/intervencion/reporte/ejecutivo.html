@@ -3,39 +3,35 @@
         <li id="id-tab-1" class="imeco-tab-2" ng-class="{'active': tab.tab1 == true}" ng-click="showTab1()">
             INDICADOR TIENDAS
         </li>
-        <li id="id-tab-2" class="imeco-tab-2" ng-class="{'active': tab.tab2 == true}" ng-click="showTab2()">
-            RECUPEROS POR TIENDA
-        </li>
-        <li id="id-tab-3" class="imeco-tab-2" ng-class="{'active': tab.tab3 == true}" ng-click="showTab3()">
-            DETALLADO POR APP
+        <li id="id-tab-3" class="imeco-tab-2" ng-class="{'active': tab.tab2 == true}" ng-click="showTab2()">
+            DETALLADO POR TIENDA
         </li>
     </ul>
     <div class="tab-content" style="overflow:hidden">
         <!--TAB 1-->
         <div class="tab-pane" ng-class="{'active': tab.tab1 == true}">
-
-            <div class="panel panel-primary">
+            <div class="panel panel-default">
                 <div class="panel-heading">
                     <strong>MENÚ - OPCIONES DE BÚSQUEDA</strong>
                 </div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-4">
-                            <div class="panel panel-primary">
+                            <div class="panel panel-default">
                                 <div class="panel-heading">
                                     FILTRO DE FECHAS
                                 </div>
                                 <div class="panel-body">
                                     <div>
-                                        <input type="radio" name="fecha" value="ANUAL" ng-model="busqueda.tipoFecha">
+                                        <input ng-click="pormeses = false" type="radio" name="fecha" value="ANUAL" ng-model="busqueda.tipoFecha">
                                         ANUAL
                                     </div>
                                     <div>
-                                        <input type="radio" name="fecha" value="POR MES" ng-model="busqueda.tipoFecha">
+                                        <input ng-click="pormeses = false" type="radio" name="fecha" value="POR MES" ng-model="busqueda.tipoFecha">
                                         POR MES
                                     </div>
                                     <div>
-                                        <input type="radio" name="fecha" value="POR MESES" ng-model="busqueda.tipoFecha">
+                                        <input ng-click="pormeses = true" type="radio" name="fecha" value="POR MESES" ng-model="busqueda.tipoFecha">
                                         POR MESES
                                     </div>
                                 </div>
@@ -43,7 +39,7 @@
                         </div>
 
                         <div class="col-sm-4">
-                            <div class="panel panel-primary">
+                            <div class="panel panel-default">
                                 <div class="panel-heading">
                                     FILTRO DE HORARIOS
                                 </div>
@@ -70,7 +66,7 @@
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <div class="panel panel-primary">
+                            <div class="panel panel-default">
                                 <div class="panel-heading">
                                     FILTRO POR SEXO
                                 </div>
@@ -90,6 +86,26 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-sm-4" ng-show="pormeses">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    SELECCIONE LOS MESES
+                                </div>
+                                <div class="panel-body">
+                                    <div>
+                                        <button ng-click="checkAll()" class="btn btn-danger btn-xs">Todos</button>
+                                        <button ng-click="uncheckAll()" class="btn btn-danger btn-xs">Ninguno</button>
+                                        <button ng-click="checkFirst()" class="btn btn-danger btn-xs">Actual</button>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label ng-repeat="mes in meses" style="display: block">
+                                            <input type="checkbox" checklist-model="selectMeses.meses"
+                                                   checklist-value="mes.id"> {{mes.text}}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div>
                         <form class="form-horizontal" 
@@ -100,11 +116,13 @@
                                 <div class="col-sm-2">
                                     <input type="date" name="dni" ng-model="busqueda.fecha"
                                            class="form-control">
+                                    <label class="label label-default">De esta fecha se tomará el mes, año o ambos dependiendo de
+                                        los filtros que elija</label>
                                 </div>
-                                <div class="col-sm-5">
-                                    <button class="btn btn-primary" ng-disabled="!formFechaConsulta.$valid"
-                                            type="submit">Consultar</button>
-                                </div>
+                            </div>
+                            <div>
+                                <button class="btn btn-primary animated infinite pulse" ng-disabled="!formFechaConsulta.$valid"
+                                        type="submit">CONSULTAR</button>
                             </div>
                         </form>
                     </div>
@@ -117,57 +135,106 @@
                     <h5>Lima y Provincias</h5>
                     <h3><label class="label label-danger">{{tituloMes}} - {{tituloAnio}}</label></h3>
                 </div>
-                <div class="row">
-                    <div class="col-sm-8">
-                        <canvas id="bar" class="chart chart-bar" data="data" labels="labels" 
-                                legend="true" series="series" click="onClick" style="height: 750px">
-                        </canvas> 
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="box box-danger">
-                            <div class="box-header" style="background: #404040;text-align: center">
-                                <img src="resources/img/otros/logo.png" width="150" height="50">
-                            </div>
-                            <div class="box-body table-responsive" style="background-color: #ddd9c4">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Tienda</th>
-                                            <th style="text-align: right"># Interv.</th>
-                                            <th style="text-align: right">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr ng-repeat="data in allData">
-                                            <td>{{data.tienda}}</td>
-                                            <td style="text-align: right">{{data.intervenciones}}</td>
-                                            <td style="text-align: right">{{data.recuperado| currency:'S/. '}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-size: 1.5em"><strong>TOTAL:</strong></td>
-                                            <td style="text-align: rightr;font-size: 1.5em"><strong>{{totalIntervenciones}}</strong></td>
-                                            <td style="text-align: right;font-size: 1.5em"><strong>{{totalRecuperado| currency:'S/. '}}</strong></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+
+                <div ng-show="!pormeses">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <canvas id="bar" class="chart chart-bar" data="data" labels="labels" 
+                                    legend="true" series="series" click="onClick" style="height: 750px">
+                            </canvas> 
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="box box-danger">
+                                <div class="box-header" style="background: #404040;text-align: center">
+                                    <img src="resources/img/otros/logo.png" width="150" height="50">
+                                </div>
+                                <div class="box-body table-responsive" style="background-color: #ddd9c4">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Tienda</th>
+                                                <th style="text-align: right"># Interv.</th>
+                                                <th style="text-align: right">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="data in allData">
+                                                <td>{{data.tienda}}</td>
+                                                <td style="text-align: right">{{data.intervenciones}}</td>
+                                                <td style="text-align: right">{{data.recuperado| currency:'S/. '}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 1.5em"><strong>TOTAL:</strong></td>
+                                                <td style="text-align: right;font-size: 1.5em"><strong>{{totalIntervenciones}}</strong></td>
+                                                <td style="text-align: right;font-size: 1.5em"><strong>{{totalRecuperado| currency:'S/. '}}</strong></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
+
+                <!--POR MESES POR MESES POR MESES POR MESES-->
+                <div ng-show="pormeses">
+                    <div class="row" ng-repeat="super in superData">
+
+                        <div class="col-sm-12" style="text-align: center">
+                            <h3><label class="label label-danger">MES {{super[5]}}</label></h3>
+                        </div>
+
+                        <div class="col-sm-8">
+                            <canvas class="chart chart-bar" data="super[1]" labels="labels" 
+                                    legend="true" series="series" style="height: 750px">
+                            </canvas> 
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="box box-danger">
+                                <div class="box-header" style="background: #404040;color: white;text-align: center">
+                                    <img class="pull-left" src="resources/img/otros/logo.png" width="150" height="50">
+                                    {{super[5]}}
+                                </div>
+                                <div class="box-body table-responsive" style="background-color: #ddd9c4">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Tienda</th>
+                                                <th style="text-align: right"># Interv.</th>
+                                                <th style="text-align: right">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="data in super[2]">
+                                                <td>{{data.tienda}}</td>
+                                                <td style="text-align: right">{{data.intervenciones}}</td>
+                                                <td style="text-align: right">{{data.recuperado| currency:'S/. '}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 1.5em"><strong>TOTAL:</strong></td>
+                                                <td style="text-align: right;font-size: 1.5em"><strong>{{super[3]}}</strong></td>
+                                                <td style="text-align: right;font-size: 1.5em"><strong>{{super[4]| currency:'S/. '}}</strong></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
 
             </div>
         </div>
         <!--FIN TAB 1-->
 
-        <!--TAB 2-->
-        <div class="tab-pane" ng-class="{'active': tab.tab2 == true}">
-            asdasdad
-        </div>
-        <!--FIN TAB 2-->
 
         <!--TAB 3-->
-        <div class="tab-pane" ng-class="{'active': tab.tab3 == true}">
+        <div class="tab-pane" ng-class="{'active': tab.tab2 == true}">
             <div>
                 <form class="form-horizontal" 
                       name="formTiendaConsulta">
@@ -178,9 +245,6 @@
                                     ng-options="ti.nombreTienda for ti in tiendas track by ti.idTienda">
                             </select>
                         </div>
-                        <!--                        <div class="col-sm-5">
-                                                    <button class="btn btn-danger" ng-disabled="!formTiendaConsulta.$valid" type="submit">Consultar</button>
-                                                </div>-->
                     </div>
                 </form>
             </div>

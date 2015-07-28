@@ -39,11 +39,11 @@ class GraficaDao {
         return $total;
     }
 
-    public function chart_recuperos_por_prevencionista($idtienda, $fecha) {
+    public function chart_recuperos_por_prevencionista($idtienda, $opcion, $fecha, $hora_inicial, $hora_final, $sexo) {
         date_default_timezone_set('America/Lima');
         $fechaActual = date('Y-m-d', strtotime(urldecode($fecha)));
-        $stm = $this->pdo->prepare("CALL chart_recuperos_por_prevencionista(?,?)");
-        $stm->execute(array($idtienda, $fechaActual));
+        $stm = $this->pdo->prepare("CALL char_ejecutivo_anual_por_tienda(?,?,?,?,?,?)");
+        $stm->execute(array($idtienda, $opcion, $fechaActual, $hora_inicial, $hora_final, $sexo));
 
         $rs = $stm->fetchAll(PDO::FETCH_OBJ);
 
@@ -55,8 +55,6 @@ class GraficaDao {
         //falta concatener
 
         foreach ($rs as $key => $inter) {
-//            array_push($label,$inter->nombrePrevencionista . $inter->descripcionProducto);
-//            array_push($label,$inter->descripcionProducto.' - '.$inter->nombrePrevencionista);
             array_push($label, $key + 1);
             array_push($cantidades, $inter->cantidadProducto);
             array_push($montos, $inter->totalProducto);
@@ -90,29 +88,60 @@ class GraficaDao {
 
         return $total;
     }
-    
-    public function chart_ejecutivo_2($opcion, $fecha, $hora_inicial, $hora_final, $sexo) {
+
+    public function chart_ejecutivo_2($opcion, $fecha, $hora_inicial, $hora_final, $sexo,$meses) {
         date_default_timezone_set('America/Lima');
-        $fechaActual = date('Y-m-d', strtotime(urldecode($fecha)));
-        $stm = $this->pdo->prepare("CALL char_ejecutivo_anual(?,?,?,?,?)");
-        $stm->execute(array($opcion, $fechaActual, $hora_inicial, $hora_final, $sexo));
 
-        $rs = $stm->fetchAll(PDO::FETCH_OBJ);
+        $mesesitos = json_decode($meses);
+        //return $mesesitos;
 
-        $total = array();
-        $tiendas = array();
-        $intervenciones = array();
-        $recuperado = array();
+        $arrayTotales = array();
 
-        foreach ($rs as $inter) {
-            array_push($tiendas, $inter->tienda);
-            array_push($intervenciones, $inter->intervenciones);
-            array_push($recuperado, $inter->recuperado);
+        //HACEMOS 12 PETICIONES AL SERVER
+
+        foreach ($mesesitos as $i) {
+        //for ($i = 1; $i <= 12; $i++) {
+            $mes = $i;
+            if ($i < 10) {
+                $mes = '0' . $i;
+            }
+            $fechaActual = date('Y-' . $mes . '-d', strtotime(urldecode($fecha)));
+            $db_conect_det = new Conexion();
+            $pdo_det = $db_conect_det->getConexion();
+            $stm = $pdo_det->prepare("CALL char_ejecutivo_anual(?,?,?,?,?)");
+            $stm->execute(array($opcion, $fechaActual, $hora_inicial, $hora_final, $sexo));
+            $rs = $stm->fetchAll(PDO::FETCH_OBJ);
+
+            $total = array();
+            $tiendas = array();
+            $intervenciones = array();
+            $recuperado = array();
+            
+            $interrecupero = array();
+
+            $importe1 = 0;
+            $importe2 = 0;
+
+            foreach ($rs as $inter) {
+                $importe1 = $importe1 + $inter->intervenciones;
+                $importe2 = $importe2 + $inter->recuperado;
+                array_push($tiendas, $inter->tienda);
+                array_push($intervenciones, $inter->intervenciones);
+                array_push($recuperado, $inter->recuperado);
+            }
+            $mesletras = $this->getMes($i-1);
+            array_push($interrecupero, $intervenciones, $recuperado);
+            array_push($total, $tiendas, $interrecupero, $rs, $importe1, $importe2,$mesletras);
+            array_push($arrayTotales, $total);
         }
 
-        array_push($total, $tiendas, $intervenciones, $recuperado, $rs);
-
-        return $total;
+        return $arrayTotales;
+    }
+    
+    function getMes ($i){
+        $meses = array('ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE');
+        return $meses[$i];
+        
     }
 
 }

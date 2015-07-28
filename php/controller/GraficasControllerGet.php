@@ -31,15 +31,20 @@ switch ($accion) {
         $hora_inicial = $_GET['horaInicial'];
         $hora_final = $_GET['horaFinal'];
         $sexo = $_GET['sexo'];
+        $meses = $_GET['meses'];
 
-        echo json_encode($graficaDao->chart_ejecutivo_2($opcion, $fecha, $hora_inicial, $hora_final, $sexo));
+        echo json_encode($graficaDao->chart_ejecutivo_2($opcion, $fecha, $hora_inicial, $hora_final, $sexo,$meses));
         break;
 
     case 'recuperos_por_prevencionista':
 
         $idtienda = $_GET['idtienda'];
+        $opcion = $_GET['opcion'];
         $fecha = $_GET['fecha'];
+        $hora_inicial = $_GET['horaInicial'];
+        $hora_final = $_GET['horaFinal'];
+        $sexo = $_GET['sexo'];
 
-        echo json_encode($graficaDao->chart_recuperos_por_prevencionista($idtienda, $fecha));
+        echo json_encode($graficaDao->chart_recuperos_por_prevencionista($idtienda, $opcion, $fecha, $hora_inicial, $hora_final, $sexo));
         break;
 }

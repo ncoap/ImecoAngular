@@ -163,8 +163,9 @@ if (@$_SESSION['acceso'] != true) {
         <script src="resources/assets/angular/angular-ui-router.min.js"></script>
         <script src="resources/assets/angular/angular-resource.min.js"></script>
         <script src="resources/assets/angular/angular-animate.min.js"></script>
+
         <script src="resources/assets/angular/texteditor/textAngular-sanitize.min.js"></script>
-        <script src="resources/assets/angular/texteditor/textAngular.min.js"></script>  
+        <script src="resources/assets/angular/texteditor/textAngular.min.js"></script>
 
 
         <!--modales personlizadas de angular-->
@@ -176,6 +177,7 @@ if (@$_SESSION['acceso'] != true) {
 
 
         <script src="admin.js"></script>
+        <script src="resources/assets/angular/checklist-model.js"></script>
         <script src="view/home/home.js"></script>
         <script src="view/intervencion/listar/listar_intervencion.js"></script>
         <script src="view/intervencion/registrar/registrar_intervencion.js"></script>
@@ -185,6 +187,7 @@ if (@$_SESSION['acceso'] != true) {
         <script src="view/sensomatizado/listar/listar_sensomatizado.js"></script>
         <script src="view/sensomatizado/registrar/registrar_sensomatizado.js"></script>
         <script src="view/sensomatizado/actualizar/actualizar_sensomatizado.js"></script>
+
 
     </body>
 </html>
