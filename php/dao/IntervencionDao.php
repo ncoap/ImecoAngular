@@ -13,30 +13,55 @@ class IntervencionDao {
         $this->pdo = $db_cone->getConexion();
     }
 
-    public function listarIntervenciones($terminos) {
+    public function listarIntervenciones($pagina,$terminos) {
 
-        $col_tienda = "ti.id_tien like '%%'";
-        $col_tipoTendero = "tipo.id_tip_ten like '%%'";
+        $response = array('size'=>0,'interventions'=>array());
 
-        if ($terminos->tienda != '0') {
-            $col_tienda = "ti.id_tien = " . $terminos->tienda->idTienda;
-        }
+        $col_busqueda = $this->get_terminos_de_busqueda($terminos);
+        $response['size'] = $this->get_row_count_cab_interven($col_busqueda);
 
-        if ($terminos->tipo != '0') {
-            $col_tipoTendero = "tipo.id_tip_ten = " . $terminos->tipo;
-        }
+        $stm = $this->pdo->prepare("CALL listado_intervenciones_multiple(?,?)");
+        $stm->execute(array($col_busqueda,$pagina));
+        $response['interventions'] = $stm->fetchAll(PDO::FETCH_OBJ);
+        return $response;
+    }
 
-        $col_tendero = $terminos->nombre;
-        $col_dni = $terminos->dni;
-        $col_sexo = $terminos->sexo;
-
+    public function get_terminos_de_busqueda($terminos){
         date_default_timezone_set('America/Lima');
         $col_fecha_desde = date('Y-m-d H:i:s', strtotime(urldecode($terminos->fechaInicial)));
         $col_fecha_hasta = date('Y-m-d H:i:s', strtotime(urldecode($terminos->fechaFinal)));
 
-        $stm = $this->pdo->prepare("CALL listado_intervenciones_multiple(?,?,?,?,?,?,?)");
-        $stm->execute(array($col_tienda, $col_tendero, $col_dni, $col_sexo, $col_tipoTendero, $col_fecha_desde, $col_fecha_hasta));
-        return $stm->fetchAll(PDO::FETCH_OBJ);
+        $col_fecha = "inter.fec_inte BETWEEN '".$col_fecha_desde."' AND '".$col_fecha_hasta."'";
+
+        $col_nombre = "";
+        if ($terminos->nombre != '') {
+            $col_nombre = " AND CONCAT(ten.nom_ten,', ',ten.ape_ten) LIKE '%" . $terminos->nombre."%'";
+        }
+
+        $col_dni = "";
+        if ($terminos->dni != '') {
+            $col_dni = " AND ten.doc_ten LIKE '%" . $terminos->dni."%'";
+        }
+
+        $col_sexo = "";
+        if ($terminos->sexo != '') {
+            $col_sexo = " AND ten.sexo = " . $terminos->sexo;
+        }
+
+
+        $col_tienda = "";
+        if ($terminos->tienda != '0') {
+            $col_tienda = " AND ti.id_tien = " . $terminos->tienda->idTienda;
+        }
+
+        $col_tipo = "";
+        if ($terminos->tipo != '') {
+            $col_tipo = " AND tipo.id_tip_ten = " . $terminos->tipo;
+        }
+
+        $col_busqueda = $col_fecha.$col_nombre.$col_dni.$col_sexo.$col_tienda.$col_tipo;
+
+        return $col_busqueda;
     }
 
     public function sp_listar_intervenciones() {
@@ -44,6 +69,15 @@ class IntervencionDao {
         $stm = $this->pdo->prepare("CALL sp_listar_intervenciones()");
         $stm->execute();
         return $stm->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function get_row_count_cab_interven($col_busqueda){
+        $db_conect = new Conexion();
+        $pdo = $db_conect->getConexion();
+        $stm = $pdo->prepare("CALL get_row_count_cab_interven(?)");
+        $stm->execute(array($col_busqueda));
+        $rs = $stm->fetch(PDO::FETCH_OBJ);
+        return $rs->numIntervenciones;
     }
 
     public function get_detalle_intervencion_by_id($id) {

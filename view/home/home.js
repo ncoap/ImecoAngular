@@ -59,22 +59,25 @@ angular.module('odisea.home',
 
             $scope.listarUltimosTenderos();
 
-            $scope.showModalDetalle = function (tenderoSelect) {
+            $scope.showModalDetalle = function (interventionSelect) {
                 var modalInstance = $modal.open({
                     templateUrl: 'view/home/detalle.html',
                     controller: 'verFotoController',
                     resolve: {
-                        tenderoSelect: function () {
-                            return tenderoSelect;
+                        interventionSelect: function () {
+                            return interventionSelect;
                         }
                     }
                 });
             };
 
         })
-        .controller('verFotoController', function ($scope, $modalInstance, tenderoSelect) {
+        .controller('verFotoController', function ($scope, $modalInstance, interventionSelect) {
 
-            $scope.tenderoSelect = tenderoSelect;
+            $scope.mirandom = Math.random();
+
+            $scope.interventionSelect = interventionSelect;
+
 
             $scope.cancel = function () {
                 $modalInstance.dismiss('cancel');

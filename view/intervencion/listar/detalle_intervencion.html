@@ -2,36 +2,35 @@
     <button type="button" class="close" ng-click="cancel()"
             data-dismiss="modal" aria-hidden="true">&times;
     </button>
-    <h4>Intervención Seleccionada</h4>
+    <strong class="text-blue">Detalle de Intervención</strong>
 </div>
-<div class="modal-body"> 
+<div class="modal-body">
     <div class="box box-danger">
         <div class="box-header">
-            <i class="fa fa-users"></i> 
-            <h3 class="box-title">Información del Tendero</h3>
+            <p class="text-black">Información del Tendero</p>
         </div>
         <div class="box-body">
             <div class="row">
                 <div class="col-xs-8">
                     <div>
                         <label>DNI: &nbsp;&nbsp;</label>
-                        <label style="color: #3c8dbc;font-size: 1.2em">{{intervencionSelect.dniTendero}}</label>
+                        <span class="text-light-blue">{{intervencionSelect.dniTendero}}</span>
                     </div>
                     <div>
                         <label>Nombre: &nbsp;&nbsp;</label>
-                        <label style="color: #3c8dbc;font-size: 1.2em">{{intervencionSelect.nombreCompletoTendero}}</label>
+                        <span class="text-light-blue">{{intervencionSelect.nombreCompletoTendero}}</span>
                     </div>
                     <div>
                         <label>Tipo de Tendero: &nbsp;&nbsp;</label>
-                        <label style="color: #3c8dbc;font-size: 1.2em">{{intervencionSelect.tipoTendero}}</label>
+                        <span class="text-light-blue">{{intervencionSelect.tipoTendero}}</span>
                     </div>
                     <div>
                         <label>Edad: &nbsp;&nbsp;</label>
-                        <label style="color: #3c8dbc;font-size: 1.2em">{{intervencionSelect.edadTendero}}</label>
+                        <span class="text-light-blue">{{intervencionSelect.edadTendero}}</span>
                     </div>
                     <div>
                         <label>Sexo: &nbsp;&nbsp;</label>
-                        <label style="color: #3c8dbc;font-size: 1.2em">{{intervencionSelect.sexoTendero}}</label>
+                        <span class="text-light-blue">{{intervencionSelect.sexoTendero}}</span>
                     </div>
                 </div>
 
@@ -44,8 +43,7 @@
     </div>
     <div class="box box-primary">
         <div class="box-header">
-            <i class="fa fa-users"></i> 
-            <h3 class="box-title">Detalle de Productos</h3>
+            <p class="text-black">Detalle de Productos</p>
         </div>
         <div class="box-body table-responsive">
             <table class="table table-bordered table-striped">

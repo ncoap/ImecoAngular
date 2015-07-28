@@ -48,6 +48,7 @@ angular.module('odisea.intervencion.registrar',
             };
         })
         .directive('fileModel', ['$parse', function ($parse) {
+        //el input file como un modelo
                 return {
                     restrict: 'A',
                     link: function (scope, element, attrs) {
@@ -63,24 +64,22 @@ angular.module('odisea.intervencion.registrar',
                 };
             }])
         .directive('myUpload', [function () {
+            //relacionar un modelo de datos con una imagen (img)
                 return {
                     restrict: 'A',
                     link: function (scope, elem, attrs) {
-
                         var reader = new FileReader();
-
                         reader.onload = function (e) {
                             scope.image = e.target.result;
                             scope.$apply();
                         };
-
                         elem.on('change', function () {
                             reader.readAsDataURL(elem[0].files[0]);
                         });
                     }
                 };
             }])
-        .controller('intervencionController', function ($rootScope, $state, $window, $scope, $log, $http, $modal, $timeout, dialogs) {
+        .controller('intervencionController', function (utilFactory,$rootScope, $state, $window, $scope, $log, $http, $modal, $timeout, dialogs) {
 
             $scope.mirandom = Math.random();
 
@@ -106,7 +105,6 @@ angular.module('odisea.intervencion.registrar',
 
             $scope.dni = '';
 
-
             $scope.tendero = {
                 idTendero: '',
                 dniTendero: '',
@@ -120,7 +118,7 @@ angular.module('odisea.intervencion.registrar',
 
             $scope.intervencion = {
                 idTendero: '',
-                fechaCompletaIntervencion: getDateActual(),
+                fechaCompletaIntervencion: utilFactory.getDateActual(),
                 derivacionIntervencion: 'Comisaria',
                 lugarDerivacion: '',
                 dniPrevencionista: '',
@@ -134,14 +132,12 @@ angular.module('odisea.intervencion.registrar',
             };
 
             $scope.buscarNombrePrevencionista = function () {
-
                 $http.get('php/controller/TenderoControllerGet.php', {
                     params: {
                         accion: 'get_name_prevencionista_by_dni',
                         dni: $scope.intervencion.dniPrevencionista
                     }
                 }).success(function (data, status, headers, config) {
-
                     if (data.msj == 'OK') {
                         $log.log(data);
                         $scope.intervencion.nombrePrevencionista = data.nombre;
@@ -149,15 +145,13 @@ angular.module('odisea.intervencion.registrar',
                         $scope.intervencion.nombrePrevencionista = '';
                     }
                 }).error(function (data, status, headers, config) {
-
                     console.log("Error");
                 });
             };
 
-
             $scope.isRegisterDniDataBase = false;
 
-            //buscar el tendero en base al dni incertado
+            //buscar el tendero en base al dni insertado
             $scope.buscarTendero = function () {
                 $http.get('php/controller/TenderoControllerGet.php', {
                     params: {
@@ -176,7 +170,7 @@ angular.module('odisea.intervencion.registrar',
                                     $scope.isRegisterDniDataBase = true;
                                     $scope.tendero = data.tendero;
                                     $scope.intervencion.idTendero = data.tendero.idTendero;
-                                    $scope.tendero.nacimientoTendero = convertStringToDate(data.tendero.nacimientoTendero);
+                                    $scope.tendero.nacimientoTendero = utilFactory.getDateFromString(data.tendero.nacimientoTendero);
                                 },
                                 function (btn) {
                                     $scope.dni = '';
@@ -257,9 +251,9 @@ angular.module('odisea.intervencion.registrar',
                             if (data.msj == 'OK') {
                                 $scope.tendero.idTendero = data.newid;
                                 $scope.intervencion.idTendero = data.newid;
+                                dialogs.wait("Procesando...", "Regsitrando Intervención", 100);
+                                $rootScope.$broadcast('dialogs.wait.progress', {'progress': 100});
                                 saveIntervencion();
-                                var dlg = dialogs.wait(undefined, undefined, _progress);
-                                _fakeWaitProgress();
                             } else {
                                 alert("El Dni ya se encuentra registrado con otro Tendero, Verifique");
                             }
@@ -281,9 +275,9 @@ angular.module('odisea.intervencion.registrar',
 
                             $log.log("ON UPDATED", data);
                             if (data.msj == 'OK') {
+                                dialogs.wait("Procesando...", "Regsitrando Intervención", 100);
+                                $rootScope.$broadcast('dialogs.wait.progress', {'progress': 100});
                                 saveIntervencion();
-                                var dlg = dialogs.wait(undefined, undefined, _progress);
-                                _fakeWaitProgress();
                             } else {
                                 alert("El Dni ya se encuentra registrado con otro tendero. Verifique DNI");
                             }
@@ -299,7 +293,6 @@ angular.module('odisea.intervencion.registrar',
             //enviamos el dni del tendero y buscamos en php el id del tendero en base al DNI
             //antes de guardar la incidencia
             function saveIntervencion() {
-                
                 var postData = {
                     accion: 'registrar',
                     data: {
@@ -314,9 +307,7 @@ angular.module('odisea.intervencion.registrar',
                 $http.post('php/controller/IntervencionControllerPost.php', postData)
                         .success(function (data, status, headers, config) {
                             $log.log(data);
-
                             loadImagen();
-
                         })
                         .error(function (data, status, headers, config) {
 
@@ -338,6 +329,20 @@ angular.module('odisea.intervencion.registrar',
                     headers: {'Content-Type': undefined}
                 }).success(function (data, status, headers, config) {
                     $log.log("IMAGES RESPONSE ", data);
+
+                    $rootScope.$broadcast('dialogs.wait.complete');
+
+                    var dlg = dialogs.confirm('Confirmación', 'Intervención Registrada con Éxito. ¿Ver Registros?');
+
+                    dlg.result.then(
+                        function (btn) {
+                            $state.go("intervenciones");
+                        },
+                        function (btn) {
+                            $window.location.reload();
+                        }
+                    );
+
 //                    $state.go('intervenciones');
                 }).error(function (data, status, headers, config) {
 
@@ -345,59 +350,14 @@ angular.module('odisea.intervencion.registrar',
                 });
             }
 
-            var _progress = 33;
-
             $scope.SaveAll = function () {
 
-                $log.log("tendero", $scope.tendero);
-                $log.log("incidente: ", $scope.intervencion);
-                $log.log("productos: ", $scope.productos);
-
-
+                $log.log("tendero", $scope.tendero,"intervención: ", $scope.intervencion,"productos: ", $scope.productos);
                 if (!$scope.isRegisterDniDataBase) {
                     saveTendero();
                 } else {
                     updateTendero();
                 }
-
-            };
-
-            //otras utilidades
-
-            function getDateActual() {
-
-                var today = new Date();
-                var dia = (today.getDate() < 10) ? '0' + today.getDate() : today.getDate();
-                var m = today.getMonth();
-                var mes = (m < 10) ? '0' + m : m;
-
-                var p_hora = today.getHours();
-                var hora = (p_hora < 10) ? '0' + p_hora : p_hora;
-
-                var p_minuto = today.getMinutes();
-                var minuto = (p_minuto < 10) ? '0' + p_minuto : p_minuto;
-
-                return new Date(today.getFullYear(), mes, dia, hora, minuto);
-            }
-
-            function convertStringToDate(fecha) {
-                var separate = fecha.split('-');
-                return new Date(separate[0], separate[1] - 1, separate[2]);
-            }
-
-            ////funciones para el dialogo
-            var _fakeWaitProgress = function () {
-                $timeout(function () {
-                    if (_progress < 100) {
-                        _progress += 33;
-                        $rootScope.$broadcast('dialogs.wait.progress', {'progress': _progress});
-                        _fakeWaitProgress();
-                    } else {
-                        $rootScope.$broadcast('dialogs.wait.complete');
-                        _progress = 0;
-
-                    }
-                }, 1000);
             };
 
         });

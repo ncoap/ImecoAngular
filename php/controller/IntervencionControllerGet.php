@@ -14,8 +14,9 @@ switch ($accion) {
         echo json_encode($intervencionDao->sp_listar_intervenciones());
         break;
     case 'multiple':
+        $pagina = $_GET['pagina'];
         $terminos = json_decode($_REQUEST['terminos']);
-        echo json_encode($intervencionDao->listarIntervenciones($terminos));
+        echo json_encode($intervencionDao->listarIntervenciones($pagina,$terminos));
         break;
     case 'ultimos':
         echo json_encode($intervencionDao->sp_get_ultimos_tenderos());

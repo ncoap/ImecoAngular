@@ -30,10 +30,8 @@ angular.module('ngOdisea', [
             },
             getDateFromString: function (dateString) {
                 //2015-05-02
-                var anio = parseInt(dateString.substr(0, 4));
-                var mes = parseInt(dateString.substr(5, 2)) - 1;
-                var dia = parseInt(dateString.substr(8, 2));
-                return new Date(anio, mes, dia);
+                var separate = dateString.split('-');
+                return new Date(separate[0], separate[1] - 1, separate[2]);
             },
             getDateActual: function () {
                 //para el correcto formato de input type datime-local
@@ -48,8 +46,7 @@ angular.module('ngOdisea', [
                 return new Date(today.getFullYear(), mes, dia, hora, minuto);
             },
             dateDefault :  {
-                ini: new Date(1990, 0, 1),
-                fin: new Date()
+                ini: new Date(2015, 0, 1)
             }
         }
 

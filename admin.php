@@ -20,12 +20,13 @@ if (@$_SESSION['acceso'] != true) {
         <meta charset="UTF-8">
         <title ng-bind="pageTitle"></title>
         <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-        <link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css'>
         <link rel="stylesheet" href="resources/assets/bootstrap/css/bootstrap.min.css"/>
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="resources/assets/theme/admin.lte.css"/>
         <link rel="stylesheet" href="resources/assets/theme/_all-skins.min.css"/>
         <link rel="stylesheet" href="resources/css/transition.css"/>
-        <link rel='stylesheet prefetch' href='http://daneden.github.io/animate.css/animate.min.css'>
+        <link rel='stylesheet' href='http://daneden.github.io/animate.css/animate.min.css'>
         <link rel="stylesheet" href="resources/assets/chart/angular-chart.css"/>
         <link rel="stylesheet" href="resources/assets/dialog/dialogs.min.css"/>
         <link rel="stylesheet" href="resources/css/imeco.css"/>
@@ -34,7 +35,7 @@ if (@$_SESSION['acceso'] != true) {
     <body class="skin-red sidebar-mini">
         <div class="wrapper">
             <header class="main-header">
-                <a href="index.php" class="logo">
+                <a href="#home" class="logo">
                     <span class="logo-mini">
                         <img style="width: 40px;" src="resources/img/otros/logo-mini.png">
                     </span>
@@ -50,7 +51,7 @@ if (@$_SESSION['acceso'] != true) {
                     <div class="navbar-custom-menu">
                         <ul class="nav navbar-nav">
                             <li class="dropdown user user-menu">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <a href="" class="dropdown-toggle" data-toggle="dropdown">
                                     <img src="resources/img/otros/user2-160x160.jpg" class="user-image" alt="User Image"/>
                                     <span class="hidden-xs"> Usuario </span>
                                 </a>
@@ -87,47 +88,47 @@ if (@$_SESSION['acceso'] != true) {
                     <ul class="sidebar-menu">
                         <li class="header">Menu</li>
                         <li class="treeview">
-                            <a href=""><i class='fa fa-users'></i> <span>Intervenciones</span> 
+                            <a href=""><i class='fa fa-user'></i> <span>Intervenciones</span>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="#intervencion"><i class="fa fa-file"></i><span>Registrar Intervención</span></a></li>
-                                <li><a href="#intervenciones"><i class="fa fa-file"></i><span>Visualizar Registros</span></a></li>
-                                <li><a href="#consolidado"><i class='fa fa-book'></i><span>Gráficas por Mes</span></a></li>
-                                <li><a href="#ejecutivo"><i class='fa fa-file'></i><span>Reporte Ejecutivo</span></a></li>
+                                <li><a href="#intervencion"><i class="fa fa-save"></i><span>Registrar Intervención</span></a></li>
+                                <li><a href="#intervenciones"><i class="fa fa-file-text"></i><span>Visualizar Registros</span></a></li>
+                                <li><a href="#consolidado"><i class="fa fa-pie-chart"></i><span>Gráficas por Mes</span></a></li>
+                                <li><a href="#ejecutivo"><i class="fa fa-line-chart"></i><span>Reporte Ejecutivo</span></a></li>
                             </ul>
                         </li>
                         <li class="treeview">
-                            <a href=""><i class='fa fa-book'></i> <span>Reporte de Riesgos </span> <i class="fa fa-angle-left pull-right"></i></a>
+                            <a href=""><i class='fa fa-ambulance'></i> <span>Reporte de Riesgos </span> <i class="fa fa-angle-left pull-right"></i></a>
                             <ul class="treeview-menu">
-                                <li><a href="#"><i class="fa fa-file"></i><span>Registro de accidentes</span></a></li>
-                                <li><a href="#"><i class="fa fa-file"></i><span>Registro de incidentes</span></a></li>                 
-                                <li><a href="#"><i class='area-chart'></i><span>Graficas por mes</span></a></li>
+                                <li><a href="#"><i class="fa fa-save"></i><span>Registro de accidentes</span></a></li>
+                                <li><a href="#"><i class="fa fa-exclamation-triangle"></i><span>Registro de incidentes</span></a></li>
+                                <li><a href="#"><i class='fa fa-pie-chart'></i><span>Graficas por mes</span></a></li>
 
                             </ul>
                         </li>
                         <li class="treeview">
                             <a href="">
-                                <i class='fa fa-book'></i>
+                                <i class='fa fa-cab'></i>
                                 <span>Continuidad Operativa</span> 
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="#"><i class="fa fa-circle-o"></i><span>Cctv</span></a></li>
-                                <li><a href="#"><i class="fa fa-circle-o"></i><span>Lci</span></a></li>
-                                <li><a href="#"><i class="fa fa-circle-o"></i><span>Antenas</span></a></li>
-                                <li><a href="#"><i class="fa fa-circle-o"></i><span>Radios</span></a></li>
+                                <li><a href="#"><i class="fa fa-circle-o text-red"></i><span>Cctv</span></a></li>
+                                <li><a href="#"><i class="fa fa-circle-o text-aqua"></i><span>Lci</span></a></li>
+                                <li><a href="#"><i class="fa fa-circle-o text-blue"></i><span>Antenas</span></a></li>
+                                <li><a href="#"><i class="fa fa-circle-o text-green"></i><span>Radios</span></a></li>
                             </ul>
                         </li>
                         <li class="treeview">
                             <a href="">
-                                <i class='fa fa-book'></i>
+                                <i class='fa fa-laptop'></i>
                                 <span>Prod. No Sensomatizado</span> 
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="#nosensomatizado"><i class="fa fa-circle-o"></i><span>Registro de Producto</span></a></li>
-                                <li><a href="#nosensomatizados"><i class="fa fa-circle-o"></i><span>Visualizar Registros</span></a></li>
+                                <li><a href="#nosensomatizado"><i class="fa fa-circle-o text-red"></i><span>Registro de Producto</span></a></li>
+                                <li><a href="#nosensomatizados"><i class="fa fa-circle-o text-aqua"></i><span>Visualizar Registros</span></a></li>
                             </ul>
                         </li>
                         <li class="header"><center> <img src="resources/img/otros/logo.png" width="90%"></center> </li>
