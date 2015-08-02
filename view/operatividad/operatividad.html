@@ -1,0 +1,141 @@
+<div class="box box-primary">
+    <div class="box-header">
+        <h3 class="box-title">CONTINUIDAD OPERATIVA MES JULIO 2015</h3>
+    </div>
+    <div class="box-body">
+        <div>
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-xs-1 control-label">Producto</label>
+                    <div class="col-xs-3">
+                        <select class="form-control">
+                            <option>Radio</option>
+                            <option>Cámaras Domo</option>
+                            <option>Innovasoft</option>
+                            <option>Bomba Contra Incendio</option>
+                            <option>Cámaras Domo</option>
+                            <option>Innovasoft</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                ITEM SELECCIONADO
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal" name="nameFormProducto">
+                    <div class="form-group">
+                        <label class="col-md-1 control-label imeco-normal">Equipo:</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" ng-model="item.equipo" placeholder="Nombre del Equipo">
+                        </div>
+                        <label class="col-md-1 control-label imeco-normal">Marca:</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" ng-model="item.marca" placeholder="Marca del Equipo">
+                        </div>
+                        <label class="col-md-1 control-label imeco-normal">Modelo:</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" ng-model="item.modelo" placeholder="Modelo del Equipo">
+                        </div>
+                        <label class="col-md-1 control-label imeco-normal">Capacidad:</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" ng-model="item.capacidad" placeholder="Capacidad">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-md-1 control-label imeco-normal">Internos:</label>
+                        <div class="col-md-1">
+                            <input type="text" ng-pattern="/^(\d)+$/" class="form-control imeco-right"
+                                   ng-model="item.interno" required="true" min="0">
+                        </div>
+                        <label class="col-md-1 control-label imeco-normal">Externos:</label>
+                        <div class="col-md-1">
+                            <input type="text" ng-pattern="/^(\d)+$/" class="form-control imeco-right"
+                                   ng-model="item.externo" required="true" min="0">
+                        </div>
+                        <label class="col-md-1 control-label imeco-normal">Inoperativo:</label>
+                        <div class="col-md-1">
+                            <input type="text" ng-pattern="/^(\d)+$/" class="form-control imeco-right"
+                                   ng-model="item.inoperativo" required="true" min="0">
+                        </div>
+                        <label class="col-md-1 control-label imeco-normal">Operativo:</label>
+                        <div class="col-md-1">
+                            <input type="text" ng-pattern="/^(\d)+$/" class="form-control imeco-right"
+                                   ng-model="item.operativo" required="true" min="0">
+                        </div>
+                        <label class="col-md-1 control-label imeco-normal">Reubicacion:</label>
+                        <div class="col-md-1">
+                            <input type="text" ng-pattern="/^(\d)+$/" class="form-control imeco-right"
+                                   ng-model="item.reubicacion" required="true" min="0">
+                        </div>
+
+                    </div>
+                    <div class="pull-right">
+                        <button type="submit" class="btn btn-xs btn-primary">Actualizar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-striped">
+            <tr style="font-weight: bold">
+                <td>Tienda</td>
+                <td>Equipo</td>
+                <td>Marca</td>
+                <td>Modelo</td>
+                <td>Capacidad</td>
+                <td class="imeco-right">TOTAL</td>
+                <td class="imeco-right text-blue">Interno</td>
+                <td class="imeco-right text-blue">Externo</td>
+                <td class="imeco-right text-green">Inoperativo</td>
+                <td class="imeco-right text-green">Operativo</td>
+                <td class="imeco-right">Reubicacion</td>
+                <td class="imeco-center">Acciones</td>
+            </tr>
+            <tr ng-repeat="oper in operatividad">
+                <td>{{oper.nombreTienda}}</td>
+                <td>{{oper.nombreEquipo}}</td>
+                <td>{{oper.marcaEquipo}}</td>
+                <td>{{oper.modeloEquipo}}</td>
+                <td>{{oper.capacidadEquipo}}</td>
+                <td class="imeco-right">{{oper.cantidadTotal}}</td>
+                <td class="imeco-right">{{oper.cantidadInterna}}</td>
+                <td class="imeco-right">{{oper.cantidadExterna}}</td>
+                <td class="imeco-right">
+                    <span class="label"
+                          ng-class="{
+                          'label-danger': oper.cantidadInoperativo >= 10 ,
+                          'label-warning': oper.cantidadInoperativo >=5 && oper.cantidadInoperativo <10,
+                          'label-success': oper.cantidadInoperativo < 5
+                          }">
+                        {{oper.cantidadInoperativo}}
+                    </span>
+                </td>
+                <td class="imeco-right">{{oper.cantidadOperativo}}</td>
+                <td class="imeco-right">{{oper.cantidadReubicacion}}</td>
+                <td style="text-align: center">
+                    <img style="cursor: pointer" src="resources/iconos/Ok-24.png" ng-click="actualizar(oper)" title="Actualizar">
+                    <img style="cursor: pointer" src="resources/iconos/Cancel-24.png" ng-click="eliminar(oper.idDetOperatividad)"
+                         title="Eliminar {{oper.idDetOperatividad}}">
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="box-footer">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                GRAVEDAD LEYENDA
+            </div>
+            <div class="panel-body">
+                <span class="label label-danger">ALTO</span>
+                <span class="label label-warning">MODERADO</span>
+                <span class="label label-success">BAJO</span>
+            </div>
+        </div>
+    </div>
+</div>

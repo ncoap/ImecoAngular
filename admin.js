@@ -4,6 +4,7 @@ angular.module('ngOdisea', [
     'ngAnimate',
     'checklist-model',
     'odisea.home',
+    'odisea.operatividad',
     'odisea.intervencion.registrar',
     'odisea.intervencion.listar',
     'odisea.intervencion.actualizar',
@@ -11,7 +12,11 @@ angular.module('ngOdisea', [
     'odisea.intervencion.ejecutivo',
     'odisea.sensomatizado.registrar',
     'odisea.sensomatizado.listar',
-    'odisea.sensomatizado.actualizar'
+    'odisea.sensomatizado.actualizar',
+    'odisea.incidente.listar',
+    'odisea.incidente.registrar',
+    'odisea.incidente.actualizar'
+
 ])
     .config(function myAppConfig($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('/home');
@@ -49,10 +54,9 @@ angular.module('ngOdisea', [
                 ini: new Date(2015, 0, 1)
             }
         }
-
-
     })
-    .run(function run() {
+    .run(function run(editableOptions) {
+        editableOptions.theme = 'bs3';
     })
 
     .controller('OdiseaController', function AppCtrl($state, $http, $log, $scope, $rootScope, $location) {
@@ -71,7 +75,7 @@ angular.module('ngOdisea', [
         $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
 
             if (toState.name === 'nosensomatizadoup') {
-                if ($rootScope.producto) {
+                if ($rootScope.sensorSeleccionado) {
                 } else {
                     event.preventDefault();
                     $state.go('nosensomatizados');
@@ -81,6 +85,15 @@ angular.module('ngOdisea', [
             if (toState.name === 'intervencionup') {
 
                 if ($rootScope.intervencionSeleccionada) {
+                } else {
+                    event.preventDefault();
+                    $state.go('intervenciones');
+                }
+            }
+
+            if (toState.name === 'incidenteup') {
+
+                if ($rootScope.incidenteSeleccionado) {
                 } else {
                     event.preventDefault();
                     $state.go('intervenciones');

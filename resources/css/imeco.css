@@ -7,6 +7,11 @@
     z-index: 1005;
 }
 
+.imeco-required{
+    font-weight:bold;
+    color: orangered;
+}
+
 .imeco-pointer{
     cursor: pointer;
 }
@@ -18,7 +23,6 @@
 
 .imeco-center{
     text-align: center;
-    padding: 0;
 }
 
 .imeco-alert{
@@ -57,4 +61,8 @@
     /*background-color: #d6e0f5;*/
     background-color: #f3f3f3;
     border: 1px solid #3c8dbc;
+}
+
+.imeco-normal{
+    font-weight: normal;
 }

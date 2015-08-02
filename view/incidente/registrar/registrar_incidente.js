@@ -1,16 +1,16 @@
-angular.module('odisea.sensomatizado.registrar',
+angular.module('odisea.incidente.registrar',
     ['ui.router', 'ngAnimate', 'ngResource', 'ui.bootstrap', 'dialogs.main'])
     .config(function config8($stateProvider) {
-        $stateProvider.state('nosensomatizado', {
-            url: '/nosensomatizado',
+        $stateProvider.state('incidente', {
+            url: '/incidente',
             views: {
                 'main': {
-                    templateUrl: 'view/sensomatizado/registrar/registrar_sensomatizado.html',
-                    controller: 'nosensomatizadoController'
+                    templateUrl: 'view/incidente/registrar/registrar_incidente.html',
+                    controller: 'incidenteController'
                 }
             },
             data: {
-                pageTitle: 'Producto No Sensomatizado'
+                pageTitle: 'Incidente'
             }
         });
     })
@@ -64,10 +64,9 @@ angular.module('odisea.sensomatizado.registrar',
         };
     }])
 
-    .controller('nosensomatizadoController', function (utilFactory,$state, $rootScope, $window, $scope, $log, $http, $modal, $timeout, dialogs) {
+    .controller('incidenteController', function (utilFactory,$state, $rootScope, $window, $scope, $log, $http, $modal, $timeout, dialogs) {
 
-
-        $scope.image = "view/imagen_no_sensomatizados/default.png";
+        $scope.image = "view/imagen_incidente/default.png";
 
         $scope.tab = {tab1: true, tab2: false, tab3: false};
 
@@ -85,12 +84,24 @@ angular.module('odisea.sensomatizado.registrar',
 
         $scope.isSaved = false;
 
-        $scope.sensomatizado = {
-            dniPrevencionista: '',
-            nombrePrevencionista: '',
+        $scope.incidente = {
+            idIncidente:0,
             tienda: undefined,
-            fecha: utilFactory.getDateActual(),
-            observaciones: 'SIN OBSERVACIONES',
+            nombreInvolucrado: '',
+            dniInvolucrado: '',
+            actoCondicionInsegura:'sin condicion',
+            nombreAccidentado: '',
+            dniAccidentado: '',
+            edadAccidentado:20,
+            sexoAccidentado:'M',
+            fechaAccidenteCompleta: utilFactory.getDateActual(),
+            nivelGravedad:'BAJO',
+            diagnostico:'sin diagnostico',
+            descansoMedico:'NO',
+            cantidadDias:0,
+            descripcionCausas:'sin descripcion',
+            lesion:'INCAPACIDAD TEMPORAL',
+            accionesCorrectivasRealizadas:'sin acciones correctivas',
             total: 0.0
         };
 
@@ -99,7 +110,8 @@ angular.module('odisea.sensomatizado.registrar',
             descripcion: '',
             marca: '',
             cantidad: 0,
-            precio: 0.0
+            precio: 0.0,
+            esActivo:'NO'
         };
 
         $scope.productos = [];
@@ -108,7 +120,7 @@ angular.module('odisea.sensomatizado.registrar',
             var producto = angular.copy($scope.producto);
             $scope.productos.push(producto);
             calcularTotalRecuperado();
-            $scope.producto = {codigo: '', descripcion: '', marca: '', cantidad: 0, precio: 0.0};
+            $scope.producto = {codigo: '', descripcion: '', marca: '', cantidad: 0, precio: 0.0, esActivo:'NO'};
         };
 
         $scope.removeProduct = function (indice) {
@@ -116,50 +128,45 @@ angular.module('odisea.sensomatizado.registrar',
             calcularTotalRecuperado();
         };
 
-
         function calcularTotalRecuperado() {
             var total = 0.0;
             angular.forEach($scope.productos, function (item) {
                 total = total + item.cantidad * item.precio;
             });
-            $scope.sensomatizado.total = total;
+            $scope.incidente.total = total;
         }
 
-
-        $scope.buscarNombrePrevencionista = function () {
-            $http.get('php/controller/SensomatizadoControllerGet.php', {
+        // BUSCAR INVOLUCRADO
+        $scope.buscarNombreInvolucrado = function () {
+            $http.get('php/controller/IncidenteControllerGet.php', {
                 params: {
-                    accion: 'get_name_prevencionista_by_dni',
-                    dni: $scope.sensomatizado.dni
+                    accion: 'get_name_involucrado_by_dni',
+                    dni: $scope.incidente.dniInvolucrado
                 }
-            }).success(function (data, status, headers, config) {
+            }).success(function (data) {
+                $log.log("147", data);
                 if (data.msj == 'OK') {
-                    $log.log(data);
-                    $scope.sensomatizado.prevencionista = data.nombre;
-                } else {
-                    $scope.sensomatizado.prevencionista = '';
+                    $scope.incidente.nombreInvolucrado = data.nombre;
                 }
-            }).error(function (data, status, headers, config) {
-                console.log("Error");
+            }).error(function (data) {
+                $log.error("152",data);
             });
         };
 
         $scope.SaveAll = function () {
-
             $scope.isSaved = true;
             console.log($scope.myFile.name);
-            $scope.sensomatizado.foto = 'view/imagen_no_sensomatizados/' + $scope.myFile.name;
             var postData = {
                 accion: 'registrar',
                 data: {
-                    sensomatizado: $scope.sensomatizado,
+                    incidente: $scope.incidente,
                     productos: JSON.stringify($scope.productos)
                 }
             };
-            dialogs.wait("Procesando...", "Regsitrando Intervención", 100);
+            dialogs.wait("Procesando...", "Regsitrando Incidente", 100);
             $rootScope.$broadcast('dialogs.wait.progress', {'progress': 100});
 
-            $http.post('php/controller/SensomatizadoControllerPost.php', postData)
+            $http.post('php/controller/IncidenteControllerPost.php', postData)
                 .success(function (data, status, headers, config) {
                     $log.log(data);
                     if (data.msj == 'OK') {
@@ -177,29 +184,27 @@ angular.module('odisea.sensomatizado.registrar',
             fd.append('file', file);
             fd.append('nombre', id);
 
-            $http.post('php/controller/SensomatizadoControllerLoad.php', fd, {
+            $http.post('php/controller/IncidenteControllerLoad.php', fd, {
                 headers: {'Content-Type': undefined}
             }).success(function (data, status, headers, config) {
                 $log.log("UPLOAD SUCCESS =>", data);
                 if(data.msj == 'OK'){
                     $rootScope.$broadcast('dialogs.wait.complete');
-
-                    var dlg = dialogs.confirm('Confirmacion', 'Productos Registrados con Exito. Ver Registros?');
+                    var dlg = dialogs.confirm('Confirmacion', 'Incidente Registrado con Exito. Ver Registros?');
                     dlg.result.then(
                         function (btn) {
-                            $state.go("nosensomatizados");
+                            $state.go("incidentes");
                         },
                         function (btn) {
                             $window.location.reload();
                         }
                     );
                 }else{
-                    alert("No se cargo la imagen");
+                    alert("Se guardo la informacion pero no se cargo la imagen");
                     $log.info(data.info);
                 }
             }).error(function (err, status, headers, config) {
                 $log.log("ERROR AJAX UPLOAD = >",err);
             });
         };
-
     });

@@ -121,6 +121,7 @@ angular.module('odisea.intervencion.listar',
                 lugarDerivacion: inter.lugarDerivacion,
                 dniPrevencionista: inter.dniPrevencionista,
                 nombrePrevencionista: inter.nombrePrevencionista,
+                idTendero: inter.idTendero,
                 tienda: {
                     idTienda: inter.idTienda,
                     nombreTienda: inter.nombreTienda

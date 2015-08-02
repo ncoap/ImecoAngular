@@ -1,9 +1,10 @@
 <div class="panel panel-primary">
     <div class="panel-heading">
         Parámetros de Búsqueda
-        <img style="cursor: pointer" class="pull-right"
-             ng-src="{{isCollapsed && 'resources/iconos/down.png' || 'resources/iconos/up.png'}}"
-             ng-click="isCollapsed = !isCollapsed">
+        <i class="pull-right fa" style="cursor: pointer;font-size: 1.5em"
+           ng-class="{'fa-chevron-circle-down': isCollapsed == true ,
+                               'fa-chevron-circle-up': isCollapsed == false}"
+           ng-click="isCollapsed = !isCollapsed"></i>
     </div>
     <div class="panel-body">
         <form name="nameFormSearch" ng-submit="consultar()" class="form-horizontal" collapse="isCollapsed">
@@ -66,14 +67,14 @@
             </div>
             <div>
                 <button class="btn btn-primary pull-right animated infinite pulse" type="submit"
-                        ng-disabled='!nameFormSearch.$valid'>BUSCAR</button>
+                        ng-disabled='!nameFormSearch.$valid' style="font-weight: bold">BUSCAR</button>
             </div>
         </form>
     </div>
 </div>
 <div class="box box-primary">
     <div class="box-header">
-        <h3 class="box-title">Productos No Sensomatizados</h3>
+        <h3 class="box-title">Registro de Incidentes</h3>
     </div>
     <div class="box-body table-responsive">
         <div>
@@ -81,25 +82,27 @@
                 <thead>
                 <tr>
                     <th>Tienda</th>
-                    <th>DNI</th>
+                    <th>Dni Prev</th>
                     <th>Prevencionista</th>
-                    <th>Fecha</th>
-                    <th>Observaciones</th>
+                    <th>Dia Incidente</th>
+                    <th>Hora Incidente</th>
+                    <th>Fecha Incidente</th>
                     <th style="text-align: center">Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="sensor in sensomatizados">
-                    <td>{{sensor.nombreTienda}}</td>
-                    <td>{{sensor.dniPrevencionista}}</td>
-                    <td>{{sensor.nombrePrevencionista}}</td>
-                    <td>{{sensor.fecha}}</td>
-                    <td>{{sensor.observaciones}}</td>
+                <tr ng-repeat="incidente in incidentes">
+                    <td>{{incidente.nombreTienda}}</td>
+                    <td>{{incidente.dniInvolucrado}}</td>
+                    <td>{{incidente.nombreInvolucrado}}</td>
+                    <td>{{incidente.diaAccidente}}</td>
+                    <td>{{incidente.horaAccidente}}</td>
+                    <td>{{incidente.fechaAccidente}}</td>
                     <td style="text-align: center">
-                        <img style="cursor: pointer" src="resources/iconos/Info-24.png" ng-click="showModalVer(sensor)" title="Detalle">
-                        <img style="cursor: pointer" src="resources/iconos/Ok-24.png" ng-click="actualizar(sensor)" title="Actualizar">
-                        <img style="cursor: pointer" src="resources/iconos/Cancel-24.png" ng-click="eliminar(sensor.id)"
-                             title="Eliminar {{sensor.idSensor}}">
+                        <img style="cursor: pointer" src="resources/iconos/Info-24.png" ng-click="showModalVer(incidente)" title="Detalle">
+                        <img style="cursor: pointer" src="resources/iconos/Ok-24.png" ng-click="actualizar(incidente)" title="Actualizar">
+                        <img style="cursor: pointer" src="resources/iconos/Cancel-24.png" ng-click="eliminar(incidente.idIncidente)"
+                             title="Eliminar {{incidente.idIncidente}}">
                     </td>
                 </tr>
                 </tbody>

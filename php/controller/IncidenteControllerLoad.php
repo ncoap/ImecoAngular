@@ -4,7 +4,7 @@ $nombreArchivo = $_FILES['file']['name'];
 $nombreTmpArchivo = $_FILES['file']['tmp_name'];
 $nombresito = $_REQUEST['nombre'];
 
-$directorio = '../../view/imagen_no_sensomatizados';
+$directorio = '../../view/imagen_incidente';
 $ext = substr($nombreArchivo, strrpos($nombreArchivo, '.'));
 
 if (in_array($ext, $formatos)) {

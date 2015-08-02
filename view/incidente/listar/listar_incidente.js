@@ -1,40 +1,38 @@
-angular.module('odisea.sensomatizado.listar',
+angular.module('odisea.incidente.listar',
     ['ui.router', 'ngAnimate', 'ngResource', 'ui.bootstrap', 'dialogs.main'])
     .config(function config7($stateProvider) {
-        $stateProvider.state('nosensomatizados', {
-            url: '/nosensomatizados',
+        $stateProvider.state('incidentes', {
+            url: '/incidentes',
             views: {
                 main: {
-                    templateUrl: 'view/sensomatizado/listar/listar_sensomatizado.html',
-                    controller: 'nosensomatizadosController'
+                    templateUrl: 'view/incidente/listar/listar_incidente.html',
+                    controller: 'incidentesController'
                 }
             },
             data: {
-                pageTitle: 'Productos No Sensomatizados'
+                pageTitle: 'Incidentes'
             }
         });
     })
-    .service('sensorService', function ($http, $q) {
-
+    .service('incidentService', function ($http, $q) {
         function get(params) {
             var defered = $q.defer();
             var promise = defered.promise;
 
-            $http.get('php/controller/SensomatizadoControllerGet.php', {
+            $http.get('php/controller/IncidenteControllerGet.php', {
                 params: params
             }).success(function (data, status, headers, config) {
                 defered.resolve(data);
             }).error(function (err) {
                 defered.reject(err);
             });
-
             return promise;
         }
 
         function post(postData) {
             var defered = $q.defer();
             var promise = defered.promise;
-            $http.post('php/controller/SensomatizadoControllerPost.php', postData)
+            $http.post('php/controller/IncidenteControllerPost.php', postData)
                 .success(function (data) {
                     defered.resolve(data);
                 })
@@ -42,22 +40,18 @@ angular.module('odisea.sensomatizado.listar',
                     defered.reject(err);
                 }
             );
-
             return promise;
         }
-
         return {
             get: get,
             post: post
         }
-
     })
-    .controller('nosensomatizadosController', function (utilFactory, $state, $rootScope, $scope, $log,
-                                                        $http, $modal, $timeout, sensorService) {
-
+    .controller('incidentesController', function (utilFactory, $state, $rootScope, $scope, $log,
+                                                        $http, $modal, $timeout, incidentService) {
         $scope.pagination = {maxSize: 10, totalItems: 0, currentPage: 1};
         $scope.isCollapsed = true;
-        $scope.sensomatizados = [];
+        $scope.incidentes = [];
 
         //Cual es el valor de cada termino de búsqueda
         $scope.termSearch = {
@@ -79,14 +73,14 @@ angular.module('odisea.sensomatizado.listar',
         };
 
         $scope.pageChanged = function () {
-            sensorService.get({
+            incidentService.get({
                 accion: 'multiple',
                 pagina: $scope.pagination.currentPage,
                 terminos: JSON.stringify($scope.termSearch)
             }).then(function (data) {
                 $log.info("SERVICE - MULTIPLE => ", data);
                 $scope.pagination.totalItems = data.size;
-                $scope.sensomatizados = data.sensomatizados;
+                $scope.incidentes = data.incidentes;
             }).catch(function (err) {
                 $log.error("SERVICE - MULTIPLE =>", err);
             });
@@ -98,35 +92,44 @@ angular.module('odisea.sensomatizado.listar',
             $scope.listar();
         };
 
-        $scope.actualizar = function (sensor) {
-
-            $log.log(sensor);
-
-            var producto = {
-                idSensor:sensor.idSensor,
-                dniPrevencionista:sensor.dniPrevencionista,
-                nombrePrevencionista: sensor.nombrePrevencionista,
+        $scope.actualizar = function (incidente) {
+            $log.log(incidente);
+            var incidente = {
+                idIncidente:incidente.idIncidente,
                 tienda: {
-                    idTienda: sensor.idTienda,
-                    nombreTienda: sensor.nombreTienda
+                    idTienda:incidente.idTienda,
+                    nombreTienda : incidente.nombreTienda
                 },
-                fecha:utilFactory.getDateTimeFromString(sensor.fechaCompleta),
-                observaciones : sensor.observaciones,
-                total: sensor.total
+                nombreInvolucrado: incidente.nombreInvolucrado,
+                dniInvolucrado: incidente.dniInvolucrado,
+                actoCondicionInsegura:incidente.actoCondicionInsegura,
+                nombreAccidentado: incidente.nombreAccidentado,
+                dniAccidentado: incidente.dniAccidentado,
+                edadAccidentado:incidente.edadAccidentado,
+                sexoAccidentado:incidente.sexoAccidentado,
+                fechaAccidenteCompleta: utilFactory.getDateTimeFromString(incidente.fechaAccidenteCompleta),
+                nivelGravedad:incidente.nivelGravedad,
+                diagnostico:incidente.diagnostico,
+                descansoMedico:incidente.descansoMedico,
+                cantidadDias:incidente.cantidadDias,
+                descripcionCausas:incidente.descripcionCausas,
+                lesion: incidente.lesion,
+                accionesCorrectivasRealizadas:incidente.accionesCorrectivasRealizadas,
+                total: incidente.total
             };
 
-            sensorService.get({
+            incidentService.get({
                 accion: 'detalle',
-                id: sensor.idSensor
+                id: incidente.idIncidente
             }).then(function (data) {
                 $log.log(data);
                 if(data.msj == 'OK'){
-                    $rootScope.sensorSeleccionado = {
-                        sensomatizado: producto,
+                    $rootScope.incidenteSeleccionado = {
+                        incidente: incidente,
                         productos: data.detalle
                     };
-                    $log.log("FROM LISTA ACTUALIZAR ",$rootScope.sensorSeleccionado);
-                    $state.go('nosensomatizadoup');
+                    $log.log("FROM LISTA ACTUALIZAR ",$rootScope.incidenteSeleccionado);
+                    $state.go('incidenteup');
                 }else{
                     $log.error("ERROR SENSORSERVICE - DETALLE",data.error);
                 }
@@ -141,17 +144,17 @@ angular.module('odisea.sensomatizado.listar',
         $scope.eliminar = function (id) {
             var a = confirm("¿Desea Eliminar El Registro y Detalle?");
             if (a) {
-                sensorService.post({
+                incidentService.post({
                     accion: 'eliminar',
                     data: {
                         id: id
                     }
                 }).then(function (data) {
                     if (data.msj == 'OK') {
-                        alert("Producto No Sensomatizado Eliminado");
+                        alert("Incidente Eliminado");
                         $scope.listar();
                     } else {
-                        alert("No se pudo Eliminar el Producto");
+                        alert("No se pudo Eliminar el Incidente");
                         $log.log("ADMIN ", data);
                     }
                 }).catch(function (err) {
@@ -162,29 +165,30 @@ angular.module('odisea.sensomatizado.listar',
 
         $scope.listar();
 
-        $scope.showModalVer = function (sensorSelect) {
+        $scope.showModalVer = function (incidentSelect) {
             var modalInstance = $modal.open({
-                templateUrl: 'view/sensomatizado/listar/detalle_sensomatizado.html',
-                controller: 'VerSensomatizadoController',
-                size: 'sm',
+                templateUrl: 'view/incidente/listar/detalle_incidente.html',
+                controller: 'VerIncidenteController',
+                size: 'lg',
                 resolve: {
-                    sensorSelect: function () {
-                        return sensorSelect;
+                    incidentSelect: function () {
+                        return incidentSelect;
                     }
                 }
             });
         };
 
     })
-    .controller('VerSensomatizadoController', function ($log, $http, $scope, $modalInstance, sensorSelect, sensorService) {
+    .controller('VerIncidenteController', function ($log, $http, $scope, $modalInstance, incidentSelect, incidentService) {
 
-        $scope.sensor = sensorSelect;
+        $scope.incidente = incidentSelect;
         $scope.mirandom = Math.random();
         $scope.productos = [];
+        $scope.isViewOtros = true;
 
-        sensorService.get({
+        incidentService.get({
             accion: 'detalle',
-            id: $scope.sensor.idSensor
+            id: $scope.incidente.idIncidente
         }).then(function (data) {
             $log.log(data);
             if(data.msj == 'OK'){
@@ -192,7 +196,6 @@ angular.module('odisea.sensomatizado.listar',
             }else{
                 $log.error("ERROR SENSORSERVICE - DETALLE",data.error);
             }
-
         }).catch(function (err) {
             $log.err("SERVICE DETALLE");
         });
@@ -200,5 +203,4 @@ angular.module('odisea.sensomatizado.listar',
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
-
     });

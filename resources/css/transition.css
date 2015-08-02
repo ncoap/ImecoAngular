@@ -1,17 +1,16 @@
-.ng-hide-add { 
+/*.ng-hide-add {
     animation:0.5s lightSpeedOut ease; 
 }
 
-/*.ng-hide-remove { 
+.ng-hide-remove {
     animation:1s flipInX ease; 
 }*/
 
 /*.ng-enter{ 
     animation:1.5s lightSpeedOut ease;
-}*/
-
-// CUANDO SE VA
+}
 // .ng-leave
+*/
 
 /* ANIMATIONS (FROM ANIMATE.CSS) ======================== */
 /* flip in */

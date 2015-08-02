@@ -20,7 +20,9 @@ if (in_array($ext, $formatos)) {
 //    $filename = date("dmYhis") . $rename;
     try {
         if (move_uploaded_file($nombreTmpArchivo, "$directorio/$nombresito" . '.jpg')) {
+
             echo json_encode("OK");
+
         } else {
             echo json_encode("KO");
         }

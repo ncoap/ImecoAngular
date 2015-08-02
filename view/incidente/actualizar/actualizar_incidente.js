@@ -1,16 +1,16 @@
-angular.module('odisea.sensomatizado.actualizar',
+angular.module('odisea.incidente.actualizar',
     ['ui.router', 'ngAnimate', 'ngResource', 'ui.bootstrap', 'dialogs.main'])
     .config(function config10($stateProvider) {
-        $stateProvider.state('nosensomatizadoup', {
-            url: '/nosensomatizadoup',
+        $stateProvider.state('incidenteup', {
+            url: '/incidenteup',
             views: {
                 'main': {
-                    templateUrl: 'view/sensomatizado/actualizar/actualizar_sensomatizado.html',
-                    controller: 'nosensomatizadoupController'
+                    templateUrl: 'view/incidente/actualizar/actualizar_incidente.html',
+                    controller: 'incidenteupController'
                 }
             },
             data: {
-                pageTitle: 'Actualizar Producto'
+                pageTitle: 'Actualizar Inicidente'
             }
         });
     }).directive('validFile', function () {
@@ -63,11 +63,11 @@ angular.module('odisea.sensomatizado.actualizar',
         };
     }])
 
-    .controller('nosensomatizadoupController', function (utilFactory, $state, $rootScope, $window, $scope, $log, $http, $modal, $timeout, dialogs) {
+    .controller('incidenteupController', function (utilFactory, $state, $rootScope, $window, $scope, $log, $http, $modal, $timeout, dialogs) {
 
-        if ($rootScope.sensorSeleccionado) {
+        if ($rootScope.incidenteSeleccionado) {
 
-            $scope.image = "view/imagen_no_sensomatizados/default.png";
+            $scope.image = "view/imagen_incidente/default.png";
 
             $scope.isNewImage = false;
             $scope.mirandom = Math.random();
@@ -82,8 +82,8 @@ angular.module('odisea.sensomatizado.actualizar',
                 precio: 0.0
             };
 
-            $scope.sensomatizado = $rootScope.sensorSeleccionado.sensomatizado;
-            $scope.productos = $rootScope.sensorSeleccionado.productos;
+            $scope.incidente = $rootScope.incidenteSeleccionado.incidente;
+            $scope.productos = $rootScope.incidenteSeleccionado.productos;
 
             $scope.irPaso1 = function () {
                 $scope.tab = {tab1: true, tab2: false, tab3: false};
@@ -111,31 +111,28 @@ angular.module('odisea.sensomatizado.actualizar',
                 calcularTotalRecuperado();
             };
 
-
             function calcularTotalRecuperado() {
                 var total = 0.0;
                 angular.forEach($scope.productos, function (item) {
                     total = total + item.cantidad * item.precio;
                 });
-                $scope.sensomatizado.total = total;
+                $scope.incidente.total = total;
             }
 
 
-            $scope.buscarNombrePrevencionista = function () {
-                $http.get('php/controller/SensomatizadoControllerGet.php', {
+            $scope.buscarNombreInvolucrado = function () {
+                $http.get('php/controller/IncidenteControllerGet.php', {
                     params: {
-                        accion: 'get_name_prevencionista_by_dni',
-                        dni: $scope.sensomatizado.dniPrevencionista
+                        accion: 'get_name_involucrado_by_dni',
+                        dni: $scope.incidente.dniInvolucrado
                     }
-                }).success(function (data, status, headers, config) {
+                }).success(function (data) {
+                    $log.log("147", data);
                     if (data.msj == 'OK') {
-                        $log.log(data);
-                        $scope.sensomatizado.nombrePrevencionista = data.nombre;
-                    } else {
-                        $scope.sensomatizado.nombrePrevencionista = '';
+                        $scope.incidente.nombreInvolucrado = data.nombre;
                     }
-                }).error(function (data, status, headers, config) {
-                    console.log("Error");
+                }).error(function (data) {
+                    $log.error("152",data);
                 });
             };
 
@@ -144,41 +141,39 @@ angular.module('odisea.sensomatizado.actualizar',
                     if (!$scope.myFile) {
                         alert("Cargue una foto o deseleccione la opción");
                     } else {
-                        $scope.updateProductos();
+                        $scope.update();
                     }
                 } else {
-                    $scope.updateProductos();
+                    $scope.update();
                 }
             };
 
-            $scope.updateProductos = function(){
+            $scope.update = function(){
 
                 $log.log("UPDATE PRODUCTOS ",$scope.productos);
-
                 $scope.isSaved = true;
                 var postData = {
                     accion: 'actualizar',
                     data: {
-                        sensomatizado: $scope.sensomatizado,
+                        incidente: $scope.incidente,
                         productos: JSON.stringify($scope.productos)
                     }
                 };
-
-                dialogs.wait("Procesando...", "Actualizando Productos", 100);
+                dialogs.wait("Procesando...", "Actualizando Inicidente", 100);
                 $rootScope.$broadcast('dialogs.wait.progress', {'progress': 100});
 
-                $http.post('php/controller/SensomatizadoControllerPost.php', postData)
+                $http.post('php/controller/IncidenteControllerPost.php', postData)
                     .success(function (data, status, headers, config) {
                         $log.log("SERVICE ACTUALIZAR" ,data);
                         if (data.msj == 'OK') {
                             if ($scope.isNewImage) {
-                                $scope.loadImage($scope.sensomatizado.idSensor);
+                                $scope.loadImage($scope.incidente.idIncidente);
                             } else {
                                 $rootScope.$broadcast('dialogs.wait.complete');
-                                var dlg = dialogs.confirm('Confirmacion', 'Actualización registrada con Éxito. Ver Registros?');
+                                var dlg = dialogs.confirm('Confirmacion', 'Incidente Actualizado con Éxito. Ver Registros?');
                                 dlg.result.then(
                                     function (btn) {
-                                        $state.go("nosensomatizados");
+                                        $state.go("incidentes");
                                     },
                                     function (btn) {
                                         $window.location.reload();
@@ -198,27 +193,27 @@ angular.module('odisea.sensomatizado.actualizar',
                 fd.append('file', file);
                 fd.append('nombre', id);
 
-                $http.post('php/controller/SensomatizadoControllerLoad.php', fd, {
+                $http.post('php/controller/IncidenteControllerLoad.php', fd, {
                     headers: {'Content-Type': undefined}
                 }).success(function (data, status, headers, config) {
                     $log.log("UPLOAD SUCCESS =>", data);
-                    if (data.msj == 'OK') {
+                    if(data.msj == 'OK'){
                         $rootScope.$broadcast('dialogs.wait.complete');
-                        var dlg = dialogs.confirm('Confirmacion', 'Actualización registrada con Éxito Ver Registros?');
+                        var dlg = dialogs.confirm('Confirmacion', 'Incidente Actualizado con Exito. Ver Registros?');
                         dlg.result.then(
                             function (btn) {
-                                $state.go("nosensomatizados");
+                                $state.go("incidentes");
                             },
                             function (btn) {
                                 $window.location.reload();
                             }
                         );
-                    } else {
-                        alert("No se cargo la imagen");
+                    }else{
+                        alert("Se actualizo la informacion pero no se cargo la imagen");
                         $log.info(data.info);
                     }
                 }).error(function (err, status, headers, config) {
-                    $log.log("ERROR AJAX UPLOAD = >", err);
+                    $log.log("ERROR AJAX UPLOAD = >",err);
                 });
             };
         }
