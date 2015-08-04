@@ -17,15 +17,27 @@ class IntervencionDao {
         $response['size'] = $this->get_row_count_cab_interven($col_busqueda);
         $stm = $this->pdo->prepare("CALL sp_intervencion(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         $stm->execute(array(1,$col_busqueda,$pagina,0,date('Y-m-d H:i:s'),0,'','',0,'',0,'','',0,0,'','','','',0,0));
-        $response['interventions'] = $stm->fetchAll(PDO::FETCH_OBJ);
+        $rs = $stm->fetchAll(PDO::FETCH_OBJ);
+        $response['interventions'] = $rs;
+
         return $response;
     }
 
     public function get_terminos_de_busqueda($terminos){
         date_default_timezone_set('America/Lima');
-        $col_fecha_desde = date('Y-m-d H:i:s', strtotime(urldecode($terminos->fechaInicial)));
-        $col_fecha_hasta = date('Y-m-d H:i:s', strtotime(urldecode($terminos->fechaFinal)));
-        $col_fecha = "inter.fec_inte BETWEEN '".$col_fecha_desde."' AND '".$col_fecha_hasta."'";
+        $col_fecha_desde = date('Y-m-d', strtotime(urldecode($terminos->fechaInicial)));
+        $col_fecha_hasta = date('Y-m-d', strtotime(urldecode($terminos->fechaFinal)));
+        $col_fecha = "(DATE(inter.fec_inte) BETWEEN '".$col_fecha_desde."' AND '".$col_fecha_hasta."')";
+
+        $col_horario =explode(" ", $terminos->horario);
+
+        $col_hora_desde = $col_horario[0];
+        $col_hora_hasta = $col_horario[1];
+        $col_hora = " AND (TIME(inter.fec_inte) BETWEEN '".$col_hora_desde."' AND '".$col_hora_hasta."')";
+        if($col_hora_desde == '22:00:00'){
+            //22:00:00 09:00:00
+            $col_hora = " AND (TIME(inter.fec_inte) NOT BETWEEN '09:01:00' AND '21:59:59')";
+        }
 
         $col_nombre = "";
         if ($terminos->nombre != '') {
@@ -39,7 +51,7 @@ class IntervencionDao {
 
         $col_sexo = "";
         if ($terminos->sexo != '') {
-            $col_sexo = " AND ten.sexo = " . $terminos->sexo;
+            $col_sexo = " AND ten.sexo = '" . $terminos->sexo."'";
         }
 
         $col_tienda = "";
@@ -52,7 +64,7 @@ class IntervencionDao {
             $col_tipo = " AND tipo.id_tip_ten = " . $terminos->tipo;
         }
 
-        $col_busqueda = $col_fecha.$col_nombre.$col_dni.$col_sexo.$col_tienda.$col_tipo;
+        $col_busqueda = $col_fecha.$col_hora.$col_nombre.$col_dni.$col_sexo.$col_tienda.$col_tipo;
         return $col_busqueda;
     }
 

@@ -79,7 +79,8 @@ angular.module('odisea.incidente.actualizar',
                 descripcion: '',
                 marca: '',
                 cantidad: 0,
-                precio: 0.0
+                precio: 0.0,
+                esActivo:'NO'
             };
 
             $scope.incidente = $rootScope.incidenteSeleccionado.incidente;
@@ -103,7 +104,7 @@ angular.module('odisea.incidente.actualizar',
                 var producto = angular.copy($scope.producto);
                 $scope.productos.push(producto);
                 calcularTotalRecuperado();
-                $scope.producto = {codigo: '', descripcion: '', marca: '', cantidad: 0, precio: 0.0};
+                $scope.producto = {codigo: '', descripcion: '', marca: '', cantidad: 0, precio: 0.0,esActivo:'NO'};
             };
 
             $scope.removeProduct = function (indice) {
@@ -132,7 +133,7 @@ angular.module('odisea.incidente.actualizar',
                         $scope.incidente.nombreInvolucrado = data.nombre;
                     }
                 }).error(function (data) {
-                    $log.error("152",data);
+                    $log.error("152", data);
                 });
             };
 
@@ -148,9 +149,9 @@ angular.module('odisea.incidente.actualizar',
                 }
             };
 
-            $scope.update = function(){
+            $scope.update = function () {
 
-                $log.log("UPDATE PRODUCTOS ",$scope.productos);
+                $log.log("UPDATE PRODUCTOS ", $scope.productos);
                 $scope.isSaved = true;
                 var postData = {
                     accion: 'actualizar',
@@ -164,7 +165,7 @@ angular.module('odisea.incidente.actualizar',
 
                 $http.post('php/controller/IncidenteControllerPost.php', postData)
                     .success(function (data, status, headers, config) {
-                        $log.log("SERVICE ACTUALIZAR" ,data);
+                        $log.log("SERVICE ACTUALIZAR", data);
                         if (data.msj == 'OK') {
                             if ($scope.isNewImage) {
                                 $scope.loadImage($scope.incidente.idIncidente);
@@ -197,7 +198,7 @@ angular.module('odisea.incidente.actualizar',
                     headers: {'Content-Type': undefined}
                 }).success(function (data, status, headers, config) {
                     $log.log("UPLOAD SUCCESS =>", data);
-                    if(data.msj == 'OK'){
+                    if (data.msj == 'OK') {
                         $rootScope.$broadcast('dialogs.wait.complete');
                         var dlg = dialogs.confirm('Confirmacion', 'Incidente Actualizado con Exito. Ver Registros?');
                         dlg.result.then(
@@ -208,12 +209,12 @@ angular.module('odisea.incidente.actualizar',
                                 $window.location.reload();
                             }
                         );
-                    }else{
+                    } else {
                         alert("Se actualizo la informacion pero no se cargo la imagen");
                         $log.info(data.info);
                     }
                 }).error(function (err, status, headers, config) {
-                    $log.log("ERROR AJAX UPLOAD = >",err);
+                    $log.log("ERROR AJAX UPLOAD = >", err);
                 });
             };
         }

@@ -50,7 +50,7 @@ angular.module('odisea.incidente.listar',
     .controller('incidentesController', function (utilFactory, $state, $rootScope, $scope, $log,
                                                         $http, $modal, $timeout, incidentService) {
         $scope.pagination = {maxSize: 10, totalItems: 0, currentPage: 1};
-        $scope.isCollapsed = true;
+        $scope.isCollapsed = false;
         $scope.incidentes = [];
 
         //Cual es el valor de cada termino de búsqueda

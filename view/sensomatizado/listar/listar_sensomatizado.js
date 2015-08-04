@@ -56,7 +56,7 @@ angular.module('odisea.sensomatizado.listar',
                                                         $http, $modal, $timeout, sensorService) {
 
         $scope.pagination = {maxSize: 10, totalItems: 0, currentPage: 1};
-        $scope.isCollapsed = true;
+        $scope.isCollapsed = false;
         $scope.sensomatizados = [];
 
         //Cual es el valor de cada termino de búsqueda

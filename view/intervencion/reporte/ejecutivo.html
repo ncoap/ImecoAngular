@@ -107,24 +107,30 @@
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <form class="form-horizontal" 
-                              name="formFechaConsulta" 
-                              ng-submit="buscarData()">
-                            <div class="form-group">
-                                <label class="col-sm-1">FECHA:</label>
-                                <div class="col-sm-2">
-                                    <input type="date" name="dni" ng-model="busqueda.fecha"
-                                           class="form-control">
-                                    <label class="label label-default">De esta fecha se tomará el mes, año o ambos dependiendo de
-                                        los filtros que elija</label>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            FILTRO DE FECHA
+                        </div>
+                        <div class="panel-body">
+                            <form class="form-horizontal"
+                                  name="formFechaConsulta"
+                                  ng-submit="buscarData()">
+                                <div class="form-group">
+                                    <label class="col-sm-1">FECHA:</label>
+                                    <div class="col-sm-2">
+                                        <input type="date" name="dni" ng-model="busqueda.fecha"
+                                               class="form-control">
+                                        <label class="label label-default">De esta fecha se tomará el mes, año o ambos dependiendo de
+                                            los filtros que elija</label>
+                                    </div>
+                                    <label class="label label-default col-sm-4">FECHA:</label>
+                                    <div class="col-sm-9">
+                                        <button class="btn btn-primary animated infinite pulse pull-right" ng-disabled="!formFechaConsulta.$valid"
+                                                type="submit">CONSULTAR</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div>
-                                <button class="btn btn-primary animated infinite pulse" ng-disabled="!formFechaConsulta.$valid"
-                                        type="submit">CONSULTAR</button>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

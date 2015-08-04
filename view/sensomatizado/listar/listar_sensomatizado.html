@@ -1,9 +1,10 @@
 <div class="panel panel-primary">
     <div class="panel-heading">
         Parámetros de Búsqueda
-        <img style="cursor: pointer" class="pull-right"
-             ng-src="{{isCollapsed && 'resources/iconos/down.png' || 'resources/iconos/up.png'}}"
-             ng-click="isCollapsed = !isCollapsed">
+        <i class="pull-right fa" style="cursor: pointer;font-size: 1.5em"
+           ng-class="{'fa-chevron-circle-down': isCollapsed == true ,
+                               'fa-chevron-circle-up': isCollapsed == false}"
+           ng-click="isCollapsed = !isCollapsed"></i>
     </div>
     <div class="panel-body">
         <form name="nameFormSearch" ng-submit="consultar()" class="form-horizontal" collapse="isCollapsed">

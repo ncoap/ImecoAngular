@@ -19,9 +19,9 @@ switch ($accion) {
         $mensaje = $continuidadDao->sp_update($data);
         echo json_encode($mensaje);
         break;
-    case 'eliminar':
+    case 'remove_item':
         $data = $request->data;
-        $mensaje = $continuidadDao->sp_delete($data->id);
+        $mensaje = $continuidadDao->sp_delete_item($data->idDetOperatividad);
         echo json_encode($mensaje);
         break;
 }

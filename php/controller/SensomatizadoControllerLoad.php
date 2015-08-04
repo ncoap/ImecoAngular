@@ -15,9 +15,9 @@ if (in_array($ext, $formatos)) {
             echo json_encode(array("msj" => "KO","info"=>'No se pudo Subir la Imagen'));
         }
     } catch (Exception $e) {
-        echo json_encode($e->getMessage());
+        echo json_encode(array("msj" => "KO","info"=>$e->getMessage()));
     }
 } else {
-    echo json_encode(array("msj" => "KO"));
+    echo json_encode(array("msj" => "KO","info"=>'No Esta permitido el formato'));
 }
 

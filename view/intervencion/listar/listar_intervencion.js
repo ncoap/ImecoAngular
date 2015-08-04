@@ -55,7 +55,7 @@ angular.module('odisea.intervencion.listar',
     .controller('intervencionesController', function (utilFactory, $state, $rootScope, $scope, $log, $http, $modal, $timeout, interventionService) {
 
         $scope.pagination = {maxSize: 10, totalItems: 0, currentPage: 1};
-        $scope.isCollapsed = true;
+        $scope.isCollapsed = false;
         $scope.intervenciones = [];
 
         //Cual es el valor de cada termino de búsqueda
@@ -66,7 +66,8 @@ angular.module('odisea.intervencion.listar',
             dni: '',
             sexo: '',
             fechaInicial: utilFactory.dateDefault.ini,
-            fechaFinal: utilFactory.getDateActual()
+            fechaFinal: new Date(),
+            horario: '00:00:00 23:59:59'
         };
 
         $scope.listarIntervenciones = function () {

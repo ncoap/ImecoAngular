@@ -8,6 +8,7 @@ $continuidadDao = new ContinuidadDao();
 
 switch ($accion) {
     case 'listar':
-        echo json_encode($continuidadDao->listar());
+        $idProducto = $_GET['idProducto'];
+        echo json_encode($continuidadDao->listar($idProducto));
         break;
 }

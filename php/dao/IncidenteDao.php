@@ -139,12 +139,12 @@ class IncidenteDao {
                 '','','',0,0,0));
 
             $msj_del = $this->sp_delete_det_by_num_inte($inci->idIncidente);
-            if($msj_del['msj'] = 'KO'){
+            if($msj_del['msj'] == 'KO'){
                 return $msj_del;
             }
 
             $msj_register = $this->sp_register_detalle($inci->idIncidente, $data->productos);
-            if($msj_register['msj'] = 'KO'){
+            if($msj_register['msj'] == 'KO'){
                 return $msj_register;
             }
         } catch (PDOException $e) {
@@ -155,6 +155,7 @@ class IncidenteDao {
     }
 
     public function sp_delete_det_by_num_inte($idIncidente) {
+
         $msj = array('msj' => 'OK', 'error' => '','tipo'=>'from sp_delete_det_by_num_inte');
         //EL PDO COMINT ISRVE EN MOTORES INNODB
         try {

@@ -16,6 +16,10 @@
     cursor: pointer;
 }
 
+.imeco-cur-default{
+    cursor: default;
+}
+
 .imeco-mini-container{
     margin-top: 1em;
     padding: 1em;
@@ -23,6 +27,10 @@
 
 .imeco-center{
     text-align: center;
+}
+
+.imeco-center-div{
+    margin: 0 auto !important;
 }
 
 .imeco-alert{

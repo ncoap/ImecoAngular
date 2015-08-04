@@ -13,34 +13,45 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <strong>OPCIONES DE BÚSQUEDA</strong>
+                    <i class="pull-right fa" style="cursor: pointer;font-size: 1.5em"
+                       ng-class="{'fa-chevron-circle-down': isCollapsed == true ,
+                               'fa-chevron-circle-up': isCollapsed == false}"
+                       ng-click="isCollapsed = !isCollapsed"></i>
                 </div>
                 <div class="panel-body">
-                    <div>
+                    <div ng-show="!isCollapsed">
                         <form class="form-horizontal"
                               name="formFechaConsulta"
                               ng-submit="buscarData()">
-                            <div>
-                                <div>
-                                    <input ng-click="pormeses = false" type="radio" name="fecha" value="ANUAL" ng-model="busqueda.tipoFecha">
-                                    ANUAL
-                                </div>
-                                <div>
-                                    <input ng-click="pormeses = false" type="radio" name="fecha" value="POR MES" ng-model="busqueda.tipoFecha">
-                                    POR MES
-                                </div>
-                            </div>
                             <div class="form-group">
+                                <div class="col-md-2">
+                                    <div>
+                                        <input ng-click="pormeses = false" type="radio" name="fecha" value="ANUAL"
+                                               ng-model="busqueda.tipoFecha">
+                                        ANUAL
+                                    </div>
+                                    <div>
+                                        <input ng-click="pormeses = false" type="radio" name="fecha" value="POR MES"
+                                               ng-model="busqueda.tipoFecha">
+                                        POR MES
+                                    </div>
+                                </div>
+
                                 <label class="col-sm-1">FECHA:</label>
                                 <div class="col-sm-2">
                                     <input type="date" name="dni" ng-model="busqueda.fecha"
                                            class="form-control">
-                                    <label class="label label-default">De esta fecha se tomará el mes, año o ambos dependiendo de
+                                    <label class="label label-default">De esta fecha se tomará el mes, año o ambos
+                                        dependiendo de
                                         los filtros que elija</label>
                                 </div>
-                            </div>
-                            <div>
-                                <button class="btn btn-primary animated infinite pulse" ng-disabled="!formFechaConsulta.$valid"
-                                        type="submit">CONSULTAR</button>
+
+                                <div class="col-sm-7">
+                                    <button class="btn btn-primary animated infinite pulse pull-right"
+                                            ng-disabled="!formFechaConsulta.$valid"
+                                            type="submit">CONSULTAR
+                                    </button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -51,6 +62,7 @@
                 <div style="text-align: center">
                     <h3>Consolidado de Intervenciones Oechsle - Grupo Odisea S.A.C</h3>
                     <h5>Lima y Provincias</h5>
+
                     <h3><label class="label label-danger">{{tituloMes}} - {{tituloAnio}}</label></h3>
                 </div>
 
@@ -83,8 +95,10 @@
                                         </tr>
                                         <tr>
                                             <td style="font-size: 1.5em"><strong>TOTAL:</strong></td>
-                                            <td style="text-align: right;font-size: 1.5em"><strong>{{totalIntervenciones}}</strong></td>
-                                            <td style="text-align: right;font-size: 1.5em"><strong>{{totalRecuperado| currency:'S/. '}}</strong></td>
+                                            <td style="text-align: right;font-size: 1.5em"><strong>{{totalIntervenciones}}</strong>
+                                            </td>
+                                            <td style="text-align: right;font-size: 1.5em"><strong>{{totalRecuperado|
+                                                currency:'S/. '}}</strong></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -106,6 +120,7 @@
                       name="formTiendaConsulta">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Seleccione la Tienda</label>
+
                         <div class="col-sm-3">
                             <select class="form-control" ng-model="tienda" ng-change="recuperadoPorPrevencionista()"
                                     ng-options="ti.nombreTienda for ti in tiendas track by ti.idTienda">
@@ -119,9 +134,13 @@
 
                 <div class="col-sm-5">
                     <div class="box box-danger">
-                        <div class="box-header" style="background: #404040;color: white;text-align: center;padding: 1em">
+                        <div class="box-header"
+                             style="background: #404040;color: white;text-align: center;padding: 1em">
                             <img src="resources/img/otros/logo.png" width="150" height="50" class="pull-left">
-                            <h3 class="box-title">Control de Recuperos por Prevencionista <strong>{{tienda.nombreTienda}}</strong></h3>
+
+                            <h3 class="box-title">Control de Recuperos por Prevencionista <strong>{{tienda.nombreTienda}}</strong>
+                            </h3>
+
                             <p>Tenderos Capturados {{tituloMes}} - {{tituloAnio}}</p>
                         </div>
                         <div class="box-body table-responsive" style="background-color: #ddd9c4;height: 460px">
@@ -170,9 +189,12 @@
             <div class="row">
                 <div class="col-sm-5">
                     <div class="box box-danger">
-                        <div class="box-header" style="background: #404040;color: white;text-align: center;padding: 1em">
+                        <div class="box-header"
+                             style="background: #404040;color: white;text-align: center;padding: 1em">
                             <img src="resources/img/otros/logo.png" width="150" height="50" class="pull-left">
-                            <h3 class="box-title">Control de Intervenciones por tipo de Hurto <strong>{{tienda.nombreTienda}}</strong></h3>
+
+                            <h3 class="box-title">Control de Intervenciones por tipo de Hurto <strong>{{tienda.nombreTienda}}</strong>
+                            </h3>
                         </div>
                         <div class="box-body" style="background-color: #ddd9c4">
                             <table class="table table-bordered">
@@ -196,8 +218,12 @@
                                 </tr>
                                 <tr>
                                     <td style="font-weight: bold;font-size: 1.5em">TOTAL</td>
-                                    <td style="text-align: right;font-weight: bold;font-size: 1.5em">{{total.cantidadInternos + total.cantidadExternos}}</td>
-                                    <td style="text-align: right;font-weight: bold;font-size: 1.5em">{{total.totalInternos + total.totalExternos| currency:'S/ '}}</td>
+                                    <td style="text-align: right;font-weight: bold;font-size: 1.5em">
+                                        {{total.cantidadInternos + total.cantidadExternos}}
+                                    </td>
+                                    <td style="text-align: right;font-weight: bold;font-size: 1.5em">
+                                        {{total.totalInternos + total.totalExternos| currency:'S/ '}}
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -207,7 +233,8 @@
                 <div class="col-sm-7">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Control de Intervenciones por tipo de Hurto <strong>{{tienda.nombreTienda}} {{tituloMes}} - {{tituloAnio}}</strong>
+                            Control de Intervenciones por tipo de Hurto <strong>{{tienda.nombreTienda}} {{tituloMes}} -
+                            {{tituloAnio}}</strong>
                         </div>
                         <div class="panel-body" style="height: 500px">
                             <canvas id="bar3" class="chart chart-bar" data="data3" labels="labels3"

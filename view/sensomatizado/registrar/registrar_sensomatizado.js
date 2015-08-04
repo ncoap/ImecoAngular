@@ -130,14 +130,14 @@ angular.module('odisea.sensomatizado.registrar',
             $http.get('php/controller/SensomatizadoControllerGet.php', {
                 params: {
                     accion: 'get_name_prevencionista_by_dni',
-                    dni: $scope.sensomatizado.dni
+                    dni: $scope.sensomatizado.dniPrevencionista
                 }
             }).success(function (data, status, headers, config) {
                 if (data.msj == 'OK') {
                     $log.log(data);
-                    $scope.sensomatizado.prevencionista = data.nombre;
+                    $scope.sensomatizado.nombrePrevencionista = data.nombre;
                 } else {
-                    $scope.sensomatizado.prevencionista = '';
+                    $scope.sensomatizado.nombrePrevencionista = '';
                 }
             }).error(function (data, status, headers, config) {
                 console.log("Error");
@@ -145,10 +145,8 @@ angular.module('odisea.sensomatizado.registrar',
         };
 
         $scope.SaveAll = function () {
-
             $scope.isSaved = true;
             console.log($scope.myFile.name);
-            $scope.sensomatizado.foto = 'view/imagen_no_sensomatizados/' + $scope.myFile.name;
             var postData = {
                 accion: 'registrar',
                 data: {
@@ -160,13 +158,15 @@ angular.module('odisea.sensomatizado.registrar',
             $rootScope.$broadcast('dialogs.wait.progress', {'progress': 100});
 
             $http.post('php/controller/SensomatizadoControllerPost.php', postData)
-                .success(function (data, status, headers, config) {
+                .success(function (data) {
                     $log.log(data);
                     if (data.msj == 'OK') {
                         $scope.loadImage(data.id);
+                    }else{
+                        alert(data.error);
                     }
                 })
-                .error(function (err, status, headers, config) {
+                .error(function (err) {
                     $log.info("ERROR REGISTRAR", err);
                 });
         };
@@ -183,7 +183,6 @@ angular.module('odisea.sensomatizado.registrar',
                 $log.log("UPLOAD SUCCESS =>", data);
                 if(data.msj == 'OK'){
                     $rootScope.$broadcast('dialogs.wait.complete');
-
                     var dlg = dialogs.confirm('Confirmacion', 'Productos Registrados con Exito. Ver Registros?');
                     dlg.result.then(
                         function (btn) {
@@ -194,8 +193,7 @@ angular.module('odisea.sensomatizado.registrar',
                         }
                     );
                 }else{
-                    alert("No se cargo la imagen");
-                    $log.info(data.info);
+                    alert(data.info);
                 }
             }).error(function (err, status, headers, config) {
                 $log.log("ERROR AJAX UPLOAD = >",err);

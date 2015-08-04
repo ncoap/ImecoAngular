@@ -50,72 +50,158 @@ angular.module('odisea.operatividad',
         }
 
     })
-    .controller('operatividadController', function ($log, $scope, operatividadService) {
+    .controller('operatividadController', function ($log, $scope, $filter, operatividadService) {
+        var orderBy = $filter('orderBy');
+        $scope.reverse = true;
+        $scope.predicate = 'cantidadInoperativo';
 
-        $scope.item = {
-            idDetOperatividad:0,
-            idOperatividad:0,
-            tienda:undefined,
-            producto:undefined,
-            equipo: '',
-            marca: '',
-            modelo: '',
-            capacidad: '',
-            total:0,
-            interno: 0,
-            externo: 0,
-            inoperativo: 0,
-            operativo: 0,
-            reubicacion: 0,
-            otros:'',
-            observaciones:''
+        $scope.isAdd = false;
+
+
+        $scope.order = function (predicate, reverse) {
+            $scope.operatividad = orderBy($scope.operatividad, predicate, reverse);
+            $scope.predicate = predicate;
         };
+
+        $scope.producto = undefined;
 
         $scope.operatividad = [];
 
+        $scope.removeOper = function (id) {
+            $log.log(id);
+            var res = confirm('¿Eliminar el Item?');
+            if (res) {
+                operatividadService.post({
+                    accion: 'remove_item',
+                    data: {
+                        idDetOperatividad: id
+                    }
+                }).then(function (data) {
+                    $log.info("SERVICE - REMOVE => ", data);
+                    if (data.msj == 'OK') {
+                        $scope.listado();
+                    } else {
+                        alert("Error al Eliminar el Item ");
+                    }
+                }).catch(function (err) {
+                    $log.error("SERVICE - REMOVE ITEM =>", err);
+                });
+            }
+        };
+
+        $scope.cancelOper = function (id) {
+            if (id == 0) {
+                $scope.isAdd = false;
+                $scope.operatividad.splice($scope.operatividad.length - 1, 1);
+            }
+        };
+
+        $scope.saveOper = function (data, id, index) {
+            $log.log("SAVE USER");
+            $log.log(data);
+            //VALIDACION DE LAS CANTIDADES PARA QUE SUMEN TOTAL
+            var respuesta = validate_total(data);
+            if (respuesta.msj == 'OK') {
+                data.idDetOperatividad = id;
+                //POR MIENTRAS LA UNO
+                data.idOperatividad = 1;
+                data.idProducto =  $scope.producto.idProducto;
+                data.total = respuesta.total;
+                data.otros = '';
+                data.observaciones = '';
+                operatividadService.post({
+                    accion: 'actualizar',
+                    data: {
+                        item: data
+                    }
+                }).then(function (data) {
+                    if (data.msj == 'OK') {
+                        //SOLO ACTUALIZAMOS EL ID NUEVO
+                        //$scope.operatividad[index].idDetOperatividad = data.id;
+                        $scope.listado();
+                    } else {
+                        $log.log(data);
+                        alert("Error al guardar el Item");
+                        return "";
+                    }
+                }).catch(function (err) {
+                    $log.error("SERVICE - MULTIPLE =>", err);
+                });
+
+            } else {
+                alert(respuesta.mensaje);
+                return respuesta.mensaje;
+            }
+        };
+
+        function validate_total(data) {
+            var respuesta = {msj: 'OK', mensaje: '', total: 0};
+
+            var sum = data.cantidadExterna + data.cantidadInterna;
+            var sum2 = data.cantidadOperativo + data.cantidadInoperativo;
+
+            var reub = data.cantidadReubicacion;
+
+            if (sum != sum2) {
+                respuesta.msj = 'KO';
+                respuesta.mensaje = 'LA SUMA TOTAL NO COINCIDE';
+            } else {
+                respuesta.total = sum;
+                if (reub > respuesta.total) {
+                    respuesta.msj = 'KO';
+                    respuesta.mensaje = 'LA CANTIDAD DE REUBICADOS EXCEDE AL TOTAL';
+                }
+            }
+            return respuesta;
+        }
+
+
+        $scope.changeProduct = function () {
+            $log.log($scope.producto);
+            $scope.listado();
+        };
+
+        $scope.addOperatividad = function () {
+            if (!$scope.isAdd) {
+                if ($scope.producto) {
+                    $scope.inserted = {
+                        idDetOperatividad: 0,
+                        idOperatividad: 1,
+                        idTienda: 1,
+                        nombreEquipo: '',
+                        marcaEquipo: '',
+                        modeloEquipo: '',
+                        capacidadEquipo: '',
+                        cantidadTotal: 0,
+                        cantidadInterna: 0,
+                        cantidadExterna: 0,
+                        cantidadInoperativo: 0,
+                        cantidadOperativo: 0,
+                        cantidadReubicacion: 0
+                    };
+                    $scope.operatividad.push($scope.inserted);
+                    $scope.isAdd = true;
+                } else {
+                    alert("Seleccione un producto");
+                }
+            }
+        };
+
         $scope.listado = function () {
-            operatividadService.get({
-                accion: 'listar'
-            }).then(function (data) {
-                $log.info("SERVICE - LISTAR => ", data);
-                $scope.operatividad = data.operatividad;
-            }).catch(function (err) {
-                $log.error("SERVICE - MULTIPLE =>", err);
-            });
-        };
-
-
-        $scope.actualizar = function (item) {
-            $scope.item = {
-                id: item.idDetOperatividad,
-                equipo: item.nombreEquipo,
-                marca: item.marcaEquipo,
-                modelo: item.modeloEquipo,
-                capacidad: item.capacidadEquipo,
-                interno: item.cantidadInterna,
-                externo: item.cantidadExterna,
-                inoperativo: item.cantidadInoperativo,
-                operativo: item.cantidadOperativo,
-                reubicacion: item.cantidadReubicacion
-            };
-        };
-
-
-        $scope.update = function () {
-            operatividadService.post({
-                accion: 'registrar',
-                data: {
-                    item: $scope.item
-                }
-            }).then(function (data) {
-                if (data.msj == 'OK') {
-                    $scope.listado();
-                }
-            }).catch(function (err) {
-                $log.error("SERVICE - MULTIPLE =>", err);
-            });
+            if ($scope.producto) {
+                operatividadService.get({
+                    accion: 'listar',
+                    idProducto: $scope.producto.idProducto
+                }).then(function (data) {
+                    $log.info("SERVICE - LISTAR => ", data);
+                    $scope.operatividad = data.operatividad;
+                }).catch(function (err) {
+                    $log.error("SERVICE - MULTIPLE =>", err);
+                });
+            } else {
+                $scope.operatividad = [];
+            }
         };
 
         $scope.listado();
-
     });

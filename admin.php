@@ -124,7 +124,7 @@ if (@$_SESSION['acceso'] != true) {
                             </a>
                         </li>
                         <li>
-                            <a href="#reporteIncidentes">
+                            <a href="">
                                 <i class="fa fa-pie-chart"></i>
                                 <span>Gráfica por Mes</span>
                             </a>
@@ -141,11 +141,11 @@ if (@$_SESSION['acceso'] != true) {
                         <li>
                             <a href="#operatividad">
                                 <i class="fa fa-circle-o text-red"></i>
-                                <span>Actualizar</span>
+                                <span>Check List</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="">
                                 <i class="fa fa-circle-o text-aqua"></i>
                                 <span>Reportes</span>
                             </a>

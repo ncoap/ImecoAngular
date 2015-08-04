@@ -29,6 +29,8 @@ angular.module('odisea.intervencion.consolidado',
 
         $scope.pormeses = false;
 
+        $scope.isCollapsed = false;
+
         $scope.busqueda = {
             fecha: new Date(),
             opcion: '1',

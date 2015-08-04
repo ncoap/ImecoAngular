@@ -66,7 +66,8 @@ angular.module('ngOdisea', [
                 accion: 'listar'
             }
         }).success(function (data, status, headers, config) {
-            $scope.tiendas = data;
+            $scope.tiendas = data.tiendas;
+            $scope.productos = data.productos;
 
         }).error(function (data, status, headers, config) {
             console.log("Error");
@@ -96,7 +97,7 @@ angular.module('ngOdisea', [
                 if ($rootScope.incidenteSeleccionado) {
                 } else {
                     event.preventDefault();
-                    $state.go('intervenciones');
+                    $state.go('incidentes');
                 }
             }
             if (angular.isDefined(toState.data.pageTitle)) {
