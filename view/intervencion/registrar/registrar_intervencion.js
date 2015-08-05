@@ -137,14 +137,14 @@ angular.module('odisea.intervencion.registrar',
                     accion: 'get_name_prevencionista_by_dni',
                     dni: $scope.intervencion.dniPrevencionista
                 }
-            }).success(function (data, status, headers, config) {
+            }).success(function (data) {
+                $log.log(data);
                 if (data.msj == 'OK') {
-                    $log.log(data);
                     $scope.intervencion.nombrePrevencionista = data.nombre;
                 } else {
                     $scope.intervencion.nombrePrevencionista = '';
                 }
-            }).error(function (data, status, headers, config) {
+            }).error(function (data) {
                 console.log("Error");
             });
         };
@@ -201,16 +201,10 @@ angular.module('odisea.intervencion.registrar',
         $scope.productos = [];
 
         $scope.addProduct = function () {
-
             var producto = angular.copy($scope.producto);
-
             $scope.productos.push(producto);
-
             calcularTotalRecuperado();
-
             $scope.producto = {codigo: '', descripcion: '', marca: '', cantidad: 0, precio: 0.0};
-
-
         };
 
         $scope.removeProduct = function (indice) {
@@ -230,30 +224,28 @@ angular.module('odisea.intervencion.registrar',
         }
 
         function saveTendero() {
-
             var postData = {
                 accion: 'registrar',
                 tendero: $scope.tendero
             };
 
+            dialogs.wait("Procesando...", "Registrando Intervención", 100);
+            $rootScope.$broadcast('dialogs.wait.progress', {'progress': 100});
+
             $http.post('php/controller/TenderoControllerPost.php', postData)
-                .success(function (data, status, headers, config) {
-
-                    $log.log("ON SAVED ", data);
-
+                .success(function (data) {
                     if (data.msj == 'OK') {
                         $scope.tendero.idTendero = data.newid;
                         $scope.intervencion.idTendero = data.newid;
-                        dialogs.wait("Procesando...", "Regsitrando Intervención", 100);
-                        $rootScope.$broadcast('dialogs.wait.progress', {'progress': 100});
                         saveIntervencion();
                     } else {
-                        alert("El Dni ya se encuentra registrado con otro Tendero, Verifique");
+                        $rootScope.$broadcast('dialogs.wait.complete');
+                        dialogs.error("DNI", 'El Dni ya se encuentra registrado con otro Tendero, Verifique');
                     }
                 })
-                .error(function (data, status, headers, config) {
-
-                    $log.info("que paso aca");
+                .error(function (data) {
+                    $rootScope.$broadcast('dialogs.wait.complete');
+                    dialogs.error("ERROR SERVIDOR", data);
                 });
         }
 
@@ -263,28 +255,24 @@ angular.module('odisea.intervencion.registrar',
                 tendero: $scope.tendero
             };
 
-            $http.post('php/controller/TenderoControllerPost.php', postData)
-                .success(function (data, status, headers, config) {
+            dialogs.wait("Procesando...", "Regsitrando Intervención", 100);
+            $rootScope.$broadcast('dialogs.wait.progress', {'progress': 100});
 
-                    $log.log("ON UPDATED", data);
+            $http.post('php/controller/TenderoControllerPost.php', postData)
+                .success(function (data) {
                     if (data.msj == 'OK') {
-                        dialogs.wait("Procesando...", "Regsitrando Intervención", 100);
-                        $rootScope.$broadcast('dialogs.wait.progress', {'progress': 100});
                         saveIntervencion();
                     } else {
-                        alert("El Dni ya se encuentra registrado con otro tendero. Verifique DNI");
+                        $rootScope.$broadcast('dialogs.wait.complete');
+                        dialogs.error("Imagen", "El Dni ya se encuentra registrado con otro tendero. Verifique DNI");
                     }
-
                 })
-                .error(function (data, status, headers, config) {
-
-                    $log.info("que paso aca");
+                .error(function (data) {
+                    $rootScope.$broadcast('dialogs.wait.complete');
+                    dialogs.error("ERROR SERVIDOR- function updateTendero", data);
                 });
         }
 
-        //save cab_incidente
-        //enviamos el dni del tendero y buscamos en php el id del tendero en base al DNI
-        //antes de guardar la incidencia
         function saveIntervencion() {
             var postData = {
                 accion: 'registrar',
@@ -293,54 +281,66 @@ angular.module('odisea.intervencion.registrar',
                     productos: JSON.stringify($scope.productos)
                 }
             };
-            //se esta subiendo la info -- desactivar el boton
             $scope.isUpload = true;
-            $http.post('php/controller/IntervencionControllerPost.php', postData)
-                .success(function (data, status, headers, config) {
-                    $log.log(data);
-                    loadImagen();
-                })
-                .error(function (data, status, headers, config) {
 
-                    $log.info("que paso aca");
+            $http.post('php/controller/IntervencionControllerPost.php', postData)
+                .success(function (data) {
+                    if (data.msj == 'OK') {
+                        loadImagen();
+                    } else {
+                        $rootScope.$broadcast('dialogs.wait.complete');
+                        dialogs.error("Registrar Intervención", "No se registró la Intervención, " +
+                            "Verifique sus Datos:");
+                        $scope.isUpload = false;
+                    }
+                })
+                .error(function (data) {
+                    $rootScope.$broadcast('dialogs.wait.complete');
+                    dialogs.error("ERROR SERVIDOR->", data);
                 });
         }
 
         function loadImagen() {
+
             var file = $scope.myFile;
             var fd = new FormData();
             fd.append('file', file);
             fd.append('nombre', $scope.tendero.idTendero);
-            $log.log("FILE ZISE", file);
 
             $http.post('php/controller/TenderoControllerLoad.php', fd, {
                 headers: {'Content-Type': undefined}
-            }).success(function (data, status, headers, config) {
-                $log.log("IMAGES RESPONSE ", data);
+            }).success(function (data) {
                 $rootScope.$broadcast('dialogs.wait.complete');
-                var dlg = dialogs.confirm('Confirmación', 'Intervención Registrada con Éxito. ¿Ver Registros?');
-                dlg.result.then(
-                    function (btn) {
-                        $state.go("intervenciones");
-                    },
-                    function (btn) {
+                if (data.msj == 'OK') {
+                    var noty = dialogs.notify("Mensaje", "INTERVENCION REGISTRADA CON EXITO");
+                    noty.result.then(function () {
                         $window.location.reload();
-                    }
-                );
-
-            }).error(function (data, status, headers, config) {
-                $log.log("que paso acacacaca");
+                    });
+                } else {
+                    var d_error = dialogs.error("Error Subir Imagen", "Intervencion Registrada pero no la Imagen:" +
+                        data.mensaje);
+                    d_error.result.then(function () {
+                        $window.location.reload();
+                    });
+                }
+            }).error(function (data) {
+                $rootScope.$broadcast('dialogs.wait.complete');
+                dialogs.error("ERROR SERVIDOR", data);
             });
         }
 
         $scope.SaveAll = function () {
-            $log.log("tendero", $scope.tendero, "intervención: ", $scope.intervencion, "productos: ", $scope.productos);
-            if (!$scope.isRegisterDniDataBase) {
-                saveTendero();
-            } else {
-                updateTendero();
-            }
+            var dlg = dialogs.confirm('Confirmar', 'DESEA REGISTRAR LA INTERVENCION?');
+            dlg.result.then(
+                function (btn) {
+                    if (!$scope.isRegisterDniDataBase) {
+                        saveTendero();
+                    } else {
+                        updateTendero();
+                    }
+                },
+                function (btn) {
+                }
+            );
         };
-
     });
-        

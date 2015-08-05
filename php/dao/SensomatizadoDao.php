@@ -14,6 +14,7 @@ class SensomatizadoDao {
     }
 
     public function listarNoSensomatizados($pagina,$terminos) {
+
         $response = array('size'=>0,'sensomatizados'=>array(),'busqueda'=>'');
         $col_busqueda = $this->get_terminos_de_busqueda($terminos);
         $response['busqueda']= $col_busqueda;
@@ -22,6 +23,7 @@ class SensomatizadoDao {
         $stm->execute(array(1,$col_busqueda,$pagina,0,'','',date('Y-m-d H:i:s'),0,'',0,'','','',0,0));
         $response['sensomatizados'] = $stm->fetchAll(PDO::FETCH_OBJ);
         return $response;
+
     }
 
     public function get_terminos_de_busqueda($terminos){

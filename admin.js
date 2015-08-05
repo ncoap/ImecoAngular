@@ -16,7 +16,6 @@ angular.module('ngOdisea', [
     'odisea.incidente.listar',
     'odisea.incidente.registrar',
     'odisea.incidente.actualizar'
-
 ])
     .config(function myAppConfig($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('/home');
@@ -59,22 +58,24 @@ angular.module('ngOdisea', [
         editableOptions.theme = 'bs3';
     })
 
-    .controller('OdiseaController', function AppCtrl($state, $http, $log, $scope, $rootScope, $location) {
+    .controller('OdiseaController', function AppCtrl($state, $http, $log, $scope, $rootScope) {
 
         $http.get('php/controller/TiendaControllerGet.php', {
             params: {
                 accion: 'listar'
             }
-        }).success(function (data, status, headers, config) {
-            $scope.tiendas = data.tiendas;
-            $scope.productos = data.productos;
-
-        }).error(function (data, status, headers, config) {
+        }).success(function (data) {
+            if(data.msj != 'KK'){
+                $scope.tiendas = data.tiendas;
+                $scope.productos = data.productos;
+            }else{
+                alert("ERROR DE CONEXION A LA BASE DE DATOS");
+            }
+        }).error(function (data) {
             console.log("Error");
         });
 
         $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-
             if (toState.name === 'nosensomatizadoup') {
                 if ($rootScope.sensorSeleccionado) {
                 } else {
@@ -82,9 +83,7 @@ angular.module('ngOdisea', [
                     $state.go('nosensomatizados');
                 }
             }
-
             if (toState.name === 'intervencionup') {
-
                 if ($rootScope.intervencionSeleccionada) {
                 } else {
                     event.preventDefault();
@@ -93,7 +92,6 @@ angular.module('ngOdisea', [
             }
 
             if (toState.name === 'incidenteup') {
-
                 if ($rootScope.incidenteSeleccionado) {
                 } else {
                     event.preventDefault();

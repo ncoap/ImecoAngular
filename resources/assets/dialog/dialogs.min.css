@@ -2,9 +2,7 @@
 .dialog-header-wait{background-color:#428bca}
 .dialog-header-notify{background-color:#eee}
 .dialog-header-confirm{
-    background-color:#99DF99
-        
-        /*#7CD87C*/
+    background-color: #3c8dbc;
 }
 .dialog-header-confirm h4,
 .dialog-header-confirm span,

@@ -1,0 +1,34 @@
+        $scope.actualizar = function (item) {
+            $scope.item = {
+                id: item.idDetOperatividad,
+                equipo: item.nombreEquipo,
+                marca: item.marcaEquipo,
+                modelo: item.modeloEquipo,
+                capacidad: item.capacidadEquipo,
+                interno: item.cantidadInterna,
+                externo: item.cantidadExterna,
+                inoperativo: item.cantidadInoperativo,
+                operativo: item.cantidadOperativo,
+                reubicacion: item.cantidadReubicacion
+            };
+        };
+
+
+        $scope.item = {
+                    idDetOperatividad:0,
+                    idOperatividad:0,
+                    tienda:undefined,
+                    producto:undefined,
+                    equipo: '',
+                    marca: '',
+                    modelo: '',
+                    capacidad: '',
+                    total:0,
+                    interno: 0,
+                    externo: 0,
+                    inoperativo: 0,
+                    operativo: 0,
+                    reubicacion: 0,
+                    otros:'',
+                    observaciones:''
+                };

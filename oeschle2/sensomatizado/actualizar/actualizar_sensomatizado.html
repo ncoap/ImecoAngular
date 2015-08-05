@@ -1,0 +1,235 @@
+<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+        <li id="id-tab-1" class="imeco-tab" ng-class="{'active': tab.tab1 == true}">
+            PASO 1
+        </li>
+        <li id="id-tab-2" class="imeco-tab" ng-class="{'active': tab.tab2 == true}">
+            PASO 2
+        </li>
+        <li id="id-tab-3" class="imeco-tab" ng-class="{'active': tab.tab3 == true}">
+            PASO 3
+        </li>
+    </ul>
+
+    <div class="tab-content" style="overflow:hidden">
+        <!--PASO 1-->
+        <div class="tab-pane" ng-class="{'active': tab.tab1 == true}">
+            <div class="box box-danger">
+                <div class="box-header">
+                    <h3 class="box-title">Actualizar</h3>
+                </div>
+                <div class="box-body">
+                    <form class="form-horizontal" name="nameForm1" enctype="multipart/form-data"
+                          ng-submit="actualizarProducto()">
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">Dni</label>
+                            <div class="col-xs-10">
+                                <input type="text" required ng-model="sensomatizado.dniPrevencionista"
+                                       ng-blur="buscarNombrePrevencionista()"
+                                       class="form-control" placeholder="Dni Prevencionista">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">Nombre</label>
+                            <div class="col-xs-10">
+                                <input type="text" required ng-model="sensomatizado.nombrePrevencionista"
+                                       class="form-control" placeholder="Nombre del Prevencionista">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">Tienda</label>
+                            <div class="col-xs-10">
+                                <select class="form-control" ng-model="sensomatizado.tienda" required
+                                        ng-options="ti.nombreTienda for ti in tiendas track by ti.idTienda">
+                                    <option value="">-Seleccione-</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">Fecha:</label>
+                            <div class="col-xs-10">
+                                <input type="datetime-local" ng-model="sensomatizado.fecha" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">Observaciones:</label>
+                            <div class="col-xs-10">
+                    <textarea class="form-control text-res" rows="5"
+                              maxlength="600" ng-trim='false'
+                              ng-model="sensomatizado.observaciones"
+                              style="resize: none">
+                    </textarea>
+                    <span class="label label-info">
+                        {{600 - sensomatizado.observaciones.length}}
+                        Caracteres Restantes
+                    </span>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+
+            <button class="pull-right btn btn-danger" ng-click="irPaso2()"
+                    ng-disabled="!(nameForm1.$valid)">Siguiente</button>
+        </div>
+        <!-- FIN PASO 1 -->
+
+
+        <!-- PASO 2 -->
+        <div class="tab-pane" ng-class="{'active': tab.tab2 == true}">
+
+            <div class="box box-danger">
+                <div class="box-header">
+                    <h3 class="box-title">Ingrese Producto</h3>
+                </div>
+                <div class="box-body">
+                    <form class="form-horizontal" name="nameFormProducto">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Código:</label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" ng-model="producto.codigo"
+                                       required maxlength="30"
+                                       placeholder="Código del Producto">
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Descripción:</label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" required
+                                       ng-model="producto.descripcion" maxlength="100"
+                                       placeholder="Descripción del Producto">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Marca:</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" maxlength="50"
+                                       ng-model="producto.marca" placeholder="Marca del Producto">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Cantidad:</label>
+                            <div class="col-md-3">
+                                <input type="text"
+                                       ng-pattern="/^(\d)+$/"
+                                       class="form-control"
+                                       ng-model="producto.cantidad" required="true" min="0">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Precio:</label>
+                            <div class="col-md-3">
+                                <input type="number" step="0.01"
+                                       ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
+                                       class="form-control" ng-model="producto.precio" required min="0">
+                            </div>
+                            <div class="col-md-7">
+                                <button  class="btn btn-primary pull-right"
+                                         ng-click="addProduct()" ng-disabled="!nameFormProducto.$valid"
+                                         title="Agrege Producto a la Lista">Agregar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title">Actualizar Productos No Sensomatizados</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body table-responsive">
+                    <div class="col-xs-12">
+                        <table id="id-table-intervenciones" class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Marca</th>
+                                <th style="text-align: right">Cantidad</th>
+                                <th style="text-align: right">Precio</th>
+                                <th style="text-align: center">Acción</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="pro in productos">
+                                <td>{{pro.codigo}}</td>
+                                <td>{{pro.descripcion}}</td>
+                                <td>{{pro.marca}}</td>
+                                <td style="text-align: right">{{pro.cantidad}}</td>
+                                <td style="text-align: right">{{pro.precio | currency:'S/. '}}</td>
+                                <td style="text-align: center">
+                                    <button class="btn btn-danger btn-xs" ng-click="removeProduct($index)">Quitar</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div>
+                            <div class="pull-right">
+                                <strong>Total:</strong>
+                                <label style="font-size: 1em" class="label label-info">{{sensomatizado.total | currency:'S/. '}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <button class="pull-left btn btn-danger" ng-click="irPaso1()">Atrás</button>
+                <button class="pull-right btn btn-danger" ng-click="irPaso3()">Siguiente</button>
+            </div>
+
+        </div>
+        <!--FIN PASO 2-->
+
+        <!--PASO 3 PASO 3 PASO 3 PASO 3-->
+        <div class="tab-pane" ng-class="{'active': tab.tab3 == true}">
+
+            <div class="row">
+                <div class="col-xs-6" style="text-align: center">
+                    <div>
+                        <label class="label label-danger" style="display: block" >FOTO ANTERIOR</label>
+                    </div>
+                    <img ng-src="view/imagen_no_sensomatizados/{{sensomatizado.idSensor}}.jpg?random={{mirandom}}"
+                         class="img-rounded" err-src='view/imagen_no_sensomatizados/default.png'
+                         width="280px" height="300px" >
+                </div>
+
+                <div class="col-xs-6" style="text-align: center">
+                    <form name="modelito" class="form-horizontal" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <div>
+                                <label style="display: block" class="label label-success">FOTO NUEVA</label>
+                            </div>
+                            <img ng-src="{{image}}" class="img-rounded" width="280px" height="300px">
+                        </div>
+                        <div>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" ng-model="isNewImage"><label>&nbsp;ACTUALIZAR FOTO?</label>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <input my-upload type="file" ng-model="document" file-model="myFile">
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div>
+                <button ng-click="irPaso2()" class="pull-left btn btn-danger">Atrás</button>
+                <button ng-click="SaveAll()" ng-disabled="!(modelito.$valid && !isUpload)"
+                        class="pull-right btn btn-primary btn-lg">
+                    Actualizar Productos No Sensomatizados</button>
+            </div>
+        </div>
+        <!--FIN PASO 3-->
+    </div>
+</div>

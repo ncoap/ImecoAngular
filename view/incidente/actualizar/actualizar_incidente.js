@@ -98,7 +98,7 @@ angular.module('odisea.incidente.actualizar',
                 $scope.tab = {tab1: false, tab2: false, tab3: true};
             };
 
-            $scope.isSaved = false;
+            $scope.isUpload = false;
 
             $scope.addProduct = function () {
                 var producto = angular.copy($scope.producto);
@@ -152,7 +152,7 @@ angular.module('odisea.incidente.actualizar',
             $scope.update = function () {
 
                 $log.log("UPDATE PRODUCTOS ", $scope.productos);
-                $scope.isSaved = true;
+                $scope.isUpload = true;
                 var postData = {
                     accion: 'actualizar',
                     data: {
@@ -164,26 +164,19 @@ angular.module('odisea.incidente.actualizar',
                 $rootScope.$broadcast('dialogs.wait.progress', {'progress': 100});
 
                 $http.post('php/controller/IncidenteControllerPost.php', postData)
-                    .success(function (data, status, headers, config) {
-                        $log.log("SERVICE ACTUALIZAR", data);
+                    .success(function (data) {
                         if (data.msj == 'OK') {
                             if ($scope.isNewImage) {
                                 $scope.loadImage($scope.incidente.idIncidente);
                             } else {
-                                $rootScope.$broadcast('dialogs.wait.complete');
-                                var dlg = dialogs.confirm('Confirmacion', 'Incidente Actualizado con Éxito. Ver Registros?');
-                                dlg.result.then(
-                                    function (btn) {
-                                        $state.go("incidentes");
-                                    },
-                                    function (btn) {
-                                        $window.location.reload();
-                                    }
-                                );
+                                var noty = dialogs.error("ACTUALIZAR", "Se actualizó el incidente");
+                                noty.result.then(function () {
+                                    $window.location.reload();
+                                });
                             }
                         }
                     })
-                    .error(function (err, status, headers, config) {
+                    .error(function (err) {
                         $log.info("ERROR REGISTRAR", err);
                     });
             };
@@ -196,24 +189,20 @@ angular.module('odisea.incidente.actualizar',
 
                 $http.post('php/controller/IncidenteControllerLoad.php', fd, {
                     headers: {'Content-Type': undefined}
-                }).success(function (data, status, headers, config) {
-                    $log.log("UPLOAD SUCCESS =>", data);
+                }).success(function (data) {
                     if (data.msj == 'OK') {
                         $rootScope.$broadcast('dialogs.wait.complete');
-                        var dlg = dialogs.confirm('Confirmacion', 'Incidente Actualizado con Exito. Ver Registros?');
-                        dlg.result.then(
-                            function (btn) {
-                                $state.go("incidentes");
-                            },
-                            function (btn) {
-                                $window.location.reload();
-                            }
-                        );
+                        var noty = dialogs.error("ACTUALIZAR", "Se actualizó el incidente");
+                        noty.result.then(function () {
+                            $window.location.reload();
+                        });
                     } else {
-                        alert("Se actualizo la informacion pero no se cargo la imagen");
-                        $log.info(data.info);
+                        var noty = dialogs.error("IMAGEN", "Se actualizó el incidente, pero no la imagen");
+                        noty.result.then(function () {
+                            $window.location.reload();
+                        });
                     }
-                }).error(function (err, status, headers, config) {
+                }).error(function (err) {
                     $log.log("ERROR AJAX UPLOAD = >", err);
                 });
             };

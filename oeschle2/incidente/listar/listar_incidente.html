@@ -1,0 +1,120 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        Parámetros de Búsqueda
+        <i class="pull-right fa" style="cursor: pointer;font-size: 1.5em"
+           ng-class="{'fa-chevron-circle-down': isCollapsed == true ,
+                               'fa-chevron-circle-up': isCollapsed == false}"
+           ng-click="isCollapsed = !isCollapsed"></i>
+    </div>
+    <div class="panel-body">
+        <form name="nameFormSearch" ng-submit="consultar()" class="form-horizontal" collapse="isCollapsed">
+            <div class="row">
+                <label class="control-label col-md-1">Tienda:</label>
+                <div  class="col-md-3" style="margin-bottom: 1em">
+                    <select class="form-control" ng-model="termSearch.tienda"
+                            ng-options="ti.nombreTienda for ti in tiendas track by ti.idTienda">
+                        <option value="">TODAS LAS TIENDAS</option>
+                    </select>
+                </div>
+
+                <label class="control-label col-md-1">DNI:</label>
+                <div class="col-md-3" style="margin-bottom: 1em">
+                    <input  type="text" ng-model="termSearch.dni"
+                            ng-maxlength="15" maxlength="15"
+                            class="form-control"
+                            placeholder="DNI del Prevencionista">
+                </div>
+
+                <label class="control-label col-md-1">Nombre:</label>
+                <div class="col-md-3" style="margin-bottom: 1em">
+                    <input type="text" ng-model="termSearch.nombre" class="form-control"
+                           placeholder="Nombre del Prevencionista">
+                </div>
+
+
+                <label class="control-label col-md-1">Fecha:</label>
+                <div class="col-md-3" style="margin-bottom: 1em">
+                    <input type="date"
+                           ng-model="termSearch.fechaInicial"
+                           class="form-control" style="margin-bottom: 1em" required/>
+                    <input type="date"
+                           ng-model="termSearch.fechaFinal"
+                           class="form-control" style="margin-bottom: 1em" required/>
+                </div>
+
+                <label class="control-label col-md-1">Rango:</label>
+                <div class="col-md-3" style="margin-bottom: 1em">
+                    <div>
+                        <input type="radio" name="horario" value="00:00:00 23:59:59" ng-model="termSearch.horario">
+                        TODOS
+                    </div>
+                    <div>
+                        <input type="radio" name="horario" value="09:00:00 12:00:00" ng-model="termSearch.horario">
+                        09:00 a 12:00
+                        <input style="margin-left: 2em" type="radio" name="horario"
+                               value="12:00:00 17:00:00" ng-model="busqueda.horario">
+                        12:00 a 17:00
+                    </div>
+                    <div>
+                        <input type="radio" name="horario" value="17:00:00 22:00:00" ng-model="termSearch.horario">
+                        17:00 a 22:00
+                        <input style="margin-left: 2em" type="radio" name="horario"
+                               value="22:00:00 09:00:00" ng-model="termSearch.horario">
+                        22:00 a 09:00
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-primary pull-right animated infinite pulse" type="submit"
+                            ng-disabled='!nameFormSearch.$valid' style="font-weight: bold">BUSCAR</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="box box-primary">
+    <div class="box-header">
+        <h3 class="box-title">Registro de Incidentes</h3>
+    </div>
+    <div class="box-body table-responsive">
+        <div>
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>Tienda</th>
+                    <th>Dni Prev</th>
+                    <th>Prevencionista</th>
+                    <th>Dia Incidente</th>
+                    <th>Hora Incidente</th>
+                    <th>Fecha Incidente</th>
+                    <th style="text-align: center">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="incidente in incidentes">
+                    <td>{{incidente.nombreTienda}}</td>
+                    <td>{{incidente.dniInvolucrado}}</td>
+                    <td>{{incidente.nombreInvolucrado}}</td>
+                    <td>{{incidente.diaAccidente}}</td>
+                    <td>{{incidente.horaAccidente}}</td>
+                    <td>{{incidente.fechaAccidente}}</td>
+                    <td style="text-align: center">
+                        <img style="cursor: pointer" src="resources/iconos/Info-24.png" ng-click="showModalVer(incidente)" title="Detalle">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div>
+                <label class="label label-warning" ng-if="sensomatizados.length == 0">0 Registros</label>
+            </div>
+        </div>
+    </div>
+    <div class="box-footer">
+        <div class="imeco-right">
+            <pagination total-items="pagination.totalItems" ng-model="pagination.currentPage"
+                        max-size="pagination.maxSize" ng-change="pageChanged()"
+                        class="pagination-sm" items-per-page = "10"
+                        boundary-links="true" rotate="false">
+            </pagination>
+        </div>
+    </div>
+</div>

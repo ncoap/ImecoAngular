@@ -22,6 +22,5 @@ switch ($accion) {
         $data = $request->data;
         $mensaje = $intervencionDao->sp_delete_intervencion($data->id);
         echo json_encode($mensaje);
-
         break;
 }

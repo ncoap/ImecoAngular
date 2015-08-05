@@ -171,20 +171,22 @@ angular.module('odisea.intervencion.actualizar',
                     accion: 'actualizar',
                     tendero: $scope.tendero
                 };
+                var dlg = dialogs.wait(undefined, undefined, 100);
+                $rootScope.$broadcast('dialogs.wait.progress', {'progress': 100});
+
                 $http.post('php/controller/TenderoControllerPost.php', postData)
-                    .success(function (data, status, headers, config) {
-                        console.log(data);
+                    .success(function (data) {
                         if (data.msj == 'OK') {
-                            var dlg = dialogs.wait(undefined, undefined, 100);
-                            $rootScope.$broadcast('dialogs.wait.progress', {'progress': 100});
                             updateIntervencion();
                         } else {
-                            alert("No se pudo actualizar al tendero");
-                            console.log(data);
+                            $rootScope.$broadcast('dialogs.wait.complete');
+                            dialogs.error("Actualizar Intervención", "No se actualizó la Intervención, " +
+                                "Verifique sus datos: '");
                         }
                     })
-                    .error(function (data, status, headers, config) {
-                        $log.info("que paso aca");
+                    .error(function (data) {
+                        $rootScope.$broadcast('dialogs.wait.complete');
+                        dialogs.error("ERROR SERVIDOR", data);
                     });
             }
 
@@ -202,21 +204,29 @@ angular.module('odisea.intervencion.actualizar',
 
                 $http.post('php/controller/IntervencionControllerPost.php', postData)
                     .success(function (data) {
-                        $log.log("RESPONSE UPDATE INTERVENCION", data);
-                        if ($scope.isNewImage) {
-                            loadImagen();
+                        if (data.msj == 'OK') {
+                            if ($scope.isNewImage) {
+                                loadImagen();
+                            } else {
+                                $rootScope.$broadcast('dialogs.wait.complete');
+                                var noty = dialogs.notify("Mensaje", "INTERVENCION ACTUALIZADA CON EXITO");
+                                noty.result.then(function () {
+                                    $window.location.reload();
+                                });
+                            }
                         } else {
-                            $rootScope.$broadcast('dialogs.wait.complete');
-                            alert("Intervencion Actualizada");
-                            $state.go('intervenciones');
+                            dialogs.error("Actualizar Intervención", "No se actualizó la Intervención, " +
+                                "Verifique sus Datos:");
+                            $scope.isUpload = false;
                         }
                     })
                     .error(function (data) {
-                        $log.info("que paso aca");
+                        $rootScope.$broadcast('dialogs.wait.complete');
+                        dialogs.error("ERROR SERVIDOR", data);
                     });
             }
 
-            function loadImagen(){
+            function loadImagen() {
                 var file = $scope.myFile;
                 var fd = new FormData();
                 fd.append('file', file);
@@ -225,59 +235,71 @@ angular.module('odisea.intervencion.actualizar',
                 $http.post('php/controller/TenderoControllerLoad.php', fd, {
                     headers: {'Content-Type': undefined}
                 }).success(function (data) {
+                    $rootScope.$broadcast('dialogs.wait.complete');
                     if (data.msj == 'OK') {
-                        $rootScope.$broadcast('dialogs.wait.complete');
-                        alert("Intervencion Actualizada");
-                        $state.go('intervenciones');
+                        var noty = dialogs.notify("Mensaje", "INTERVENCION ACTUALIZADA CON EXITO");
+                        noty.result.then(function () {
+                            $state.go('intervenciones');
+                        });
                     } else {
-                        alert("Datos Actualizados, NO se Cargo la Imagen:" + data.mensaje);
-                        $log.log("Load", data);
+                        var noty = dialogs.notify("Imagen", "Datos Actualizados, pero NO se Cargo la Imagen " + data.mensaje);
+                        noty.result.then(function () {
+                            $scope.isUpload = false;
+                        });
                     }
                 }).error(function (data) {
-                    $log.log("que paso acacacaca");
+                    $rootScope.$broadcast('dialogs.wait.complete');
+                    dialogs.error("ERROR SERVIDOR", data);
                 });
             }
 
             $scope.SaveAll = function () {
-                $log.log("tendero", $scope.tendero);
-                $log.log("incidente: ", $scope.intervencion);
-                $log.log("productos: ", $scope.productos);
-                if ($scope.isNewImage) {
-                    if (!$scope.myFile) {
-                        alert("Cargue una foto o deseleccione la opción");
-                    } else {
-                        updateTendero();
+                var dlg = dialogs.confirm('Confirmar', 'DESEAS ACTUALIZAR LA INTERVENCION?');
+                dlg.result.then(
+                    function (btn) {
+                        if ($scope.isNewImage) {
+                            if (!$scope.myFile) {
+                                var noty = dialogs.notify("Imagen", "Cargue una foto o deseleccione la opción");
+                            } else {
+                                updateTendero();
+                            }
+                        } else {
+                            updateTendero();
+                        }
+                    },
+                    function (btn) {
                     }
-                } else {
-                    updateTendero();
-                }
+                );
             };
 
             $scope.verificarDni = function () {
                 var dniActual = $scope.tendero.dniTendero;
-
                 if (dni_inicial != dniActual) {
                     $http.get('php/controller/TenderoControllerGet.php', {
                         params: {
                             accion: 'buscar',
                             dni: dniActual
                         }
-                    }).success(function (data, status, headers, config) {
+                    }).success(function (data) {
                         if (data.msj == 'OK') {
-                            var opt = confirm("El DNI ingresado se encuentra registrado con OTRO TENDERO. " +
-                                "Desea Cargar los datos del Tendero Encontrado(S) o cambie el DNI (N)?");
-
-                            if (opt) {
-                                $scope.tendero = data.tendero;
-                                var fecha = convertStringToDate();
-                                $scope.tendero.nacimientoTendero = utilFactory.getDateFromString(data.tendero.nacimientoTendero);
-
-                            } else {
-                                $scope.tendero.dniTendero = dni_inicial;
-                            }
+                            var dlg = dialogs.confirm('DNI', "El DNI ingresado se encuentra registrado con OTRO TENDERO. " +
+                            "Desea Cargar los datos del Tendero Encontrado(SI) o cambie el DNI (NO)?");
+                            dlg.result.then(
+                                function (btn) {
+                                    $scope.mirandom = Math.random();
+                                    $scope.tendero = data.tendero;
+                                    $scope.intervencion.idTendero = data.tendero.idTendero;
+                                    $scope.tendero.nacimientoTendero = utilFactory.getDateFromString(data.tendero.nacimientoTendero);
+                                },
+                                function (btn) {
+                                    $scope.tendero.dniTendero = dni_inicial;
+                                }
+                            );
+                        }else{
+                            dialogs.error("ERROR","No se pudo verificar el DNI");
                         }
-                    }).error(function (data, status, headers, config) {
-                        console.log("Error");
+                    }).error(function (data) {
+                        dialogs.error("ERROR SERVIDOR- verificarDni", data);
                     });
                 }
             };

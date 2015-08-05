@@ -133,8 +133,8 @@ angular.module('odisea.sensomatizado.registrar',
                     dni: $scope.sensomatizado.dniPrevencionista
                 }
             }).success(function (data, status, headers, config) {
+                $log.log(data);
                 if (data.msj == 'OK') {
-                    $log.log(data);
                     $scope.sensomatizado.nombrePrevencionista = data.nombre;
                 } else {
                     $scope.sensomatizado.nombrePrevencionista = '';
@@ -145,30 +145,41 @@ angular.module('odisea.sensomatizado.registrar',
         };
 
         $scope.SaveAll = function () {
-            $scope.isSaved = true;
-            console.log($scope.myFile.name);
-            var postData = {
-                accion: 'registrar',
-                data: {
-                    sensomatizado: $scope.sensomatizado,
-                    productos: JSON.stringify($scope.productos)
-                }
-            };
-            dialogs.wait("Procesando...", "Regsitrando Intervención", 100);
-            $rootScope.$broadcast('dialogs.wait.progress', {'progress': 100});
 
-            $http.post('php/controller/SensomatizadoControllerPost.php', postData)
-                .success(function (data) {
-                    $log.log(data);
-                    if (data.msj == 'OK') {
-                        $scope.loadImage(data.id);
-                    }else{
-                        alert(data.error);
-                    }
-                })
-                .error(function (err) {
-                    $log.info("ERROR REGISTRAR", err);
-                });
+            var dlg = dialogs.confirm('Confirmar', 'DESEA REGISTRAR EL PRODUCTO?');
+            dlg.result.then(
+                function (btn) {
+                    $scope.isUpload = true;
+                    var postData = {
+                        accion: 'registrar',
+                        data: {
+                            sensomatizado: $scope.sensomatizado,
+                            productos: JSON.stringify($scope.productos)
+                        }
+                    };
+                    dialogs.wait("Procesando...", "Registrando Intervencion", 100);
+                    $rootScope.$broadcast('dialogs.wait.progress', {'progress': 100});
+
+                    $http.post('php/controller/SensomatizadoControllerPost.php', postData)
+                        .success(function (data) {
+                            $log.log(data);
+                            if (data.msj == 'OK') {
+                                $scope.loadImage(data.id);
+                            }else{
+                                $rootScope.$broadcast('dialogs.wait.complete');
+                                dialogs.error("Registro", "No se registro el Producto, " +
+                                    "Verifique sus Datos o Conexion:");
+                                $scope.isUpload = false;
+                            }
+                        })
+                        .error(function (err) {
+                            $rootScope.$broadcast('dialogs.wait.complete');
+                            dialogs.error("ERROR SERVIDOR", data);
+                        });
+                },
+                function (btn) {
+                }
+            );
         };
 
         $scope.loadImage = function (id) {
@@ -179,24 +190,23 @@ angular.module('odisea.sensomatizado.registrar',
 
             $http.post('php/controller/SensomatizadoControllerLoad.php', fd, {
                 headers: {'Content-Type': undefined}
-            }).success(function (data, status, headers, config) {
-                $log.log("UPLOAD SUCCESS =>", data);
+            }).success(function (data) {
+                $rootScope.$broadcast('dialogs.wait.complete');
                 if(data.msj == 'OK'){
-                    $rootScope.$broadcast('dialogs.wait.complete');
-                    var dlg = dialogs.confirm('Confirmacion', 'Productos Registrados con Exito. Ver Registros?');
-                    dlg.result.then(
-                        function (btn) {
-                            $state.go("nosensomatizados");
-                        },
-                        function (btn) {
-                            $window.location.reload();
-                        }
-                    );
+                    var noty = dialogs.notify("Mensaje", "PRODUCTO REGISTRADO CON EXITO");
+                    noty.result.then(function () {
+                        $window.location.reload();
+                    });
                 }else{
-                    alert(data.info);
+                    var d_error = dialogs.error("Error Subir Imagen", "Producto Registrado pero no la Imagen:" +
+                        data.info);
+                    d_error.result.then(function () {
+                        $window.location.reload();
+                    });
                 }
-            }).error(function (err, status, headers, config) {
-                $log.log("ERROR AJAX UPLOAD = >",err);
+            }).error(function (data) {
+                $rootScope.$broadcast('dialogs.wait.complete');
+                dialogs.error("ERROR SERVIDOR", data);
             });
         };
 

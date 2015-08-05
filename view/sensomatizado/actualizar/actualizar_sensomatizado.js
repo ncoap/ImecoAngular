@@ -140,22 +140,28 @@ angular.module('odisea.sensomatizado.actualizar',
             };
 
             $scope.SaveAll = function () {
-                if ($scope.isNewImage) {
-                    if (!$scope.myFile) {
-                        alert("Cargue una foto o deseleccione la opción");
-                    } else {
-                        $scope.updateProductos();
+
+                var dlg = dialogs.confirm('Confirmar', 'DESEA REGISTRAR EL PRODUCTO?');
+                dlg.result.then(
+                    function (btn) {
+                        if ($scope.isNewImage) {
+                            if (!$scope.myFile) {
+                                alert("Cargue una foto o deseleccione la opción");
+                            } else {
+                                $scope.updateProductos();
+                            }
+                        } else {
+                            $scope.updateProductos();
+                        }
+                    },
+                    function (btn) {
                     }
-                } else {
-                    $scope.updateProductos();
-                }
+                );
             };
 
             $scope.updateProductos = function(){
 
-                $log.log("UPDATE PRODUCTOS ",$scope.productos);
-
-                $scope.isSaved = true;
+                $scope.isUpload = true;
                 var postData = {
                     accion: 'actualizar',
                     data: {
@@ -163,32 +169,30 @@ angular.module('odisea.sensomatizado.actualizar',
                         productos: JSON.stringify($scope.productos)
                     }
                 };
-
                 dialogs.wait("Procesando...", "Actualizando Productos", 100);
                 $rootScope.$broadcast('dialogs.wait.progress', {'progress': 100});
-
                 $http.post('php/controller/SensomatizadoControllerPost.php', postData)
-                    .success(function (data, status, headers, config) {
-                        $log.log("SERVICE ACTUALIZAR" ,data);
+                    .success(function (data) {
+                        $rootScope.$broadcast('dialogs.wait.complete');
                         if (data.msj == 'OK') {
                             if ($scope.isNewImage) {
                                 $scope.loadImage($scope.sensomatizado.idSensor);
                             } else {
-                                $rootScope.$broadcast('dialogs.wait.complete');
-                                var dlg = dialogs.confirm('Confirmacion', 'Actualización registrada con Éxito. Ver Registros?');
-                                dlg.result.then(
-                                    function (btn) {
-                                        $state.go("nosensomatizados");
-                                    },
-                                    function (btn) {
-                                        $window.location.reload();
-                                    }
-                                );
+                                var noty = dialogs.notify("Mensaje", "PRODUCTO ACTUALIZADO CON EXITO");
+                                noty.result.then(function () {
+                                    $window.location.reload();
+                                });
                             }
+                        }else{
+
+                            dialogs.error("Registro", "No se actualizo el Producto, " +
+                                "Verifique sus Datos:");
+                            $scope.isUpload = false;
                         }
                     })
-                    .error(function (err, status, headers, config) {
-                        $log.info("ERROR REGISTRAR", err);
+                    .error(function (data) {
+                        $rootScope.$broadcast('dialogs.wait.complete');
+                        dialogs.error("ERROR SERVIDOR", data);
                     });
             };
 
@@ -201,24 +205,22 @@ angular.module('odisea.sensomatizado.actualizar',
                 $http.post('php/controller/SensomatizadoControllerLoad.php', fd, {
                     headers: {'Content-Type': undefined}
                 }).success(function (data, status, headers, config) {
-                    $log.log("UPLOAD SUCCESS =>", data);
+                    $rootScope.$broadcast('dialogs.wait.complete');
                     if (data.msj == 'OK') {
-                        $rootScope.$broadcast('dialogs.wait.complete');
-                        var dlg = dialogs.confirm('Confirmacion', 'Actualización registrada con Éxito Ver Registros?');
-                        dlg.result.then(
-                            function (btn) {
-                                $state.go("nosensomatizados");
-                            },
-                            function (btn) {
-                                $window.location.reload();
-                            }
-                        );
+                        var noty = dialogs.notify("Mensaje", "PRODUCTO ACTUALIZADO CON EXITO");
+                        noty.result.then(function () {
+                            $window.location.reload();
+                        });
                     } else {
-                        alert("No se cargo la imagen");
-                        $log.info(data.info);
+                        var d_error = dialogs.error("Error Subir Imagen", "Producto Actualizado, pero no la Imagen:" +
+                            data.info);
+                        d_error.result.then(function () {
+                            $window.location.reload();
+                        });
                     }
                 }).error(function (err, status, headers, config) {
-                    $log.log("ERROR AJAX UPLOAD = >", err);
+                    $rootScope.$broadcast('dialogs.wait.complete');
+                    dialogs.error("ERROR SERVIDOR", data);
                 });
             };
         }

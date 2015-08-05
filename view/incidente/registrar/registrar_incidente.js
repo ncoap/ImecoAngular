@@ -82,7 +82,7 @@ angular.module('odisea.incidente.registrar',
             $scope.tab = {tab1: false, tab2: false, tab3: true};
         };
 
-        $scope.isSaved = false;
+        $scope.isUpload = false;
 
         $scope.incidente = {
             idIncidente:0,
@@ -154,7 +154,7 @@ angular.module('odisea.incidente.registrar',
         };
 
         $scope.SaveAll = function () {
-            $scope.isSaved = true;
+            $scope.isUpload = true;
             console.log($scope.myFile.name);
             var postData = {
                 accion: 'registrar',
@@ -187,21 +187,17 @@ angular.module('odisea.incidente.registrar',
             $http.post('php/controller/IncidenteControllerLoad.php', fd, {
                 headers: {'Content-Type': undefined}
             }).success(function (data, status, headers, config) {
-                $log.log("UPLOAD SUCCESS =>", data);
+                $rootScope.$broadcast('dialogs.wait.complete');
                 if(data.msj == 'OK'){
-                    $rootScope.$broadcast('dialogs.wait.complete');
-                    var dlg = dialogs.confirm('Confirmacion', 'Incidente Registrado con Exito. Ver Registros?');
-                    dlg.result.then(
-                        function (btn) {
-                            $state.go("incidentes");
-                        },
-                        function (btn) {
-                            $window.location.reload();
-                        }
-                    );
+                    var noty = dialogs.notify("Mensaje", "INCIDENTE REGISTRADO CON EXITO");
+                    noty.result.then(function () {
+                        $window.location.reload();
+                    });
                 }else{
-                    alert("Se guardo la informacion pero no se cargo la imagen");
-                    $log.info(data.info);
+                    var noty = dialogs.error("IMAGEN", "Se registro el incidente pero no la Imagen");
+                    noty.result.then(function () {
+                        $window.location.reload();
+                    });
                 }
             }).error(function (err, status, headers, config) {
                 $log.log("ERROR AJAX UPLOAD = >",err);

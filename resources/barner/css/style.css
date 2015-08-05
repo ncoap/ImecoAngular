@@ -51,3 +51,9 @@ body::before {
 .victor-button:hover{
     background-color: #c1a545 !important;
 }
+
+
+.lol{
+    width: 130px;
+    height: 75px;
+}

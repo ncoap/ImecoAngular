@@ -6,7 +6,7 @@ if (@$_SESSION['acceso'] != true) {
     if (@$_SESSION['rol'] == 'JEFE DE ODISEA') {
         header('Location: odisea.php');
     } else if (@$_SESSION['rol'] == 'GERENTE DE PREVENCION') {
-        header('Location: oeschle1.php');
+        header('Location: oeschle.php');
     } else if (@$_SESSION['rol'] == 'JEFE DE PREVENCION') {
         header('Location: oeschle2.php');
     }
@@ -237,5 +237,6 @@ if (@$_SESSION['acceso'] != true) {
 <script src="view/incidente/listar/listar_incidente.js"></script>
 <script src="view/incidente/registrar/registrar_incidente.js"></script>
 <script src="view/incidente/actualizar/actualizar_incidente.js"></script>
+
 </body>
 </html>

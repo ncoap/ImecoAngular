@@ -32,7 +32,7 @@ switch ($op) {
             } else if ($respuesta->rol == 'JEFE DE ODISEA') {
                 header('Location: ../../odisea.php');
             } else if ($respuesta->rol == 'GERENTE DE PREVENCION') {
-                header('Location: ../../oeschle1.php');
+                header('Location: ../../oeschle.php');
             } else if ($respuesta->rol == 'JEFE DE PREVENCION') {
                 header('Location: ../../oeschle2.php');
             }
