@@ -82,25 +82,24 @@
                                 <div class="box-body table-responsive" style="background-color: #ddd9c4">
                                     <table class="table table-bordered">
                                         <thead>
-                                        <tr>
                                             <th>Tienda</th>
-                                            <th style="text-align: right"># Interv.</th>
-                                            <th style="text-align: right">Total</th>
-                                        </tr>
+                                            <th style="text-align: right">n°Interv</th>
+                                            <th style="text-align: right">Total S/.</th>
                                         </thead>
                                         <tbody>
-                                        <tr ng-repeat="data in allData">
-                                            <td>{{data.tienda}}</td>
-                                            <td style="text-align: right">{{data.intervenciones}}</td>
-                                            <td style="text-align: right">{{data.recuperado| currency:'S/. '}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-size: 1.5em"><strong>TOTAL:</strong></td>
-                                            <td style="text-align: right;font-size: 1.5em"><strong>{{totalIntervenciones}}</strong>
-                                            </td>
-                                            <td style="text-align: right;font-size: 1.5em"><strong>{{totalRecuperado|
-                                                currency:'S/. '}}</strong></td>
-                                        </tr>
+                                            <tr ng-repeat="data in allData">
+                                                <td>{{data.tienda}}</td>
+                                                <td style="text-align: right">{{data.intervenciones}}</td>
+                                                <td style="text-align: right">{{data.recuperado| currency:''}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 1.1em"><strong>TOTAL:</strong></td>
+                                                <td style="text-align: right;font-size: 1.1em"><strong>{{totalIntervenciones}}</strong>
+                                                </td>
+                                                <td style="text-align: right;font-size: 1.1em"><strong>{{totalRecuperado|
+                                                    currency:''}}</strong>
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>

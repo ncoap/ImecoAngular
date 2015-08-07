@@ -22,7 +22,7 @@ angular.module('odisea.sensomatizado.listar',
 
             $http.get('php/controller/SensomatizadoControllerGet.php', {
                 params: params
-            }).success(function (data, status, headers, config) {
+            }).success(function (data) {
                 defered.resolve(data);
             }).error(function (err) {
                 defered.reject(err);
@@ -54,7 +54,6 @@ angular.module('odisea.sensomatizado.listar',
     })
     .controller('nosensomatizadosController', function (utilFactory, $state, $rootScope, $scope, $log,
                                                         $http, $modal, $timeout, sensorService) {
-
         $scope.pagination = {maxSize: 10, totalItems: 0, currentPage: 1};
         $scope.isCollapsed = false;
         $scope.sensomatizados = [];
