@@ -33,7 +33,9 @@ angular.module('odisea.home',
             };
         })
         .controller('homeController', function ($scope, $log, $http, $modal, $timeout) {
-            
+
+            $log.log("HOME=>",$scope.rol);
+
             $scope.mirandom = Math.random();
 
             $scope.ultimasintervenciones = [];

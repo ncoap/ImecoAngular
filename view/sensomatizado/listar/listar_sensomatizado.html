@@ -78,24 +78,28 @@
     </div>
     <div class="box-body table-responsive">
         <div>
-            <table id="id-table-intervenciones" class="table table-bordered table-striped">
+            <table id="id-table-intervenciones" class="table table-bordered table-striped" style="min-width: 1200px">
                 <thead>
                 <tr>
                     <th>Tienda</th>
-                    <th>DNI</th>
-                    <th>Prevencionista</th>
                     <th>Fecha</th>
-                    <th>Observaciones</th>
+                    <th>Dni Prev</th>
+                    <th>Producto</th>
+                    <th>Marca</th>
+                    <th class="imeco-right">Cantidad</th>
+                    <th class="imeco-right">Precio</th>
                     <th style="text-align: center">Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="sensor in sensomatizados">
                     <td>{{sensor.nombreTienda}}</td>
-                    <td>{{sensor.dniPrevencionista}}</td>
-                    <td>{{sensor.nombrePrevencionista}}</td>
                     <td>{{sensor.fecha}}</td>
-                    <td>{{sensor.observaciones}}</td>
+                    <td>{{sensor.dniPrevencionista}}</td>
+                    <td>{{sensor.descripcionProducto}}</td>
+                    <td>{{sensor.marcaProducto}}</td>
+                    <td class="imeco-right">{{sensor.cantidadProducto}}</td>
+                    <td class="imeco-right">{{sensor.precioProducto | currency:'S/. '}}</td>
                     <td style="text-align: center">
                         <img style="cursor: pointer" src="resources/iconos/Info-24.png" ng-click="showModalVer(sensor)" title="Detalle">
                         <img style="cursor: pointer" src="resources/iconos/Ok-24.png" ng-click="actualizar(sensor)" title="Actualizar">

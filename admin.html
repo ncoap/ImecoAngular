@@ -1,17 +1,3 @@
-<?php
-session_start();
-if (@$_SESSION['acceso'] != true) {
-    header('Location: index.php');
-} else {
-    if (@$_SESSION['rol'] == 'JEFE DE ODISEA') {
-        header('Location: odisea.php');
-    } else if (@$_SESSION['rol'] == 'GERENTE DE PREVENCION') {
-        header('Location: oeschle.php');
-    } else if (@$_SESSION['rol'] == 'JEFE DE PREVENCION') {
-        header('Location: oeschle2.php');
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="es" ng-app="ngOdisea" ng-controller="OdiseaController">
 
@@ -20,9 +6,8 @@ if (@$_SESSION['acceso'] != true) {
     <title ng-bind="pageTitle"></title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     <link rel="stylesheet" href="resources/assets/bootstrap/css/bootstrap.min.css"/>
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"
-          type="text/css">
-    <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="resources/assets/theme/admin.lte.css"/>
     <link rel="stylesheet" href="resources/assets/theme/_all-skins.min.css"/>
     <link rel="stylesheet" href="resources/css/transition.css"/>
@@ -37,14 +22,13 @@ if (@$_SESSION['acceso'] != true) {
 <div class="wrapper">
     <header class="main-header">
         <a href="#home" class="logo">
-                    <span class="logo-mini">
-                        <img style="width: 40px;" src="resources/img/otros/logo-mini.png">
-                    </span>
-                    <span class="logo-lg">
-                        <img src="resources/img/otros/logooes.png">
-                    </span>
+            <span class="logo-mini">
+                <img style="width: 40px;" src="resources/img/otros/captura.png">
+            </span>
+            <span class="logo-lg">
+                <img src="resources/img/otros/logooes.png">
+            </span>
         </a>
-
         <nav class="navbar navbar-static-top" role="navigation">
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                 <span class="sr-only">Toggle navigation</span>
@@ -62,13 +46,13 @@ if (@$_SESSION['acceso'] != true) {
                                 <img src="resources/img/otros/user2-160x160.jpg" class="img-circle" alt="User Image"/>
 
                                 <p>
-                                    <?= $_SESSION['rol'] ?>
+                                    {{rol}}
                                 </p>
                             </li>
 
                             <li class="user-footer">
                                 <div class="pull-right">
-                                    <a id="id-btn-exit" href="php/controller/LoginController.php?op=2"
+                                    <a ng-click="logout()"
                                        class="btn btn-default btn-flat">Salir</a>
                                 </div>
                             </li>
@@ -206,6 +190,7 @@ if (@$_SESSION['acceso'] != true) {
 <script src="resources/assets/angular/angular-ui-router.min.js"></script>
 <script src="resources/assets/angular/angular-resource.min.js"></script>
 <script src="resources/assets/angular/angular-animate.min.js"></script>
+<script src="resources/assets/angular/cooki/angular-cookies.min.js"></script>
 
 <script src="resources/assets/angular/texteditor/textAngular-sanitize.min.js"></script>
 <script src="resources/assets/angular/texteditor/textAngular.min.js"></script>

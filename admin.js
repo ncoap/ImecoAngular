@@ -3,6 +3,7 @@ angular.module('ngOdisea', [
     'ui.bootstrap',
     'ngAnimate',
     'checklist-model',
+    'ngCookies',
     'odisea.home',
     'odisea.operatividad',
     'odisea.intervencion.registrar',
@@ -20,7 +21,7 @@ angular.module('ngOdisea', [
     .config(function myAppConfig($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('/home');
     })
-    .factory("utilFactory", function () {
+    .factory("utilFactory", function ($cookieStore) {
         return {
             nombreApp: 'Variables Globales',
             getDateTimeFromString: function (dateTimeString) {
@@ -51,6 +52,12 @@ angular.module('ngOdisea', [
             },
             dateDefault :  {
                 ini: new Date(2015, 0, 1)
+            },
+            getRol : function () {
+                return $cookieStore.get('rol') || false;
+            },
+            removeRol : function() {
+                $cookieStore.remove('rol');
             }
         }
     })
@@ -58,48 +65,60 @@ angular.module('ngOdisea', [
         editableOptions.theme = 'bs3';
     })
 
-    .controller('OdiseaController', function AppCtrl($state, $http, $log, $scope, $rootScope) {
+    .controller('OdiseaController', function AppCtrl($state, $http, $log, $scope, $rootScope,utilFactory) {
 
-        $http.get('php/controller/TiendaControllerGet.php', {
-            params: {
-                accion: 'listar'
-            }
-        }).success(function (data) {
-            if(data.msj != 'KK'){
-                $scope.tiendas = data.tiendas;
-                $scope.productos = data.productos;
-            }else{
-                alert("ERROR DE CONEXION A LA BASE DE DATOS");
-            }
-        }).error(function (data) {
-            console.log("Error");
-        });
+        if(utilFactory.getRol()) {
 
-        $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-            if (toState.name === 'nosensomatizadoup') {
-                if ($rootScope.sensorSeleccionado) {
-                } else {
-                    event.preventDefault();
-                    $state.go('nosensomatizados');
-                }
-            }
-            if (toState.name === 'intervencionup') {
-                if ($rootScope.intervencionSeleccionada) {
-                } else {
-                    event.preventDefault();
-                    $state.go('intervenciones');
-                }
-            }
+            $scope.rol = utilFactory.getRol();
 
-            if (toState.name === 'incidenteup') {
-                if ($rootScope.incidenteSeleccionado) {
-                } else {
-                    event.preventDefault();
-                    $state.go('incidentes');
+            $scope.logout = function(){
+                //el js del index.html ya elimina el usuario
+                window.location.href = "index.html";
+            };
+
+            $http.get('php/controller/TiendaControllerGet.php', {
+                params: {
+                    accion: 'listar'
                 }
-            }
-            if (angular.isDefined(toState.data.pageTitle)) {
-                $scope.pageTitle = toState.data.pageTitle + ' | Odisea';
-            }
-        });
+            }).success(function (data) {
+                if (data.msj != 'KK') {
+                    $scope.tiendas = data.tiendas;
+                    $scope.productos = data.productos;
+                } else {
+                    alert("ERROR DE CONEXION A LA BASE DE DATOS");
+                }
+            }).error(function (data) {
+                console.log("Error");
+            });
+
+            $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+                if (toState.name === 'nosensomatizadoup') {
+                    if ($rootScope.sensorSeleccionado) {
+                    } else {
+                        event.preventDefault();
+                        $state.go('nosensomatizados');
+                    }
+                }
+                if (toState.name === 'intervencionup') {
+                    if ($rootScope.intervencionSeleccionada) {
+                    } else {
+                        event.preventDefault();
+                        $state.go('intervenciones');
+                    }
+                }
+
+                if (toState.name === 'incidenteup') {
+                    if ($rootScope.incidenteSeleccionado) {
+                    } else {
+                        event.preventDefault();
+                        $state.go('incidentes');
+                    }
+                }
+                if (angular.isDefined(toState.data.pageTitle)) {
+                    $scope.pageTitle = toState.data.pageTitle + ' | Odisea';
+                }
+            });
+        }else{
+            window.location.href = "index.html";
+        }
     });

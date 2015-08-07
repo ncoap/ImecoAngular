@@ -38,6 +38,7 @@
                                 </div>
 
                                 <label class="col-sm-1">FECHA:</label>
+
                                 <div class="col-sm-2">
                                     <input type="date" name="dni" ng-model="busqueda.fecha"
                                            class="form-control">
@@ -130,116 +131,115 @@
                 </form>
             </div>
 
-            <div class="row" style="">
-
-                <div class="col-sm-5">
-                    <div class="box box-danger">
-                        <div class="box-header"
-                             style="background: #404040;color: white;text-align: center;padding: 1em">
-                            <img src="resources/img/otros/logo.png" width="150" height="50" class="pull-left">
-
-                            <h3 class="box-title">Control de Recuperos por Prevencionista <strong>{{tienda.nombreTienda}}</strong>
-                            </h3>
-
-                            <p>Tenderos Capturados {{tituloMes}} - {{tituloAnio}}</p>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="panel-title"><strong>PRODUCTOS RECUPERADOS </strong></span>
+                    <span>{{tituloMes}} {{tituloAnio}}  Tienda:{{tienda.nombreTienda}}</span>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <div class="box box-danger">
+                                <div class="box-header" style="background: #404040;color: white;text-align: center;">
+                                    <img src="resources/img/otros/logo.png" width="120" height="40" class="pull-left">
+                                    <span class="box-title" style="margin-top: 0.5em">Por Prevencionista</span>
+                                </div>
+                                <div class="box-body table-responsive" style="background-color: #ddd9c4;height: 460px">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Prevencionista</th>
+                                            <th>Codigo</th>
+                                            <th>Descripcion</th>
+                                            <th>Marca</th>
+                                            <th>Tipo Hurto</th>
+                                            <th style="text-align: right">Total S/.</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="data in allData2">
+                                            <td>{{$index + 1}}</td>
+                                            <td>{{data.nombrePrevencionista}}</td>
+                                            <td>{{data.codigoProducto}}</td>
+                                            <td>{{data.descripcionProducto}}</td>
+                                            <td>{{data.marcaProducto}}</td>
+                                            <td>{{data.tipoHurto}}</td>
+                                            <td style="text-align: right">{{data.totalProducto| currency:''}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                        <div class="box-body table-responsive" style="background-color: #ddd9c4;height: 460px">
-                            <table class="table table-bordered">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>DNI</th>
-                                    <th>Prevencionista</th>
-                                    <th>Descripción</th>
-                                    <th>Tipo de Hurto</th>
-                                    <th>Cantidad</th>
-                                    <th style="text-align: right">Total</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="data in allData2">
-                                    <td>{{$index + 1}}</td>
-                                    <td>{{data.dniPrevencionista}}</td>
-                                    <td>{{data.nombrePrevencionista}}</td>
-                                    <td>{{data.descripcionProducto}}</td>
-                                    <td>{{data.tipoHurto}}</td>
-                                    <td>{{data.cantidadProducto}}</td>
-                                    <td style="text-align: right">{{data.totalProducto| currency:'S/ '}}</td>
-                                </tr>
-                                </tbody>
-                            </table>
+
+                        <div class="col-sm-5">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <span class="panel-title">Por Prevencionista</span>
+                                </div>
+                                <div class="panel-body" style="height: 500px">
+                                    <canvas id="bar2" class="chart chart-bar" data="data2" labels="labels2"
+                                            legend="true" series="series2" style="height: 400px">
+                                    </canvas>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-sm-7">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Tienda <strong>{{tienda.nombreTienda}} {{tituloMes}} - {{tituloAnio}}</strong>
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <div class="box box-danger">
+                                <div class="box-header"
+                                     style="background: #404040;color: white;text-align: center;">
+                                    <img src="resources/img/otros/logo.png" width="120" height="40" class="pull-left">
+                                    <span class="box-title" style="margin-top: 0.5em">Por Tipo de Hurto</span>
+                                </div>
+                                <div class="box-body" style="background-color: #ddd9c4">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>Tipo de Hurto</th>
+                                            <th style="text-align: right">Cantidad</th>
+                                            <th style="text-align: right">Total S/.</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>INTERNO</td>
+                                            <td style="text-align: right">{{total.cantidadInternos}}</td>
+                                            <td style="text-align: right">{{total.totalInternos| currency:''}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>EXTERNO</td>
+                                            <td style="text-align: right">{{total.cantidadExternos}}</td>
+                                            <td style="text-align: right">{{total.totalExternos| currency:''}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: bold;font-size: 1.5em">TOTAL</td>
+                                            <td style="text-align: right;font-weight: bold;font-size: 1.5em">
+                                                {{total.cantidadInternos + total.cantidadExternos}}
+                                            </td>
+                                            <td style="text-align: right;font-weight: bold;font-size: 1.5em">
+                                                {{total.totalInternos + total.totalExternos| currency:''}}
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                        <div class="panel-body" style="height: 500px">
-                            <canvas id="bar2" class="chart chart-bar" data="data2" labels="labels2"
-                                    legend="true" series="series2" style="height: 400px">
-                            </canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-5">
-                    <div class="box box-danger">
-                        <div class="box-header"
-                             style="background: #404040;color: white;text-align: center;padding: 1em">
-                            <img src="resources/img/otros/logo.png" width="150" height="50" class="pull-left">
-
-                            <h3 class="box-title">Control de Intervenciones por tipo de Hurto <strong>{{tienda.nombreTienda}}</strong>
-                            </h3>
-                        </div>
-                        <div class="box-body" style="background-color: #ddd9c4">
-                            <table class="table table-bordered">
-                                <thead>
-                                <tr>
-                                    <th>Tipo de Hurto</th>
-                                    <th style="text-align: right">Cantidad</th>
-                                    <th style="text-align: right">Total</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>INTERNO</td>
-                                    <td style="text-align: right">{{total.cantidadInternos}}</td>
-                                    <td style="text-align: right">{{total.totalInternos| currency:'S/ '}}</td>
-                                </tr>
-                                <tr>
-                                    <td>EXTERNO</td>
-                                    <td style="text-align: right">{{total.cantidadExternos}}</td>
-                                    <td style="text-align: right">{{total.totalExternos| currency:'S/ '}}</td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: bold;font-size: 1.5em">TOTAL</td>
-                                    <td style="text-align: right;font-weight: bold;font-size: 1.5em">
-                                        {{total.cantidadInternos + total.cantidadExternos}}
-                                    </td>
-                                    <td style="text-align: right;font-weight: bold;font-size: 1.5em">
-                                        {{total.totalInternos + total.totalExternos| currency:'S/ '}}
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-7">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Control de Intervenciones por tipo de Hurto <strong>{{tienda.nombreTienda}} {{tituloMes}} -
-                            {{tituloAnio}}</strong>
-                        </div>
-                        <div class="panel-body" style="height: 500px">
-                            <canvas id="bar3" class="chart chart-bar" data="data3" labels="labels3"
-                                    legend="true" series="series3" style="height: 400px">
-                            </canvas>
+                        <div class="col-sm-5">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <span class="panel-title">Por Tipo de Hurto</span>
+                                </div>
+                                <div class="panel-body" style="height: 500px">
+                                    <canvas id="bar3" class="chart chart-bar" data="data3" labels="labels3"
+                                            legend="true" series="series3" style="height: 400px">
+                                    </canvas>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

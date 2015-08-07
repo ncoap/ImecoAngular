@@ -1,50 +1,12 @@
 <?php
 
-session_start();
 include '../dao/LoginDao.php';
-$model = new LoginDao();
 
-if (isset($_REQUEST['op'])) {
-    $op = $_REQUEST['op'];
-} else {
-    header('Location: ../../admin.php');
-}
+$postdata = file_get_contents("php://input");
+$request = json_decode($postdata);
+$loginDao = new LoginDao();
 
-switch ($op) {
-    case 1:
-        unset($_SESSION['acceso']);
-        unset($_SESSION['rol']);
-        unset($_SESSION['usuario']);
+$username = $request->usuario->username;
+$password = $request->usuario->password;
 
-        $usu = $_REQUEST['user'];
-        $pass = $_REQUEST['pass'];
-        $respuesta = $model->logeUsu($usu, $pass);
-        if ($respuesta == false) {
-            $_SESSION['acceso'] = false;
-            header('Location: ../../index.php');
-        } else {
-            $_SESSION['acceso'] = true;
-            $_SESSION['usuario'] = $respuesta->usuario;
-            $_SESSION['rol'] = $respuesta->rol;
-            
-            if ($respuesta->rol == 'ADMINISTRADOR') {
-                header('Location: ../../admin.php');
-            } else if ($respuesta->rol == 'JEFE DE ODISEA') {
-                header('Location: ../../odisea.php');
-            } else if ($respuesta->rol == 'GERENTE DE PREVENCION') {
-                header('Location: ../../oeschle.php');
-            } else if ($respuesta->rol == 'JEFE DE PREVENCION') {
-                header('Location: ../../oeschle2.php');
-            }
-        }
-        break;
-    case 2:
-        session_unset($_SESSION['acceso']);
-        session_unset($_SESSION['rol']);
-        session_unset($_SESSION['usuario']);
-        header('Location: ../../index.php');
-        break;
-    default :
-        header('Location: ../../index.php');
-        break;
-}
+echo json_encode($loginDao->logeUsu($username, $password));
