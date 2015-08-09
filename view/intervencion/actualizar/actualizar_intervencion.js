@@ -303,5 +303,7 @@ angular.module('odisea.intervencion.actualizar',
                     });
                 }
             };
+        }else{
+            $state.go('home');
         }
     });

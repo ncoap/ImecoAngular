@@ -14,6 +14,23 @@ angular.module('odisea.incidente.listar',
             }
         });
     })
+    .directive('errSrc', function () {
+        return {
+            link: function (scope, element, attrs) {
+                scope.$watch(function () {
+                    return attrs['ngSrc'];
+                }, function (value) {
+                    if (!value) {
+                        element.attr('src', attrs.errSrc);
+                    }
+                });
+
+                element.bind('error', function () {
+                    element.attr('src', attrs.errSrc);
+                });
+            }
+        };
+    })
     .service('incidentService', function ($http, $q) {
         function get(params) {
             var defered = $q.defer();
@@ -60,7 +77,8 @@ angular.module('odisea.incidente.listar',
             dni: '',
             fechaInicial: utilFactory.dateDefault.ini,
             fechaFinal: new Date(),
-            horario: '00:00:00 23:59:59'
+            horario: '00:00:00 23:59:59',
+            tipo:'accidente'
         };
 
         $scope.listar = function () {

@@ -70,9 +70,39 @@ angular.module('ngOdisea', [
         if(utilFactory.getRol()) {
 
             $scope.rol = utilFactory.getRol();
+            //acceso total
+            //solo registro
+            //visualizacion y reportes
+            //solo visualizacion
+            $scope.urls = {
+                'ADMINISTRADOR' : ['home','intervencion', 'intervencionup', 'intervenciones', 'consolidado', 'ejecutivo', 'incidente', 'incidenteup', 'incidentes', 'grafincidente', 'operatividad', 'grafoperatividad', 'nosensomatizado', 'nosensomatizadoup', 'nosensomatizados', 'grafsensomatizado'],
+                'JEFE DE ODISEA' : ['home','intervencion', 'incidente', 'nosensomatizado'],
+                'GERENTE DE PREVENCION' : ['home','intervenciones', 'consolidado', 'ejecutivo', 'incidentes', 'grafincidente', 'grafoperatividad', 'nosensomatizados', 'grafsensomatizado'],
+                'JEFE DE PREVENCION' : ['home','intervenciones', 'incidentes', 'nosensomatizados']
+            };
+
+            $scope.permisos = {
+                admin : function(){
+                    return ['ADMINISTRADOR'].indexOf($scope.rol)!=-1;
+                },
+                odisea : function(){
+                    return ['JEFE DE ODISEA'].indexOf($scope.rol)!=-1;
+                },
+                admin_odisea : function(){
+                    return  ['ADMINISTRADOR','JEFE DE ODISEA'].indexOf($scope.rol)!=-1;
+                },
+                gerente : function(){
+                    return ['GERENTE DE PREVENCION'].indexOf($scope.rol)!=-1;
+                },
+                admin_gerente : function(){
+                    return  ['ADMINISTRADOR','GERENTE DE PREVENCION'].indexOf($scope.rol)!=-1;
+                },
+                jefe : function(){
+                    return ['JEFE DE PREVENCION'].indexOf($scope.rol)!=-1;
+                }
+            };
 
             $scope.logout = function(){
-                //el js del index.html ya elimina el usuario
                 window.location.href = "index.html";
             };
 
@@ -88,32 +118,18 @@ angular.module('ngOdisea', [
                     alert("ERROR DE CONEXION A LA BASE DE DATOS");
                 }
             }).error(function (data) {
-                console.log("Error");
+                console.log("Error al cargar las tiendas y productos");
             });
 
             $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-                if (toState.name === 'nosensomatizadoup') {
-                    if ($rootScope.sensorSeleccionado) {
-                    } else {
-                        event.preventDefault();
-                        $state.go('nosensomatizados');
-                    }
-                }
-                if (toState.name === 'intervencionup') {
-                    if ($rootScope.intervencionSeleccionada) {
-                    } else {
-                        event.preventDefault();
-                        $state.go('intervenciones');
-                    }
+                if($scope.urls[$scope.rol].indexOf(toState.name)!=-1){
+                    //si tiene los permisos que continue
+                }else{
+                    //si no los tiene que los redirija al HOME
+                    event.preventDefault();
+                    $state.go('home');
                 }
 
-                if (toState.name === 'incidenteup') {
-                    if ($rootScope.incidenteSeleccionado) {
-                    } else {
-                        event.preventDefault();
-                        $state.go('incidentes');
-                    }
-                }
                 if (angular.isDefined(toState.data.pageTitle)) {
                     $scope.pageTitle = toState.data.pageTitle + ' | Odisea';
                 }

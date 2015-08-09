@@ -14,10 +14,10 @@ class IncidenteDao {
         $response = array('size'=>0,'incidentes'=>array());
         $col_busqueda = $this->get_terminos_de_busqueda($terminos);
         $response['size'] = $this->get_row_count_cab_interven($col_busqueda);
-        $stm = $this->pdo->prepare("CALL sp_incidente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        $stm = $this->pdo->prepare("CALL sp_incidente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         $stm->execute(array(
-            1,$col_busqueda,$pagina,0,0,
-            '','','','','',
+            1,$col_busqueda,$pagina,0,0,'',
+            '','','',
             0,'',date('Y-m-d H:i:s'),'','',
             '',0,'','','',
             0,'','','',0,0,
@@ -53,7 +53,10 @@ class IncidenteDao {
             $col_tienda = " AND t.id_tien = " . $terminos->tienda->idTienda;
         }
 
-        $col_busqueda = $col_fecha.$col_hora.$col_dni.$col_nombre.$col_tienda;
+        $col_tipo = " AND c.tipo = '" . $terminos->tipo."'";
+
+
+        $col_busqueda = $col_fecha.$col_tipo.$col_hora.$col_dni.$col_nombre.$col_tienda;
         return $col_busqueda;
 
     }
@@ -61,10 +64,10 @@ class IncidenteDao {
     public function get_row_count_cab_interven($col_busqueda){
         $db_conect = new Conexion();
         $pdo = $db_conect->getConexion();
-        $stm = $pdo->prepare("CALL sp_incidente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        $stm = $pdo->prepare("CALL sp_incidente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         $stm->execute(array(
-            2,$col_busqueda,0,0,0,
-            '','','','','',
+            2,$col_busqueda,0,0,0,'',
+            '','','',
             0,'',date('Y-m-d H:i:s'),'','',
             '',0,'','','',
             0,'','','',0,0,
@@ -76,10 +79,10 @@ class IncidenteDao {
     public function get_detalle_by_id($id) {
         $response = array('msj'=>'OK','detalle'=>array(),'error'=>'');
         try {
-            $stm = $this->pdo->prepare("CALL sp_incidente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            $stm = $this->pdo->prepare("CALL sp_incidente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             $stm->execute(array(
-                3,'',0,$id,0,
-                '','','','','',
+                3,'',0,$id,0,'',
+                '','','',
                 0,'',date('Y-m-d H:i:s'),'','',
                 '',0,'','','',
                 0,'','','',0,0,
@@ -95,14 +98,13 @@ class IncidenteDao {
     public function sp_register($data) {
         $respuesta = array('msj' => 'OK', 'error' => '','id' =>'','tipo'=>'from sp_register');
         try {
-            $stm = $this->pdo->prepare("CALL sp_incidente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            $stm = $this->pdo->prepare("CALL sp_incidente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             $inci = $data->incidente;
             date_default_timezone_set('America/Lima');
             $fechaAccidenteCompleta = date('Y-m-d H:i:s', strtotime(urldecode($inci->fechaAccidenteCompleta)));
             $stm->execute(array(
-                4,'',0,0,$inci->tienda->idTienda,
+                4,'',0,0,$inci->tienda->idTienda,$inci->tipo,
                 $inci->nombreInvolucrado,$inci->dniInvolucrado,$inci->actoCondicionInsegura,
-                $inci->nombreAccidentado,$inci->dniAccidentado,
                 $inci->edadAccidentado,$inci->sexoAccidentado,$fechaAccidenteCompleta,
                 $inci->nivelGravedad,$inci->diagnostico,
                 $inci->descansoMedico,$inci->cantidadDias,$inci->descripcionCausas,$inci->lesion,
@@ -124,14 +126,13 @@ class IncidenteDao {
     public function sp_update($data) {
         $respuesta = array('msj' => 'OK', 'error' => '','tipo'=>'from sp_update');
         try {
-            $stm = $this->pdo->prepare("CALL sp_incidente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            $stm = $this->pdo->prepare("CALL sp_incidente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             $inci = $data->incidente;
             date_default_timezone_set('America/Lima');
             $fechaAccidenteCompleta = date('Y-m-d H:i:s', strtotime(urldecode($inci->fechaAccidenteCompleta)));
 
-            $stm->execute(array(5,'',0,$inci->idIncidente,$inci->tienda->idTienda,
+            $stm->execute(array(5,'',0,$inci->idIncidente,$inci->tienda->idTienda,$inci->tipo,
                 $inci->nombreInvolucrado,$inci->dniInvolucrado,$inci->actoCondicionInsegura,
-                $inci->nombreAccidentado,$inci->dniAccidentado,
                 $inci->edadAccidentado,$inci->sexoAccidentado,$fechaAccidenteCompleta,
                 $inci->nivelGravedad,$inci->diagnostico,
                 $inci->descansoMedico,$inci->cantidadDias,$inci->descripcionCausas,$inci->lesion,
@@ -161,10 +162,10 @@ class IncidenteDao {
         try {
             $db = new Conexion();
             $pdo = $db->getConexion();
-            $stm = $pdo->prepare("CALL sp_incidente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            $stm = $pdo->prepare("CALL sp_incidente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             $stm->execute(array(
-                9,'',0,$idIncidente,0,
-                '','','','','',
+                9,'',0,$idIncidente,0,'',
+                '','','',
                 0,'',date('Y-m-d H:i:s'),'','',
                 '',0,'','','',
                 0,'','','',0,0,
@@ -184,12 +185,12 @@ class IncidenteDao {
         try {
             $db = new Conexion();
             $pdo = $db->getConexion();
-            $stm = $pdo->prepare("CALL sp_incidente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            $stm = $pdo->prepare("CALL sp_incidente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             $pdo->beginTransaction();
             foreach ($productos as $pro) {
                 $stm->execute(array(
-                    7,'',0,$idIncidente,0,
-                    '','','','','',
+                    7,'',0,$idIncidente,0,'',
+                    '','','',
                     0,'',date('Y-m-d H:i:s'),'','',
                     '',0,'','','',
                     0,$pro->codigo, $pro->descripcion, $pro->marca, $pro->cantidad, $pro->precio,
@@ -206,10 +207,10 @@ class IncidenteDao {
     function sp_delete($id) {
         $respuesta = array('msj' => 'OK', 'error' => '');
         try {
-            $stm = $this->pdo->prepare("CALL sp_incidente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            $stm = $this->pdo->prepare("CALL sp_incidente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             $stm->execute(array(
-                6,'',0,$id,0,
-                '','','','','',
+                6,'',0,$id,0,'',
+                '','','',
                 0,'',date('Y-m-d H:i:s'),'','',
                 '',0,'','','',
                 0,'','','',0,0,
@@ -224,10 +225,10 @@ class IncidenteDao {
     public function get_name_involucrado_by_dni($dni) {
         $respuesta = array('msj' => 'KO','error'=>'' ,'nombre' => '');
         try {
-            $stm = $this->pdo->prepare("CALL sp_incidente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            $stm = $this->pdo->prepare("CALL sp_incidente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             $stm->execute(array(
-                8,'',0,0,0,
-                '',$dni,'','','',
+                8,'',0,0,0,'',
+                '',$dni,'',
                 0,'',date('Y-m-d H:i:s'),'','',
                 '',0,'','','',
                 0,'','','',0,0,

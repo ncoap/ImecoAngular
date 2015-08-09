@@ -110,13 +110,13 @@
     </div>
     <div class="box-body">
         <div class="table-responsive">
-            <table class="table table-bordered table-striped" style="min-width: 1200px">
+            <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>Tienda</th>
+                        <th>Dni</th>
                         <th>Tendero</th>
                         <th>Tipo</th>
-                        <th>DNI</th>
                         <th>Edad</th>
                         <th>Sexo</th>
                         <th>Dia</th>
@@ -128,9 +128,9 @@
                 <tbody>
                     <tr ng-repeat="inter in intervenciones">
                         <td>{{inter.nombreTienda}}</td>
+                        <td>{{inter.dniTendero}}</td>
                         <td>{{inter.nombreCompletoTendero}}</td>
                         <td>{{inter.tipoTendero}}</td>
-                        <td>{{inter.dniTendero}}</td>
                         <td>{{inter.edadTendero}}</td>
                         <td>{{inter.sexoTendero}}</td>
                         <td>{{inter.diaIntervencion}}</td>
@@ -138,8 +138,8 @@
                         <td>{{inter.fechaIntervencion}}</td>
                         <td style="text-align: center">
                             <img style="cursor: pointer" src="resources/iconos/Info-24.png" ng-click="showModalVerIntervencion(inter)" title="Detalle">
-                            <img style="cursor: pointer" src="resources/iconos/Ok-24.png" ng-click="actualizarIntervencion(inter)" title="Actualizar">
-                            <img style="cursor: pointer" src="resources/iconos/Cancel-24.png" ng-click="eliminarIntervencion(inter.idIntervencion)"
+                            <img ng-show="permisos.admin()" style="cursor: pointer" src="resources/iconos/Ok-24.png" ng-click="actualizarIntervencion(inter)" title="Actualizar">
+                            <img ng-show="permisos.admin()" style="cursor: pointer" src="resources/iconos/Cancel-24.png" ng-click="eliminarIntervencion(inter.idIntervencion)"
                                  title="Eliminar {{inter.idIntervencion}}">
                         </td>
                     </tr>

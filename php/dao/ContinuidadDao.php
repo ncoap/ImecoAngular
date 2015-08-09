@@ -12,10 +12,10 @@ class ContinuidadDao {
     public function listar($idProducto) {
         //en los listados tambien try ctach
         $response = array('operatividad'=>array());
-        $stm = $this->pdo->prepare("CALL sp_operatividad(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        $stm = $this->pdo->prepare("CALL sp_operatividad(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         $stm->execute(array(1,
             0, 0, 0, $idProducto,
-            '', '', '','',
+            '', '','',
             0, 0, 0, 0,
            0, 0, '', ''));
         $response['operatividad'] = $stm->fetchAll(PDO::FETCH_OBJ);
@@ -33,11 +33,11 @@ class ContinuidadDao {
                 $opcion = 4;
             }
 
-            $stm = $this->pdo->prepare("CALL sp_operatividad(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            $stm = $this->pdo->prepare("CALL sp_operatividad(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             $stm->execute(array(
                 $opcion,
                 $item->idDetOperatividad, $item->idOperatividad, $item->idTienda, $item->idProducto,
-                $item->nombreEquipo, $item->marcaEquipo, $item->modeloEquipo, $item->capacidadEquipo,
+                $item->marcaEquipo, $item->modeloEquipo, $item->capacidadEquipo,
                 $item->total, $item->cantidadInterna, $item->cantidadExterna, $item->cantidadInoperativo,
                 $item->cantidadOperativo, $item->cantidadReubicacion, $item->otros, $item->observaciones));
 
@@ -56,10 +56,10 @@ class ContinuidadDao {
     public function sp_delete_item($idDetOperatividad){
         $respuesta = array('msj' => 'OK', 'error' => '');
         try {
-            $stm = $this->pdo->prepare("CALL sp_operatividad(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            $stm = $this->pdo->prepare("CALL sp_operatividad(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             $stm->execute(array(3,
                 $idDetOperatividad, 0, 0, 0,
-                '', '', '','',
+                '', '','',
                 0, 0, 0, 0,
                 0, 0, '', ''));
         } catch (PDOException $e) {

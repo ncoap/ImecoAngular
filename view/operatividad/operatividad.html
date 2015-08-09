@@ -1,11 +1,6 @@
 <div class="box box-primary">
     <div class="box-header">
         <h3 class="box-title">CONTINUIDAD OPERATIVA ACTUAL</h3>
-        <div class="pull-right">
-            <span class="label label-danger">ALTO</span>
-            <span class="label label-warning">MODERADO</span>
-            <span class="label label-success">BAJO</span>
-        </div>
     </div>
     <div class="box-body">
         <div>
@@ -25,10 +20,9 @@
             </form>
         </div>
         <div class="table-responsive">
-            <table class="table table-bordered table-striped" style="width: 1500px">
+            <table class="table table-bordered table-striped">
                 <tr style="font-weight: bold">
                     <td>Tienda</td>
-                    <td>Equipo</td>
                     <td>Marca</td>
                     <td>Modelo</td>
                     <td>Capacidad</td>
@@ -49,11 +43,6 @@
                     <span editable-select="oper.idTienda" e-name="idTienda" e-form="rowform"
                           e-ng-options="t.idTienda as t.nombreTienda for t in tiendas">
                         {{oper.nombreTienda}}
-                    </span>
-                    </td>
-                    <td>
-                    <span editable-text="oper.nombreEquipo" e-name="nombreEquipo" e-form="rowform">
-                        {{oper.nombreEquipo}}
                     </span>
                     </td>
                     <td>
@@ -89,9 +78,10 @@
                     <span editable-number="oper.cantidadInoperativo" e-name="cantidadInoperativo" e-form="rowform">
                         <span class="label"
                               ng-class="{
-                          'label-danger': oper.cantidadInoperativo >= 10 ,
-                          'label-warning': oper.cantidadInoperativo >=5 && oper.cantidadInoperativo <10,
-                          'label-success': oper.cantidadInoperativo < 5
+                          'label-black': oper.cantidadInoperativo >= 15 ,
+                          'label-danger': oper.cantidadInoperativo >= 10 && oper.cantidadInoperativo <=14,
+                          'label-warning': oper.cantidadInoperativo >=5 && oper.cantidadInoperativo <=9,
+                          'label-success': oper.cantidadInoperativo <= 4
                           }">
                         {{oper.cantidadInoperativo}}
                         </span>
@@ -129,6 +119,14 @@
 
         <div style="margin-top: 1em">
             <button class="btn btn-default" ng-click="addOperatividad()">Agregar</button>
+        </div>
+    </div>
+    <div class="box-footer">
+        <div class="pull-right">
+            <label class="label label-black imeco-block">CRITICO [15-mas]</label>
+            <label class="label label-danger imeco-block">GRAVE [10-14]</label>
+            <label class="label label-warning imeco-block">MODERADO [5-9]</label>
+            <label class="label label-success imeco-block">BAJO [0-4]</label>
         </div>
     </div>
 </div>

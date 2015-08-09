@@ -37,25 +37,10 @@
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <li class="dropdown user user-menu">
-                        <a href="" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="resources/img/otros/user2-160x160.jpg" class="user-image" alt="User Image"/>
-                            <span class="hidden-xs"> Usuario </span>
-                        </a>
+                        <a href="" class="dropdown-toggle" data-toggle="dropdown"><img src="resources/img/otros/user2-160x160.jpg" class="user-image" alt="User Image"/><span class="hidden-xs"> Usuario </span></a>
                         <ul class="dropdown-menu">
-                            <li class="user-header">
-                                <img src="resources/img/otros/user2-160x160.jpg" class="img-circle" alt="User Image"/>
-
-                                <p>
-                                    {{rol}}
-                                </p>
-                            </li>
-
-                            <li class="user-footer">
-                                <div class="pull-right">
-                                    <a ng-click="logout()"
-                                       class="btn btn-default btn-flat">Salir</a>
-                                </div>
-                            </li>
+                            <li class="user-header"><img src="resources/img/otros/user2-160x160.jpg" class="img-circle" alt="User Image"/><p>{{rol}}</p></li>
+                            <li class="user-footer"><div class="pull-right"><a ng-click="logout()" class="btn btn-default btn-flat">Salir</a></div></li>
                         </ul>
                     </li>
                 </ul>
@@ -76,85 +61,35 @@
             <ul class="sidebar-menu">
                 <li class="header">Menu</li>
                 <li class="treeview">
-                    <a href=""><i class='fa fa-user'></i> <span>Intervenciones</span>
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </a>
+                    <a href=""><i class='fa fa-user'></i> <span>Intervenciones</span><i class="fa fa-angle-left pull-right"></i></a>
                     <ul class="treeview-menu">
-                        <li><a href="#intervencion"><i class="fa fa-save"></i><span>Registrar Intervención</span></a>
-                        </li>
-                        <li><a href="#intervenciones"><i
-                                    class="fa fa-file-text"></i><span>Visualizar Registros</span></a></li>
-                        <li><a href="#consolidado"><i class="fa fa-pie-chart"></i><span>Gráficas por Mes</span></a></li>
-                        <li><a href="#ejecutivo"><i class="fa fa-line-chart"></i><span>Reporte Ejecutivo</span></a></li>
+                        <li ng-show="permisos.admin_odisea()"><a href="#intervencion"><i class="fa fa-save"></i><span>Registrar Intervención</span></a></li>
+                        <li ng-show="!permisos.odisea()"><a href="#intervenciones"><i class="fa fa-file-text"></i><span>Visualizar Registros</span></a></li>
+                        <li ng-show="permisos.admin_gerente()"><a href="#consolidado"><i class="fa fa-pie-chart"></i><span>Gráficas por Mes</span></a></li>
+                        <li ng-show="permisos.admin_gerente()"><a href="#ejecutivo"><i class="fa fa-line-chart"></i><span>Reporte Ejecutivo</span></a></li>
                     </ul>
                 </li>
                 <li class="treeview">
-                    <a href="">
-                        <i class='fa fa-ambulance'></i>
-                        <span>Reporte de Riesgos</span>
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </a>
+                    <a href=""><i class='fa fa-ambulance'></i><span>Reporte de Riesgos</span><i class="fa fa-angle-left pull-right"></i></a>
                     <ul class="treeview-menu">
-                        <li>
-                            <a href="#incidente">
-                                <i class="fa fa-exclamation-triangle"></i>
-                                <span>Incidente/Accidente</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#incidentes">
-                                <i class="fa fa-file-text"></i>
-                                <span>Ver Registros</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="">
-                                <i class="fa fa-pie-chart"></i>
-                                <span>Gráfica por Mes</span>
-                            </a>
-                        </li>
+                        <li ng-show="permisos.admin_odisea()"><a href="#incidente"><i class="fa fa-exclamation-triangle"></i><span>Incidente/Accidente</span></a></li>
+                        <li ng-show="!permisos.odisea()"><a href="#incidentes"><i class="fa fa-file-text"></i><span>Ver Registros</span></a></li>
+                        <li ng-show="permisos.admin_gerente()"><a href="#grafincidente"><i class="fa fa-pie-chart"></i><span>Gráfica por Mes</span></a></li>
                     </ul>
                 </li>
                 <li class="treeview">
-                    <a href="">
-                        <i class='fa fa-cab'></i>
-                        <span>Continuidad Operativa</span>
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </a>
+                    <a href=""><i class='fa fa-cab'></i><span>Continuidad Operativa</span><i class="fa fa-angle-left pull-right"></i></a>
                     <ul class="treeview-menu">
-                        <li>
-                            <a href="#operatividad">
-                                <i class="fa fa-circle-o text-red"></i>
-                                <span>Check List</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="">
-                                <i class="fa fa-circle-o text-aqua"></i>
-                                <span>Reportes</span>
-                            </a>
-                        </li>
+                        <li ng-show="permisos.admin()"><a href="#operatividad"><i class="fa fa-circle-o text-red"></i><span>Check List</span></a></li>
+                        <li ng-show="permisos.admin_gerente()"><a href="grafoperatividad"><i class="fa fa-circle-o text-green"></i><span>Gráfica por Mes</span></a></li>
                     </ul>
                 </li>
                 <li class="treeview">
-                    <a href="">
-                        <i class='fa fa-laptop'></i>
-                        <span>Prod. No Sensomatizado</span>
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </a>
+                    <a href=""><i class='fa fa-laptop'></i><span>Prod. No Sensomatizado</span><i class="fa fa-angle-left pull-right"></i></a>
                     <ul class="treeview-menu">
-                        <li>
-                            <a href="#nosensomatizado">
-                                <i class="fa fa-circle-o text-red"></i>
-                                <span>Registro de Producto</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#nosensomatizados">
-                                <i class="fa fa-circle-o text-aqua"></i>
-                                <span>Visualizar Registros</span>
-                            </a>
-                        </li>
+                        <li ng-show="permisos.admin_odisea()"><a href="#nosensomatizado"><i class="fa fa-circle-o text-red"></i><span>Registro de Producto</span></a></li>
+                        <li ng-show="!permisos.odisea()"><a href="#nosensomatizados"><i class="fa fa-circle-o text-aqua"></i><span>Visualizar Registros</span></a></li>
+                        <li ng-show="permisos.admin_gerente()"><a href="#grafsensomatizado"><i class="fa fa-circle-o text-green"></i><span>Gráfica por Mes</span></a></li>
                     </ul>
                 </li>
                 <li class="header">

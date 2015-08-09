@@ -85,7 +85,6 @@
                     <th>Prevencionista</th>
                     <th>Hora</th>
                     <th>Dia</th>
-                    <th>Mes</th>
                     <th>Fecha</th>
                     <th>Codigo</th>
                     <th>Producto</th>
@@ -102,7 +101,6 @@
                     <td>{{sensor.nombrePrevencionista}}</td>
                     <td>{{sensor.horaIntervencion}}</td>
                     <td>{{sensor.diaIntervencion}}</td>
-                    <td>{{sensor.mesIntervencion}}</td>
                     <td>{{sensor.fecha}}</td>
                     <td>{{sensor.codigoProducto}}</td>
                     <td>{{sensor.descripcionProducto}}</td>
@@ -112,8 +110,8 @@
                     <td class="imeco-right">{{sensor.totalProducto | currency:''}}</td>
                     <td style="text-align: center">
                         <img style="cursor: pointer" src="resources/iconos/Info-24.png" ng-click="showModalVer(sensor)" title="Detalle">
-                        <img style="cursor: pointer" src="resources/iconos/Ok-24.png" ng-click="actualizar(sensor)" title="Actualizar">
-                        <img style="cursor: pointer" src="resources/iconos/Cancel-24.png" ng-click="eliminar(sensor.id)"
+                        <img ng-show="permisos.admin()"  style="cursor: pointer" src="resources/iconos/Ok-24.png" ng-click="actualizar(sensor)" title="Actualizar">
+                        <img ng-show="permisos.admin()"  style="cursor: pointer" src="resources/iconos/Cancel-24.png" ng-click="eliminar(sensor.id)"
                              title="Eliminar {{sensor.idSensor}}">
                     </td>
                 </tr>

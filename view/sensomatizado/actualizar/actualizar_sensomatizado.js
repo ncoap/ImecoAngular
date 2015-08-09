@@ -223,6 +223,8 @@ angular.module('odisea.sensomatizado.actualizar',
                     dialogs.error("ERROR SERVIDOR", data);
                 });
             };
+        }else{
+            $state.go('home');
         }
     });
 

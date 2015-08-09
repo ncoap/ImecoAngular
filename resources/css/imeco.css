@@ -41,6 +41,12 @@
 .imeco-right{
     text-align: right
 }
+
+.imeco-block{
+    display: block;
+    text-align: left !important;
+}
+
 .imeco-left{
     text-align: left
 }

@@ -206,6 +206,8 @@ angular.module('odisea.incidente.actualizar',
                     $log.log("ERROR AJAX UPLOAD = >", err);
                 });
             };
+        }else{
+            $state.go('home');
         }
     });
 
