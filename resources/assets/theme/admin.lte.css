@@ -3859,7 +3859,10 @@ table.text-center th {
   filter: alpha(opacity=65);
 }
 .text-red {
-  color: #dd4b39 !important;
+  color: #dd7a70 !important;
+}
+.text-white {
+  color: white !important;
 }
 .text-yellow {
   color: #f39c12 !important;

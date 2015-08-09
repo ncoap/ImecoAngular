@@ -10,7 +10,7 @@ angular.module('odisea.incidente.listar',
                 }
             },
             data: {
-                pageTitle: 'Incidentes'
+                pageTitle: 'Accidentes/Incidentes'
             }
         });
     })

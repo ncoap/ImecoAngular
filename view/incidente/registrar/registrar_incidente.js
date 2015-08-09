@@ -10,7 +10,7 @@ angular.module('odisea.incidente.registrar',
                 }
             },
             data: {
-                pageTitle: 'Incidente'
+                pageTitle: 'Registro Accidente/Incidente'
             }
         });
     })

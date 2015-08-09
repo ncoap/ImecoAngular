@@ -10,7 +10,7 @@ angular.module('odisea.incidente.actualizar',
                 }
             },
             data: {
-                pageTitle: 'Actualizar Inicidente'
+                pageTitle: 'Actualizar Accidente/Incidente'
             }
         });
     }).directive('validFile', function () {

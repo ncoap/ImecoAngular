@@ -12,17 +12,21 @@
                 <thead>
                     <tr>
                         <th>Tienda</th>
-                        <th>Fecha de Intervención</th>
                         <th>Tendero</th>
+                        <th>Dia</th>
+                        <th>Hora</th>
+                        <th>Fecha</th>
                         <th style="text-align: center">Foto</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="intervencion in ultimasintervenciones">
                         <td style="vertical-align: middle">{{intervencion.nombreTienda}}</td>
-                        <td style="vertical-align: middle">{{intervencion.fechaIntervencion}}</td>
                         <td style="vertical-align: middle">{{intervencion.nombreCompletoTendero}}</td>
-                        
+                        <td style="vertical-align: middle">{{intervencion.diaIntervencion}}</td>
+                        <td style="vertical-align: middle">{{intervencion.horaIntervencion}}</td>
+                        <td style="vertical-align: middle">{{intervencion.fechaIntervencion}}</td>
+
                         <td style="text-align: center">
                             <img class="img-rounded"
                                  ng-src="view/imagen_tendero/{{intervencion.idTendero}}.jpg?random={{mirandom}}"
