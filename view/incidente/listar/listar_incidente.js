@@ -118,11 +118,10 @@ angular.module('odisea.incidente.listar',
                     idTienda:incidente.idTienda,
                     nombreTienda : incidente.nombreTienda
                 },
+                tipo : incidente.tipo,
                 nombreInvolucrado: incidente.nombreInvolucrado,
                 dniInvolucrado: incidente.dniInvolucrado,
                 actoCondicionInsegura:incidente.actoCondicionInsegura,
-                nombreAccidentado: incidente.nombreAccidentado,
-                dniAccidentado: incidente.dniAccidentado,
                 edadAccidentado:incidente.edadAccidentado,
                 sexoAccidentado:incidente.sexoAccidentado,
                 fechaAccidenteCompleta: utilFactory.getDateTimeFromString(incidente.fechaAccidenteCompleta),
@@ -146,7 +145,6 @@ angular.module('odisea.incidente.listar',
                         incidente: incidente,
                         productos: data.detalle
                     };
-                    $log.log("FROM LISTA ACTUALIZAR ",$rootScope.incidenteSeleccionado);
                     $state.go('incidenteup');
                 }else{
                     $log.error("ERROR SENSORSERVICE - DETALLE",data.error);

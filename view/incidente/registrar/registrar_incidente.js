@@ -87,11 +87,10 @@ angular.module('odisea.incidente.registrar',
         $scope.incidente = {
             idIncidente:0,
             tienda: undefined,
+            tipo : 'accidente',
             nombreInvolucrado: '',
             dniInvolucrado: '',
             actoCondicionInsegura:'sin condicion',
-            nombreAccidentado: '',
-            dniAccidentado: '',
             edadAccidentado:20,
             sexoAccidentado:'M',
             fechaAccidenteCompleta: utilFactory.getDateActual(),
@@ -136,46 +135,34 @@ angular.module('odisea.incidente.registrar',
             $scope.incidente.total = total;
         }
 
-        // BUSCAR INVOLUCRADO
-        $scope.buscarNombreInvolucrado = function () {
-            $http.get('php/controller/IncidenteControllerGet.php', {
-                params: {
-                    accion: 'get_name_involucrado_by_dni',
-                    dni: $scope.incidente.dniInvolucrado
-                }
-            }).success(function (data) {
-                $log.log("147", data);
-                if (data.msj == 'OK') {
-                    $scope.incidente.nombreInvolucrado = data.nombre;
-                }
-            }).error(function (data) {
-                $log.error("152",data);
-            });
-        };
-
         $scope.SaveAll = function () {
-            $scope.isUpload = true;
-            console.log($scope.myFile.name);
-            var postData = {
-                accion: 'registrar',
-                data: {
-                    incidente: $scope.incidente,
-                    productos: JSON.stringify($scope.productos)
-                }
-            };
-            dialogs.wait("Procesando...", "Regsitrando Incidente", 100);
-            $rootScope.$broadcast('dialogs.wait.progress', {'progress': 100});
 
-            $http.post('php/controller/IncidenteControllerPost.php', postData)
-                .success(function (data, status, headers, config) {
-                    $log.log(data);
-                    if (data.msj == 'OK') {
-                        $scope.loadImage(data.id);
-                    }
-                })
-                .error(function (err, status, headers, config) {
-                    $log.info("ERROR REGISTRAR", err);
-                });
+            var dlg = dialogs.confirm('Confirmar', 'Desea registrar el '+$scope.incidente.tipo+'?');
+            dlg.result.then(
+                function (btn) {
+                    $scope.isUpload = true;
+                    var postData = {
+                        accion: 'registrar',
+                        data: {
+                            incidente: $scope.incidente,
+                            productos: JSON.stringify($scope.productos)
+                        }
+                    };
+                    dialogs.wait("Procesando...", "Regsitrando Incidente", 100);
+                    $rootScope.$broadcast('dialogs.wait.progress', {'progress': 100});
+                    $http.post('php/controller/IncidenteControllerPost.php', postData)
+                        .success(function (data) {
+                            if (data.msj == 'OK') {
+                                $scope.loadImage(data.id);
+                            }
+                        })
+                        .error(function (err) {
+                            $log.info("ERROR REGISTRAR", err);
+                        });
+                },
+                function (btn) {
+                }
+            );
         };
 
         $scope.loadImage = function (id) {

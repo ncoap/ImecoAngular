@@ -83,6 +83,7 @@ angular.module('odisea.incidente.actualizar',
                 esActivo:'NO'
             };
 
+
             $scope.incidente = $rootScope.incidenteSeleccionado.incidente;
             $scope.productos = $rootScope.incidenteSeleccionado.productos;
 

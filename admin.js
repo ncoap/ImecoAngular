@@ -16,7 +16,8 @@ angular.module('ngOdisea', [
     'odisea.sensomatizado.actualizar',
     'odisea.incidente.listar',
     'odisea.incidente.registrar',
-    'odisea.incidente.actualizar'
+    'odisea.incidente.actualizar',
+    'odisea.incidente.grafincidente'
 ])
     .config(function myAppConfig($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('/home');

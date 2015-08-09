@@ -144,4 +144,28 @@ class GraficaDao {
         
     }
 
+    public function chart_incidente($opcion, $fecha, $hora_inicial, $hora_final) {
+        date_default_timezone_set('America/Lima');
+        $fechaActual = date('Y-m-d', strtotime(urldecode($fecha)));
+        $stm = $this->pdo->prepare("CALL char_incidente(?,?,?,?)");
+        $stm->execute(array($opcion, $fechaActual, $hora_inicial, $hora_final));
+
+        $rs = $stm->fetchAll(PDO::FETCH_OBJ);
+
+        $total = array();
+        $tiendas = array();
+        $accidentes = array();
+        $incidentes = array();
+
+        foreach ($rs as $inter) {
+            array_push($tiendas, $inter->tienda);
+            array_push($accidentes, $inter->accidentes);
+            array_push($incidentes, $inter->incidentes);
+        }
+
+        array_push($total, $tiendas, $accidentes, $incidentes, $rs);
+
+        return $total;
+    }
+
 }

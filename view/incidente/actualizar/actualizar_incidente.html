@@ -21,6 +21,17 @@
                 <div class="box-body">
                     <form class="form-horizontal" name="nameForm1" enctype="multipart/form-data"
                           ng-submit="registrar()">
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label text-light-blue">TIPO<span class="imeco-required">*</span></label>
+                            <div class="col-xs-10">
+                                <select class="form-control" ng-model="incidente.tipo">
+                                    <option value="accidente">ACCIDENTE</option>
+                                    <option value="incidente">INCIDENTE</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label class="col-xs-2 control-label">Tienda<span class="imeco-required">*</span></label>
 
@@ -49,38 +60,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-xs-2 control-label">Acto Condicion Insegura</label>
-                            <div class="col-xs-10">
-                                <textarea class="form-control text-res" rows="5"
-                                          maxlength="500" ng-trim='false'
-                                          ng-model="incidente.actoCondicionInsegura"
-                                          style="resize: none">
-                                </textarea>
-                                <span class="label label-info">
-                                    {{500 - incidente.actoCondicionInsegura.length}}
-                                    Caracteres Restantes
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-xs-2 control-label">Dni Accidentado</label>
-                            <div class="col-xs-10">
-                                <input type="text" ng-model="incidente.dniAccidentado"
-                                       ng-minlength="8" ng-pattern="/^[0-9]+$/" maxlength="15"
-                                       class="form-control" placeholder="Dni Accidentado">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-xs-2 control-label">Nombre Accidentado</label>
-                            <div class="col-xs-10">
-                                <input type="text" ng-model="incidente.nombreAccidentado"
-                                       class="form-control" placeholder="Nombre del Accidentado">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-xs-2 control-label">Edad Accidentado<span class="imeco-required">*</span></label>
+                            <label class="col-xs-2 control-label">Edad<span class="imeco-required">*</span></label>
                             <div class="col-xs-10">
                                 <input type="number" required ng-model="incidente.edadAccidentado"
                                        class="form-control" min="0">
@@ -88,7 +68,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-xs-2 control-label">Sexo Accidentado</label>
+                            <label class="col-xs-2 control-label">Sexo</label>
                             <div class="col-xs-10">
                                 <div class="radio">
                                     <label>
@@ -104,10 +84,25 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-xs-2 control-label">Fecha Inc<span class="imeco-required">*</span></label>
+                            <label class="col-xs-2 control-label">Fecha<span class="imeco-required">*</span></label>
                             <div class="col-xs-10">
                                 <input type="datetime-local" ng-model="incidente.fechaAccidenteCompleta"
                                        class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">Acto Condicion Insegura</label>
+                            <div class="col-xs-10">
+                                <textarea class="form-control text-res" rows="5"
+                                          maxlength="500" ng-trim='false'
+                                          ng-model="incidente.actoCondicionInsegura"
+                                          style="resize: none">
+                                </textarea>
+                                <span class="label label-info">
+                                    {{500 - incidente.actoCondicionInsegura.length}}
+                                    Caracteres Restantes
+                                </span>
                             </div>
                         </div>
 
