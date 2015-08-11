@@ -126,9 +126,9 @@ angular.module('odisea.incidente.grafincidente',
             []
         ];
 
-        $scope.series3 = ['CANTIDAD', 'TOTAL'];
-        $scope.labels3 = [];
-        $scope.data3 = [
+        $scope.seriesPorTipo = ['ACCIDENTE','INCIDENTE'];
+        $scope.labelsPorTipo = [];
+        $scope.dataPorTipo = [
             [],
             []
         ];
@@ -137,13 +137,13 @@ angular.module('odisea.incidente.grafincidente',
         $scope.buscarData = function () {
             if ($scope.busqueda.tipoFecha == 'ANUAL') {
                 $scope.busqueda.opcion = '2';
-                $scope.tituloMes = 'REPORTE EJECUTIVO ANUAL : AÑO';
+                $scope.tituloMes = 'REPORTE ANUAL : AÑO';
                 $scope.tituloAnio = $scope.busqueda.fecha.getFullYear();
                 buscarDataAnual();
 
             } else if ($scope.busqueda.tipoFecha == 'POR MES') {
                 $scope.busqueda.opcion = '1';
-                $scope.tituloMes = 'REPORTE EJECUTIVO MENSUAL : ' + nombreMeses[$scope.busqueda.fecha.getMonth()];
+                $scope.tituloMes = 'REPORTE MENSUAL : ' + nombreMeses[$scope.busqueda.fecha.getMonth()];
                 $scope.tituloAnio = $scope.busqueda.fecha.getFullYear();
                 buscarDataAnual();
             } else {
@@ -191,12 +191,11 @@ angular.module('odisea.incidente.grafincidente',
 
                 $http.get('php/controller/GraficasControllerGet.php', {
                     params: {
-                        accion: 'ejecutivo2',
+                        accion: 'reporte_det_incidente',
                         opcion: $scope.busqueda.opcion,
                         fecha: $scope.busqueda.fecha,
                         horaInicial: $scope.busqueda.horario.split(' ')[0],
                         horaFinal: $scope.busqueda.horario.split(' ')[1],
-                        sexo: $scope.busqueda.sexo,
                         meses: JSON.stringify($scope.selectMeses.meses)
                     }
                 })
@@ -216,11 +215,11 @@ angular.module('odisea.incidente.grafincidente',
         }
 
 
-        function calcularTotales(data3) {
+        function calcularTotales(dataPorTipo) {
             var total1 = 0;
             var total2 = 0.0;
 
-            angular.forEach(data3, function (item) {
+            angular.forEach(dataPorTipo, function (item) {
                 total1 = total1 + parseInt(item.accidentes);
                 total2 = total2 + parseInt(item.incidentes);
             });
@@ -237,32 +236,27 @@ angular.module('odisea.incidente.grafincidente',
         $scope.recuperadoPorPrevencionista = function () {
 
             var idtienda = 1;
-
             if (!$scope.tienda) {
                 //sino esta definido
                 idtienda = 0;
             } else {
                 idtienda = $scope.tienda.idTienda;
             }
-
             $http.get('php/controller/GraficasControllerGet.php',
                 {
                     params: {
-                        accion: 'recuperos_por_prevencionista',
+                        accion: 'reporte_det_incidente',
                         idtienda: idtienda,
                         opcion: $scope.busqueda.opcion,
                         fecha: $scope.busqueda.fecha,
                         horaInicial: $scope.busqueda.horario.split(' ')[0],
-                        horaFinal: $scope.busqueda.horario.split(' ')[1],
-                        sexo: $scope.busqueda.sexo
+                        horaFinal: $scope.busqueda.horario.split(' ')[1]
                     }
                 }
             ).success(
-                function (data, status, headers, config) {
-
+                function (data) {
                     $log.info("RECUPEROS ", data);
-
-                    if (data[0].length === 0) {
+                   if (data[0].length === 0) {
                         $scope.labels2 = ['1'];
                         $scope.data2[0] = data[1];
                         $scope.data2[1] = data[2];
@@ -273,53 +267,39 @@ angular.module('odisea.incidente.grafincidente',
                         $scope.data2[1] = data[2];
                         $scope.allData2 = data[3];
                     }
-
                     calcularResumenPorHurtos($scope.allData2);
                 }
             ).error(
-                function (data, status, headers, config) {
+                function (data) {
                     console.log("Error");
                 }
             );
-
         };
-
 
         function calcularResumenPorHurtos(data) {
 
             var cant1 = 0;
             var cant2 = 0;
-            var total1 = 0.0;
-            var total2 = 0.0;
 
-            $scope.data3 = [cant1, cant2];
+            $scope.dataPorTipo[0] = [cant1, cant2];
 
             angular.forEach(data, function (detalle) {
-
-                if (detalle.tipoHurto == 'INTERNO') {
-                    cant1 = cant1 + detalle.cantidadProducto;
-                    total1 = total1 + detalle.totalProducto;
+                if (detalle.tipo == 'accidente') {
+                    cant1 = cant1 + parseInt(detalle.cantidadProducto);
                 } else {
-                    //EXTERNO
-                    cant2 = cant2 + detalle.cantidadProducto;
-                    total2 = total2 + detalle.totalProducto;
+                    //incidente
+                    cant2 = cant2 +  parseInt(detalle.cantidadProducto);
                 }
             });
 
-            total1 = Math.round(total1 * 100) / 100;
-            total2 = Math.round(total2 * 100) / 100;
-
             $scope.total = {
-                cantidadInternos: cant1,
-                cantidadExternos: cant2,
-                totalInternos: total1,
-                totalExternos: total2
+                cantidadAccidentes: cant1,
+                cantidadIncidentes: cant2
             };
 
-            $scope.labels3 = ['INTERNO', 'EXTERNO'];
-            $scope.data3[0] = [cant1, cant2];
-            $scope.data3[1] = [total1, total2];
-
+            $scope.labelsPorTipo = ['POR TIPO'];
+            $scope.dataPorTipo[0] = [cant1];
+            $scope.dataPorTipo[1] = [cant2];
         }
 
         $scope.buscarData();

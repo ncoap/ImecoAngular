@@ -144,11 +144,11 @@ class GraficaDao {
         
     }
 
-    public function chart_incidente($opcion, $fecha, $hora_inicial, $hora_final) {
+    public function chart_incidente($reporte,$idTienda,$opcion, $fecha, $hora_inicial, $hora_final) {
         date_default_timezone_set('America/Lima');
         $fechaActual = date('Y-m-d', strtotime(urldecode($fecha)));
-        $stm = $this->pdo->prepare("CALL char_incidente(?,?,?,?)");
-        $stm->execute(array($opcion, $fechaActual, $hora_inicial, $hora_final));
+        $stm = $this->pdo->prepare("CALL char_incidente(?,?,?,?,?,?)");
+        $stm->execute(array($reporte ,$idTienda, $opcion, $fechaActual, $hora_inicial, $hora_final));
 
         $rs = $stm->fetchAll(PDO::FETCH_OBJ);
 
@@ -168,4 +168,25 @@ class GraficaDao {
         return $total;
     }
 
+    public function chart_incidente_2($reporte, $idTienda, $opcion, $fecha, $hora_inicial, $hora_final) {
+        date_default_timezone_set('America/Lima');
+        $fechaActual = date('Y-m-d', strtotime(urldecode($fecha)));
+        $stm = $this->pdo->prepare("CALL char_incidente(?,?,?,?,?,?)");
+        $stm->execute(array($reporte,$idTienda, $opcion, $fechaActual, $hora_inicial, $hora_final));
+        $rs = $stm->fetchAll(PDO::FETCH_OBJ);
+
+        $total = array();
+        $label = array();
+        $cantidades = array();
+        $montos = array();
+
+        foreach ($rs as $key => $inter) {
+            array_push($label, $key + 1);
+            array_push($cantidades, $inter->cantidadProducto);
+            array_push($montos, $inter->totalProducto);
+        }
+        array_push($total, $label, $cantidades, $montos, $rs);
+        return $total;
+
+    }
 }
