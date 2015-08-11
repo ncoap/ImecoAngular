@@ -27,8 +27,6 @@ angular.module('odisea.incidente.grafincidente',
     }])
     .controller('grafincidenteController', function ($rootScope, $scope, $log, $http, dialogs) {
 
-        $scope.pormeses = false;
-
         $scope.busqueda = {
             fecha: new Date(),
             opcion: '1',
@@ -56,77 +54,44 @@ angular.module('odisea.incidente.grafincidente',
         $scope.showTab2 = function () {
 
             $scope.tab = {tab1: false, tab2: true};
-            $scope.recuperadoPorPrevencionista();
+            $scope.buscarDataDetalle();
         };
 
 
         $scope.totalAccidentes = 0;
         $scope.totalIncidentes = 0.0;
 
-        $scope.allData = [];
-        $scope.allData2 = [];
+        $scope.dataAllConsolidado = [];
+        $scope.dataAllDetalle = [];
+
         $scope.tituloMes = "";
         $scope.tituloAnio = "";
+
         $scope.tienda = {
             idTienda: 1,
             nombreTienda: '(OECHSLE) Salaverry'
-        };
-
-        $scope.meses = [
-            {id: 1, text: 'ENERO'},
-            {id: 2, text: 'FEBRERO'},
-            {id: 3, text: 'MARZO'},
-            {id: 4, text: 'ABRIL'},
-            {id: 5, text: 'MAYO'},
-            {id: 6, text: 'JUNIO'},
-            {id: 7, text: 'JULIO'},
-            {id: 8, text: 'AGOSTO'},
-            {id: 9, text: 'SEPTIEMBRE'},
-            {id: 10, text: 'OCTUBRE'},
-            {id: 11, text: 'NOVIEMBRE'},
-            {id: 12, text: 'DICIEMBRE'}
-        ];
-
-        $scope.selectMeses = {
-            meses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-        };
-
-        $scope.checkAll = function () {
-            $scope.selectMeses.meses = $scope.meses.map(function (item) {
-                return item.id;
-            });
-        };
-        $scope.uncheckAll = function () {
-            $scope.selectMeses.meses = [];
-        };
-        $scope.checkFirst = function () {
-            var currentMonth = new Date().getMonth() + 1;
-            $scope.selectMeses.meses.splice(0, $scope.selectMeses.meses.length);
-            $scope.selectMeses.meses.push(currentMonth);
         };
 
 
         var nombreMeses = ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO",
             "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"
         ];
-
-
-        $scope.series = ['n° Accidentes', 'n° Incidentes'];
-        $scope.labels = [];
-        $scope.data = [
+        
+        $scope.seriesConsolidado = ['n° Accidentes', 'n° Incidentes'];
+        $scope.labelsConsolidado = [];
+        $scope.dataConsolidado = [
             [],
             []
         ];
 
-
-        $scope.series2 = ['Cantidades', 'Total S/'];
-        $scope.labels2 = [];
-        $scope.data2 = [
+        $scope.seriesDetalle = ['Cantidades', 'Total S/'];
+        $scope.labelsDetalle = [];
+        $scope.dataDetalle = [
             [],
             []
         ];
 
-        $scope.seriesPorTipo = ['ACCIDENTE','INCIDENTE'];
+        $scope.seriesPorTipo = ['ACCIDENTE', 'INCIDENTE'];
         $scope.labelsPorTipo = [];
         $scope.dataPorTipo = [
             [],
@@ -141,17 +106,13 @@ angular.module('odisea.incidente.grafincidente',
                 $scope.tituloAnio = $scope.busqueda.fecha.getFullYear();
                 buscarDataAnual();
 
-            } else if ($scope.busqueda.tipoFecha == 'POR MES') {
+            } else {
                 $scope.busqueda.opcion = '1';
                 $scope.tituloMes = 'REPORTE MENSUAL : ' + nombreMeses[$scope.busqueda.fecha.getMonth()];
                 $scope.tituloAnio = $scope.busqueda.fecha.getFullYear();
                 buscarDataAnual();
-            } else {
-                //POR MESES
-                buscarDataMensual();
-            }
+            } 
         };
-
 
         function buscarDataAnual() {
             $http.get('php/controller/GraficasControllerGet.php', {
@@ -165,54 +126,17 @@ angular.module('odisea.incidente.grafincidente',
             })
                 .success(function (data) {
                     $log.info("HOLDA", data);
-                    $scope.allData = data[3];
-                    $scope.labels = data[0];
-                    $scope.data[0] = data[1];
-                    $scope.data[1] = data[2];
+                    $scope.dataAllConsolidado = data[3];
+                    $scope.labelsConsolidado = data[0];
+                    $scope.dataConsolidado[0] = data[1];
+                    $scope.dataConsolidado[1] = data[2];
                     calcularTotales(data[3]);
                 })
                 .error(function (data) {
                     console.log("Error");
                 });
         }
-
-
-        $scope.superData = [];
-
-        function buscarDataMensual() {
-
-            if ($scope.selectMeses.meses.length > 0) {
-                $scope.busqueda.opcion = '1';
-                $scope.tituloMes = 'REPORTE EJECUTIVO POR MESES';
-                $scope.tituloAnio = $scope.busqueda.fecha.getFullYear();
-
-                dialogs.wait('Procesando...', '', 100);
-                $rootScope.$broadcast('dialogs.wait.progress', {'progress': 08});
-
-                $http.get('php/controller/GraficasControllerGet.php', {
-                    params: {
-                        accion: 'reporte_det_incidente',
-                        opcion: $scope.busqueda.opcion,
-                        fecha: $scope.busqueda.fecha,
-                        horaInicial: $scope.busqueda.horario.split(' ')[0],
-                        horaFinal: $scope.busqueda.horario.split(' ')[1],
-                        meses: JSON.stringify($scope.selectMeses.meses)
-                    }
-                })
-                    .success(function (data, status, headers, config) {
-                        $rootScope.$broadcast('dialogs.wait.complete');
-                        $log.info("DATA ALL MESES");
-                        $log.info(data);
-                        $scope.superData = data;
-
-                    })
-                    .error(function (data, status, headers, config) {
-                        console.log("Error");
-                    });
-            } else {
-                dialogs.notify("Selección", "Elija al Menos un Mes");
-            }
-        }
+        
 
 
         function calcularTotales(dataPorTipo) {
@@ -226,14 +150,11 @@ angular.module('odisea.incidente.grafincidente',
 
             $scope.totalAccidentes = total1;
             $scope.totalIncidentes = total2;
-
         }
 
 
         //SEGUNDA BUSQUEDA
-        //SEGUNDA BUSQUEDA
-        //SEGUNDA BUSQUEDA
-        $scope.recuperadoPorPrevencionista = function () {
+        $scope.buscarDataDetalle = function () {
 
             var idtienda = 1;
             if (!$scope.tienda) {
@@ -242,8 +163,7 @@ angular.module('odisea.incidente.grafincidente',
             } else {
                 idtienda = $scope.tienda.idTienda;
             }
-            $http.get('php/controller/GraficasControllerGet.php',
-                {
+            $http.get('php/controller/GraficasControllerGet.php', {
                     params: {
                         accion: 'reporte_det_incidente',
                         idtienda: idtienda,
@@ -256,18 +176,20 @@ angular.module('odisea.incidente.grafincidente',
             ).success(
                 function (data) {
                     $log.info("RECUPEROS ", data);
-                   if (data[0].length === 0) {
-                        $scope.labels2 = ['1'];
-                        $scope.data2[0] = data[1];
-                        $scope.data2[1] = data[2];
-                        $scope.allData2 = data[3];
+                    if (data[0].length === 0) {
+                        $scope.labelsDetalle= ['1'];
+                        $scope.dataDetalle[0] = data[1];
+                        $scope.dataDetalle[1] = data[2];
+                        $scope.dataAllDetalle = data[3];
                     } else {
-                        $scope.labels2 = data[0];
-                        $scope.data2[0] = data[1];
-                        $scope.data2[1] = data[2];
-                        $scope.allData2 = data[3];
+                        $scope.labelsDetalle = data[0];
+                        $scope.dataDetalle[0] = data[1];
+                        $scope.dataDetalle[1] = data[2];
+                        $scope.dataAllDetalle = data[3];
                     }
-                    calcularResumenPorHurtos($scope.allData2);
+
+                    //contabiliza el numero
+                    calcularResumenDetalle($scope.dataAllDetalle);
                 }
             ).error(
                 function (data) {
@@ -276,32 +198,29 @@ angular.module('odisea.incidente.grafincidente',
             );
         };
 
-        function calcularResumenPorHurtos(data) {
-
+        function calcularResumenDetalle(data) {
             var cant1 = 0;
             var cant2 = 0;
-
             $scope.dataPorTipo[0] = [cant1, cant2];
-
             angular.forEach(data, function (detalle) {
+
+                //calcular
+
                 if (detalle.tipo == 'accidente') {
-                    cant1 = cant1 + parseInt(detalle.cantidadProducto);
+                    cant1 = cant1 + 1;
                 } else {
                     //incidente
-                    cant2 = cant2 +  parseInt(detalle.cantidadProducto);
+                    cant2 = cant2 + 1;
                 }
             });
-
             $scope.total = {
                 cantidadAccidentes: cant1,
                 cantidadIncidentes: cant2
             };
-
             $scope.labelsPorTipo = ['POR TIPO'];
             $scope.dataPorTipo[0] = [cant1];
             $scope.dataPorTipo[1] = [cant2];
         }
 
         $scope.buscarData();
-
     });

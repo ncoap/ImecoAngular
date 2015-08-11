@@ -32,11 +32,6 @@
                                                ng-model="busqueda.tipoFecha">
                                         POR MES
                                     </div>
-                                    <div>
-                                        <input ng-click="pormeses = true" type="radio" name="fecha" value="POR MESES"
-                                               ng-model="busqueda.tipoFecha">
-                                        POR MESES <span class="label label-info">Seleccione Varios Meses</span>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -100,44 +95,19 @@
 
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-4" ng-show="pormeses">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    SELECCIONE LOS MESES
-                                </div>
-                                <div class="panel-body">
-                                    <div>
-                                        <button ng-click="checkAll()" class="btn btn-danger btn-xs">Todos</button>
-                                        <button ng-click="uncheckAll()" class="btn btn-danger btn-xs">Ninguno</button>
-                                        <button ng-click="checkFirst()" class="btn btn-danger btn-xs">Actual</button>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label ng-repeat="mes in meses" style="display: block">
-                                            <input type="checkbox" checklist-model="selectMeses.meses"
-                                                   checklist-value="mes.id"> {{mes.text}}
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
-
             <div>
                 <div style="text-align: center">
                     <h3>Consolidado de Accidentes/Incidentes Oechsle - Grupo Odisea S.A.C</h3>
                     <h5>Lima y Provincias</h5>
-
                     <h3><label class="label label-danger">{{tituloMes}} - {{tituloAnio}}</label></h3>
                 </div>
-
-                <div ng-show="!pormeses">
+                <div>
                     <div class="row">
                         <div class="col-sm-8">
-                            <canvas id="bar" class="chart chart-bar" data="data" labels="labels"
-                                    legend="true" series="series" click="onClick" style="height: 750px">
+                            <canvas id="bar" class="chart chart-bar" data="dataConsolidado" labels="labelsConsolidado"
+                                    legend="true" series="seriesConsolidado" click="onClick" style="height: 750px">
                             </canvas>
                         </div>
                         <div class="col-sm-4">
@@ -155,7 +125,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr ng-repeat="data in allData">
+                                        <tr ng-repeat="data in dataAllConsolidado">
                                             <td>{{data.tienda}}</td>
                                             <td style="text-align: right">{{data.accidentes}}</td>
                                             <td style="text-align: right">{{data.incidentes}}</td>
@@ -176,52 +146,6 @@
                 </div>
 
                 <!--POR MESES POR MESES POR MESES POR MESES-->
-                <div ng-show="pormeses">
-                    <div class="row" ng-repeat="super in superData">
-
-                        <div class="col-sm-12" style="text-align: center">
-                            <h3><label class="label label-danger">MES {{super[5]}}</label></h3>
-                        </div>
-
-                        <div class="col-sm-8">
-                            <canvas class="chart chart-bar" data="super[1]" labels="labels" legend="true"
-                                    series="series" style="height: 750px"></canvas>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="box box-danger">
-                                <div class="box-header" style="background: #404040;color: white;text-align: center">
-                                    <img class="pull-left" src="resources/img/otros/logo.png" width="150" height="50">
-                                    {{super[5]}}
-                                </div>
-                                <div class="box-body table-responsive" style="background-color: #ddd9c4">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                        <tr>
-                                            <th>Tienda</th>
-                                            <th style="text-align: right">n°Interv</th>
-                                            <th style="text-align: right">Total S/.</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr ng-repeat="data in super[2]">
-                                            <td>{{data.tienda}}</td>
-                                            <td style="text-align: right">{{data.intervenciones}}</td>
-                                            <td style="text-align: right">{{data.recuperado| currency:''}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-size: 1.1em"><strong>TOTAL:</strong></td>
-                                            <td style="text-align: right;font-size: 1.1em"><strong>{{super[3]}}</strong>
-                                            </td>
-                                            <td style="text-align: right;font-size: 1.1em"><strong>{{super[4]|
-                                                currency:'S/. '}}</strong></td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
             </div>
         </div>
@@ -251,7 +175,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-sm-7">
+                        <div class="col-sm-12">
                             <div class="box box-danger">
                                 <div class="box-header" style="background: #404040;color: white;text-align: center;">
                                     <img src="resources/img/otros/logo.png" width="120" height="40" class="pull-left">
@@ -272,7 +196,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr ng-repeat="data in allData2">
+                                        <tr ng-repeat="data in dataAllDetalle">
                                             <td>{{$index + 1}}</td>
                                             <td>{{data.tipo}}</td>
                                             <td>{{data.nombreInvolucrado}}</td>
@@ -294,8 +218,10 @@
                                     <span class="panel-title">Detalle</span>
                                 </div>
                                 <div class="panel-body" style="height: 500px">
-                                    <canvas id="bar2" class="chart chart-bar" data="data2" labels="labels2"
-                                            legend="true" series="series2" style="height: 400px">
+                                    <canvas id="bar2" class="chart chart-bar"
+                                            data="dataDetalle" legend="true"
+                                            labels="labelsDetalle"
+                                            series="seriesDetalle" style="height: 400px">
                                     </canvas>
                                 </div>
                             </div>
