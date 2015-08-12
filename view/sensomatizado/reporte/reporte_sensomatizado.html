@@ -16,101 +16,113 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-sm-4">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    FILTRO DE FECHAS
-                                </div>
-                                <div class="panel-body">
-                                    <div>
-                                        <input ng-click="pormeses = false" type="radio" name="fecha" value="ANUAL"
-                                               ng-model="busqueda.tipoFecha">
-                                        ANUAL
+                        <form class="form-horizontal"
+                              name="formFechaConsulta"
+                              ng-submit="buscarData()">
+                            <div class="col-sm-4">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        FILTRO DE FECHAS
                                     </div>
-                                    <div>
-                                        <input ng-click="pormeses = false" type="radio" name="fecha" value="POR MES"
-                                               ng-model="busqueda.tipoFecha">
-                                        POR MES
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    FECHA
-                                </div>
-                                <div class="panel-body">
-                                    <form class="form-horizontal"
-                                          name="formFechaConsulta"
-                                          ng-submit="buscarData()">
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div>
+                                                    <input ng-click="pormeses = false" type="radio" name="fecha" value="ANUAL"
+                                                           ng-model="busqueda.tipoFecha">
+                                                    ANUAL
+                                                </div>
+                                                <div>
+                                                    <input ng-click="pormeses = false" type="radio" name="fecha" value="POR MES"
+                                                           ng-model="busqueda.tipoFecha">
+                                                    POR MES
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
                                                 <input type="date" name="dni" ng-model="busqueda.fecha"
                                                        class="form-control">
                                             </div>
                                         </div>
-                                    </form>
-                                    <br>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    FILTRO DE HORARIOS
-                                </div>
-                                <div class="panel-body">
-                                    <div>
-                                        <input type="radio" name="horario" value="00:00:00 23:59:59"
-                                               ng-model="busqueda.horario">
-                                        TODOS
-                                    </div>
-                                    <div>
-                                        <input type="radio" name="horario" value="09:00:00 12:00:00"
-                                               ng-model="busqueda.horario">
-                                        09:00 a 12:00
-                                        <input style="margin-left: 2em" type="radio" name="horario"
-                                               value="12:00:00 17:00:00" ng-model="busqueda.horario">
-                                        12:00 a 17:00
-                                    </div>
-                                    <div>
-                                        <input type="radio" name="horario" value="17:00:00 22:00:00"
-                                               ng-model="busqueda.horario">
-                                        17:00 a 22:00
-                                        <input style="margin-left: 2em" type="radio" name="horario"
-                                               value="22:00:00 09:00:00" ng-model="busqueda.horario">
-                                        22:00 a 09:00
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="col-sm-2">
-                            <button class="btn btn-primary animated infinite pulse pull-right"
-                                    ng-disabled="!formFechaConsulta.$valid"
-                                    type="submit">CONSULTAR
-                            </button>
-
-                        </div>
+                            <div class="col-sm-6">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        FILTRO DE HORARIOS
+                                    </div>
+                                    <div class="panel-body">
+                                        <div>
+                                            <input type="radio" name="horario" value="00:00:00 23:59:59"
+                                                   ng-model="busqueda.horario">
+                                            TODOS
+                                        </div>
+                                        <div>
+                                            <input type="radio" name="horario" value="09:00:00 12:00:00"
+                                                   ng-model="busqueda.horario">
+                                            09:00 a 12:00
+                                            <input style="margin-left: 2em" type="radio" name="horario"
+                                                   value="12:00:00 17:00:00" ng-model="busqueda.horario">
+                                            12:00 a 17:00
+                                            <input style="margin-left: 2em" type="radio" name="horario" value="17:00:00 22:00:00"
+                                                   ng-model="busqueda.horario">
+                                            17:00 a 22:00
+                                            <input style="margin-left: 2em" style="margin-left: 2em" type="radio" name="horario"
+                                                   value="22:00:00 09:00:00" ng-model="busqueda.horario">
+                                            22:00 a 09:00
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <button class="btn btn-primary animated infinite pulse pull-right"
+                                        ng-disabled="!formFechaConsulta.$valid" type="submit">CONSULTAR
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
             <div>
                 <div style="text-align: center">
-                    <h3>Consolidado de Accidentes/Incidentes Oechsle - Grupo Odisea S.A.C</h3>
+                    <h3>Consolidado Productos No Sensomatizados Oechsle - Grupo Odisea S.A.C</h3>
                     <h5>Lima y Provincias</h5>
 
                     <h3><label class="label label-danger">{{tituloMes}} - {{tituloAnio}}</label></h3>
                 </div>
                 <div>
                     <div class="row">
-                        <div class="col-sm-8">
-                            <canvas id="bar" class="chart chart-bar" data="dataConsolidado" labels="labelsConsolidado"
-                                    legend="true" series="seriesConsolidado" click="onClick" style="height: 750px">
-                            </canvas>
+                        <div class="col-sm-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    CANTIDADES
+                                </div>
+                                <div class="panel-body">
+                                    <canvas class="chart chart-bar" data="dataConsolidadoCantidad"
+                                            labels="labelsConsolidadoCantidad"
+                                            legend="true" series="seriesConsolidadoCantidad" click="onClick"
+                                            style="height: 550px"
+                                            colours="coloursConsolidadoCantidad">
+                                    </canvas>
+                                </div>
+                            </div>
                         </div>
+                        <div class="col-sm-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    MONTOS TOTALES S/
+                                </div>
+                                <div class="panel-body">
+                                    <canvas class="chart chart-bar" data="dataConsolidadoMonto"
+                                            labels="labelsConsolidadoMonto"
+                                            legend="true" series="seriesConsolidadoMonto" click="onClick"
+                                            style="height: 550px">
+                                    </canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4"></div>
                         <div class="col-sm-4">
                             <div class="box box-danger">
                                 <div class="box-header" style="background: #404040;text-align: center">
@@ -121,22 +133,22 @@
                                         <thead>
                                         <tr>
                                             <th>Tienda</th>
-                                            <th style="text-align: right"># Accidentes</th>
-                                            <th style="text-align: right"># Incidentes</th>
+                                            <th style="text-align: right">Cantidad</th>
+                                            <th style="text-align: right">Monto</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr ng-repeat="data in dataAllConsolidado">
                                             <td>{{data.tienda}}</td>
-                                            <td style="text-align: right">{{data.accidentes}}</td>
-                                            <td style="text-align: right">{{data.incidentes}}</td>
+                                            <td style="text-align: right">{{data.sensomatizado}}</td>
+                                            <td style="text-align: right">{{data.total | currency:'' }}</td>
                                         </tr>
                                         <tr>
                                             <td style="font-size: 1.1em"><strong>TOTAL:</strong></td>
                                             <td style="text-align: right;font-size: 1.1em">
                                                 <strong>{{totalAccidentes}}</strong></td>
                                             <td style="text-align: right;font-size: 1.1em">
-                                                <strong>{{totalIncidentes}}</strong></td>
+                                                <strong>{{totalIncidentes | currency:''}}</strong></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -171,12 +183,12 @@
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <span class="panel-title"><strong>PRODUCTOS DAÑADOS</strong></span>
+                    <span class="panel-title"><strong>PRODUCTOS NO SENSOMATIZADOS</strong></span>
                     <span>{{tituloMes}} {{tituloAnio}}  Tienda:{{tienda.nombreTienda}}</span>
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-sm-8">
                             <div class="box box-danger">
                                 <div class="box-header" style="background: #404040;color: white;text-align: center;">
                                     <img src="resources/img/otros/logo.png" width="120" height="40" class="pull-left">
@@ -187,9 +199,7 @@
                                         <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Tipo</th>
-                                            <th>Involucrado</th>
-                                            <th>Activo?</th>
+                                            <th>Prevencionista</th>
                                             <th>Codigo</th>
                                             <th>Descripcion</th>
                                             <th>Marca</th>
@@ -201,15 +211,38 @@
                                         <tbody>
                                         <tr ng-repeat="data in dataAllDetalle">
                                             <td>{{$index + 1}}</td>
-                                            <td>{{data.tipo}}</td>
-                                            <td>{{data.nombreInvolucrado}}</td>
-                                            <td>{{data.esActivo}}</td>
+                                            <td>{{data.nombrePrevencionista}}</td>
                                             <td>{{data.codigoProducto}}</td>
                                             <td>{{data.descripcionProducto}}</td>
                                             <td>{{data.marcaProducto}}</td>
                                             <td class="imeco-right">{{data.cantidadProducto}}</td>
                                             <td class="imeco-right">{{data.precioProducto | currency:''}}</td>
                                             <td class="imeco-right">{{data.totalProducto | currency:''}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="box box-danger">
+                                <div class="box-header"
+                                     style="background: #404040;color: white;text-align: center;">
+                                    <img src="resources/img/otros/logo.png" width="120" height="40" class="pull-left">
+                                    <span class="box-title" style="margin-top: 0.5em">Resumen</span>
+                                </div>
+                                <div class="box-body" style="background-color: #ddd9c4">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>Cantidad Total</th>
+                                            <th>Monto Total S/.</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td style="text-align: right">{{total.cantidadAccidentes}}</td>
+                                            <td style="text-align: right">{{total.cantidadIncidentes | currency:''}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -233,52 +266,6 @@
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="box box-danger">
-                                <div class="box-header"
-                                     style="background: #404040;color: white;text-align: center;">
-                                    <img src="resources/img/otros/logo.png" width="120" height="40" class="pull-left">
-                                    <span class="box-title" style="margin-top: 0.5em">Por Tipo</span>
-                                </div>
-                                <div class="box-body" style="background-color: #ddd9c4">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                        <tr>
-                                            <th>Tipo</th>
-                                            <th class="imeco-right">Cantidad</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>ACCIDENTES</td>
-                                            <td style="text-align: right">{{total.cantidadAccidentes}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>INCIDENTES</td>
-                                            <td class="imeco-right">{{total.cantidadIncidentes}}</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <span class="panel-title">Por Tipo</span>
-                                </div>
-                                <div class="panel-body" style="height: 500px">
-                                    <canvas id="bar3" class="chart chart-bar" legend="true"
-                                            data="dataPorTipo"
-                                            labels="labelsPorTipo"
-                                            series="seriesPorTipo"
-                                            style="height: 400px">
-                                    </canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

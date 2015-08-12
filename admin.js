@@ -14,6 +14,7 @@ angular.module('ngOdisea', [
     'odisea.sensomatizado.registrar',
     'odisea.sensomatizado.listar',
     'odisea.sensomatizado.actualizar',
+    'odisea.sensomatizado.grafsensomatizado',
     'odisea.incidente.listar',
     'odisea.incidente.registrar',
     'odisea.incidente.actualizar',

@@ -185,8 +185,72 @@ class GraficaDao {
             array_push($cantidades, $inter->cantidadProducto);
             array_push($montos, $inter->totalProducto);
         }
+
+        $inci_acci_by_tienda = $this->getIncidentesAccidentesPorTienda(3, $idTienda, $opcion, $fecha, $hora_inicial, $hora_final);
+
+        array_push($total, $label, $cantidades, $montos,$inci_acci_by_tienda, $rs);
+        return $total;
+    }
+
+    public function getIncidentesAccidentesPorTienda($reporte, $idTienda, $opcion, $fecha, $hora_inicial, $hora_final){
+        $inci_acci_by_tienda = array('accidentes'=>0,'incidentes'=>0);
+        $db = new Conexion();
+        $pdo = $db->getConexion();
+        $fechaActual = date('Y-m-d', strtotime(urldecode($fecha)));
+        $stm = $pdo->prepare("CALL char_incidente(?,?,?,?,?,?)");
+        $stm->execute(array($reporte,$idTienda, $opcion, $fechaActual, $hora_inicial, $hora_final));
+        $rs = $stm->fetch(PDO::FETCH_OBJ);
+        $inci_acci_by_tienda['accidentes'] = intval($rs->accidentes);
+        $inci_acci_by_tienda['incidentes'] = intval($rs->incidentes);
+
+        return $inci_acci_by_tienda;
+
+    }
+
+    public function reporte_main_sensomatizado($reporte,$idTienda,$opcion, $fecha, $hora_inicial, $hora_final){
+        date_default_timezone_set('America/Lima');
+        $fechaActual = date('Y-m-d', strtotime(urldecode($fecha)));
+        $stm = $this->pdo->prepare("CALL char_sensomatizado(?,?,?,?,?,?)");
+        $stm->execute(array($reporte ,$idTienda, $opcion, $fechaActual, $hora_inicial, $hora_final));
+
+        $rs = $stm->fetchAll(PDO::FETCH_OBJ);
+
+        $total = array();
+        $tiendas = array();
+        $intervenciones = array();
+        $recuperado = array();
+
+        foreach ($rs as $inter) {
+            array_push($tiendas, $inter->tienda);
+            array_push($intervenciones, $inter->sensomatizado);
+            array_push($recuperado, $inter->total);
+        }
+
+        array_push($total, $tiendas, $intervenciones, $recuperado, $rs);
+
+        return $total;
+    }
+
+    public function reporte_det_sensomatizado($reporte,$idTienda,$opcion, $fecha, $hora_inicial, $hora_final){
+        date_default_timezone_set('America/Lima');
+        $fechaActual = date('Y-m-d', strtotime(urldecode($fecha)));
+        $stm = $this->pdo->prepare("CALL char_sensomatizado(?,?,?,?,?,?)");
+        $stm->execute(array($reporte,$idTienda, $opcion, $fechaActual, $hora_inicial, $hora_final));
+        $rs = $stm->fetchAll(PDO::FETCH_OBJ);
+
+        $total = array();
+        $label = array();
+        $cantidades = array();
+        $montos = array();
+
+        foreach ($rs as $key => $inter) {
+            array_push($label, $key + 1);
+            array_push($cantidades, $inter->cantidadProducto);
+            array_push($montos, $inter->totalProducto);
+        }
+
+
         array_push($total, $label, $cantidades, $montos, $rs);
         return $total;
-
     }
 }
