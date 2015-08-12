@@ -77,7 +77,7 @@ angular.module('odisea.sensomatizado.grafsensomatizado',
             "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"
         ];
         
-        $scope.seriesConsolidadoCantidad = ['CANTIDADES'];
+        $scope.seriesConsolidadoCantidad = ['CANT. PRODUCTOS'];
         $scope.labelsConsolidadoCantidad = [];
         $scope.coloursConsolidadoCantidad = ['#3366cc','#dc3912'];
         $scope.dataConsolidadoCantidad = [
@@ -91,7 +91,7 @@ angular.module('odisea.sensomatizado.grafsensomatizado',
 
 
 
-        $scope.seriesDetalle = ['Cantidades', 'Total S/'];
+        $scope.seriesDetalle = ['Cantidad', 'Total S/'];
         $scope.labelsDetalle = [];
         $scope.dataDetalle = [
             [],
