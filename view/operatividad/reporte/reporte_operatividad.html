@@ -1,0 +1,151 @@
+<div class="nav-tabs-custom" style="padding: 0.2em">
+    <ul class="nav nav-tabs">
+        <li id="id-tab-1" class="imeco-tab-2" ng-class="{'active': tab.tab1 == true}" ng-click="showTab1()">
+            REPORTE X PRODUCTO
+        </li>
+        <li id="id-tab-3" class="imeco-tab-2" ng-class="{'active': tab.tab2 == true}" ng-click="showTab2()">
+            PRODUCTOS VS TIENDA
+        </li>
+    </ul>
+    <div class="tab-content" style="overflow:hidden">
+        <!--TAB 1-->
+        <div class="tab-pane" ng-class="{'active': tab.tab1 == true}">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>MENÚ - OPCIONES DE BÚSQUEDA</strong>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <form class="form-horizontal"
+                              name="formFechaConsulta"
+                              ng-submit="buscarData()">
+                            <div class="col-sm-4">
+                                SELECCIONE EL PRODUCTO
+                                <select class="form-control" ng-model="producto" required ng-change="changeProduct()"
+                                        ng-options="p.nombreProducto for p in productos track by p.idProducto">
+                                </select>
+                            </div>
+                            <div class="col-sm-8">
+                                <button class="btn btn-primary animated infinite pulse pull-right"
+                                        ng-disabled="!formFechaConsulta.$valid" type="submit">CONSULTAR
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    NUMERO DE {{producto.nombreProducto}} para Reubicación e Inoperativos
+                                </div>
+                                <div class="panel-body">
+                                    <canvas class="chart chart-bar" data="dataReuIno"
+                                            labels="labelsReuIno" legend="true"
+                                            series="seriesReuIno" click="onClick"
+                                            style="height: 550px">
+                                    </canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="pull-left">
+                                <label class="label label-black imeco-block odisea-font">CRITICO [15-mas]</label>
+                                <label class="label label-danger imeco-block odisea-font">GRAVE [10-14]</label>
+                                <label class="label label-warning imeco-block odisea-font">MODERADO [5-9]</label>
+                                <label class="label label-success imeco-block odisea-font">BAJO [0-4]</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="box box-danger">
+                                <div class="box-header" style="background: #404040;text-align: center">
+                                    <img src="resources/img/otros/logo.png" width="150" height="50">
+                                </div>
+                                <div class="box-body table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>Tienda</th>
+                                            <th style="text-align: right">REUBICACION</th>
+                                            <th style="text-align: right">INOPERATIVOS</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="data in dataAllReuIno">
+                                            <td>{{data.tienda}}</td>
+                                            <td style="text-align: right">{{data.reubicados}}</td>
+                                            <td style="text-align: right">
+                                                <span class="label"
+                                                      ng-class="{
+                                                  'label-black': data.inoperativo >= 15 ,
+                                                  'label-danger': data.inoperativo >= 10 && data.inoperativo <=14,
+                                                  'label-warning': data.inoperativo >=5 && data.inoperativo <=9,
+                                                  'label-success': data.inoperativo <= 4
+                                                  }">
+                                                {{data.inoperativo}}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-size: 1.1em"><strong>TOTAL:</strong></td>
+                                            <td style="text-align: right;font-size: 1.1em">
+                                                <strong>{{total.reubicados}}</strong></td>
+                                            <td style="text-align: right;font-size: 1.1em">
+                                                <strong>{{total.inoperativos}}</strong></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--FIN TAB 1-->
+        <!--TAB 3-->
+        <div class="tab-pane" ng-class="{'active': tab.tab2 == true}">
+            <div class="box box-danger">
+                <div class="box-header" style="background: #404040;text-align: center">
+                    <img src="resources/img/otros/logo.png" width="150" height="50">
+                </div>
+                <div class="box-body table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>Tienda</th>
+                            <th ng-repeat="p in productos" class="imeco-right"
+                                style="
+                                font-weight: normal;
+                                font-size: 0.8em;
+                                width: 100px;
+                                min-width: 100px;
+                                ">{{p.nombreProducto}}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="data in dataAll">
+                                <td class="imeco-right" ng-repeat="(key, value) in data">
+                                    <span class="label"
+                                          ng-class="{
+                                                  'label-black': value >= 15 ,
+                                                  'label-danger': value >= 10 && value <=14,
+                                                  'label-warning': value >=5 && value <=9,
+                                                  'label-success': value <= 4,
+                                                  'imeco-label': value.indexOf('C') != -1
+                                                  }">
+                                                {{value}}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--FIN TAB 3-->
+    </div>
+</div>

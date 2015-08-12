@@ -180,9 +180,7 @@ angular.module('odisea.sensomatizado.grafsensomatizado',
                     }
                 }
             ).success(function (data) {
-
                     $log.log("DETALLE",data);
-
                     if (data[0].length === 0) {
                         $scope.labelsDetalle= ['1'];
                         $scope.dataDetalle[0] = data[1];

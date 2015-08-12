@@ -12,6 +12,10 @@
     color: orangered;
 }
 
+.imeco-label{
+    color: #555555;
+}
+
 .imeco-pointer{
     cursor: pointer;
 }
@@ -45,6 +49,10 @@
 .imeco-block{
     display: block;
     text-align: left !important;
+}
+
+.odisea-font{
+    font-size: 1em;
 }
 
 .imeco-left{

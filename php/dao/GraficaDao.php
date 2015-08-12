@@ -253,4 +253,28 @@ class GraficaDao {
         array_push($total, $label, $cantidades, $montos, $rs);
         return $total;
     }
+
+
+    public function chart_operatividad($idproducto) {
+        $stm = $this->pdo->prepare("CALL char_operatividad(?,?,?)");
+        $stm->execute(array(1 ,0, $idproducto));
+        $rs = $stm->fetchAll(PDO::FETCH_OBJ);
+        $total = array();
+        $tiendas = array();
+        $accidentes = array();
+        $incidentes = array();
+        foreach ($rs as $inter) {
+            array_push($tiendas, $inter->tienda);
+            array_push($accidentes, $inter->reubicados);
+            array_push($incidentes, $inter->inoperativo);
+        }
+        array_push($total, $tiendas, $accidentes, $incidentes, $rs);
+        return $total;
+    }
+
+    public function chart_det_operatividad() {
+        $stm = $this->pdo->prepare("CALL char_operatividad(?,?,?)");
+        $stm->execute(array(2 ,0, 0));
+        return $stm->fetchAll(PDO::FETCH_OBJ);
+    }
 }

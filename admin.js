@@ -6,6 +6,7 @@ angular.module('ngOdisea', [
     'ngCookies',
     'odisea.home',
     'odisea.operatividad',
+    'odisea.operatividad.grafoperatividad',
     'odisea.intervencion.registrar',
     'odisea.intervencion.listar',
     'odisea.intervencion.actualizar',

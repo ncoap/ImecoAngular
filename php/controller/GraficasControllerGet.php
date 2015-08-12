@@ -79,4 +79,13 @@ switch ($accion) {
         echo json_encode($graficaDao->reporte_det_sensomatizado(2,$idTienda,$opcion, $fecha, $hora_inicial, $hora_final));
         break;
 
+    case 'chart_operatividad':
+        $idproducto = $_GET['idproducto'];
+        echo json_encode($graficaDao->chart_operatividad($idproducto));
+        break;
+
+    case 'chart_det_operatividad':
+        echo json_encode($graficaDao->chart_det_operatividad());
+        break;
+
 }
