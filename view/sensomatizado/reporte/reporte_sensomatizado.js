@@ -14,6 +14,28 @@ angular.module('odisea.sensomatizado.grafsensomatizado',
             }
         });
     })
+    .directive('exportTable', function () {
+        var link = function ($scope, elm, attr) {
+            $scope.$on('export-excel', function (e, d) {
+                elm.tableExport({type: 'excel', escape: false});
+            });
+        };
+        return {
+            restrict: 'C',
+            link: link
+        }
+    })
+    .directive('exportTable2', function () {
+        var link = function ($scope, elm, attr) {
+            $scope.$on('export-excel-2', function (e, d) {
+                elm.tableExport({type: 'excel', escape: false});
+            });
+        };
+        return {
+            restrict: 'C',
+            link: link
+        }
+    })
     .config(['ChartJsProvider', function (ChartJsProvider) {
         // Configure all charts
         ChartJsProvider.setOptions({
@@ -59,6 +81,14 @@ angular.module('odisea.sensomatizado.grafsensomatizado',
 
             $scope.tab = {tab1: false, tab2: true};
             $scope.buscarDataDetalle();
+        };
+
+        $scope.exportAction = function(){
+            $scope.$broadcast('export-excel', {});
+        };
+
+        $scope.exportAction2 = function(){
+            $scope.$broadcast('export-excel-2', {});
         };
 
 

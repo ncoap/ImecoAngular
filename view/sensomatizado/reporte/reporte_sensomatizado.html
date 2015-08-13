@@ -129,7 +129,7 @@
                                     <img src="resources/img/otros/logo.png" width="150" height="50">
                                 </div>
                                 <div class="box-body table-responsive" style="background-color: #f3f3f3">
-                                    <table class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped exportTable">
                                         <thead>
                                         <tr>
                                             <th>Tienda</th>
@@ -157,7 +157,9 @@
                         </div>
                     </div>
                     <div class="pull-right">
-                        <button class="odisea-btn-pdf">Exportar a EXCEL</button>
+                        <button class="odisea-btn-pdf" ng-click="exportAction()">
+                            <img width="25" height="25" src="resources/img/xls.png">
+                            &nbsp; Exportar a Excel</button>
                     </div>
                 </div>
 
@@ -193,7 +195,7 @@
                             <span>{{tituloMes}} {{tituloAnio}}  Tienda:{{tienda.nombreTienda}}</span>
                         </div>
                         <div class="box-body table-responsive" style="background-color: #f3f3f3;height: 350px">
-                            <table class="table table-bordered table-striped">
+                            <table class="table table-bordered table-striped exportTable2">
                                 <thead>
                                 <tr>
                                     <th>#</th>
@@ -229,7 +231,9 @@
                                 <label class="label label-info odisea-font">{{total.cantidadIncidentes | currency:''}}</label>
                             </div>
                             <div class="pull-right">
-                            <button class="odisea-btn-pdf">Exportar a EXCEL</button>
+                                <button class="odisea-btn-pdf" ng-click="exportAction2()">
+                                    <img width="25" height="25" src="resources/img/xls.png">
+                                    &nbsp; Exportar a Excel</button>
                             </div>
                         </div>
                     </div>

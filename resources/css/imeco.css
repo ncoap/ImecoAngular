@@ -93,7 +93,7 @@
     border: none;
     box-sizing: border-box;
     border-radius: .4em;
-    background-color:#ff4842;
+    background-color:#7dcd40;
     color: #fff;
     cursor: pointer;
     display: inline-block;
@@ -113,5 +113,5 @@
     -webkit-appearance: none;
 }
 .odisea-btn-pdf:focus, .odisea-btn-pdf:hover{
-    background-color:#7dcd40;
+    background-color:#ff4842;
 }

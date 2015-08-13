@@ -29,6 +29,11 @@ angular.module('odisea.intervencion.ejecutivo',
 
         $scope.pormeses = false;
 
+        $scope.tienda = {
+            idTienda: 1,
+            nombreTienda: '(OECHSLE) Salaverry'
+        };
+
         $scope.busqueda = {
             fecha: new Date(),
             opcion: '1',
@@ -68,10 +73,7 @@ angular.module('odisea.intervencion.ejecutivo',
         $scope.allData2 = [];
         $scope.tituloMes = "";
         $scope.tituloAnio = "";
-        $scope.tienda = {
-            idTienda: 1,
-            nombreTienda: '(OECHSLE) Salaverry'
-        };
+
 
         $scope.meses = [
             {id: 1, text: 'ENERO'},
@@ -229,8 +231,8 @@ angular.module('odisea.intervencion.ejecutivo',
             var total2 = 0.0;
 
             angular.forEach(data3, function (item) {
-                total1 = total1 + item.intervenciones;
-                total2 = total2 + item.recuperado;
+                total1 = total1 + parseInt(item.intervenciones);
+                total2 = total2 + parseFloat(item.recuperado);
             });
 
             $scope.totalIntervenciones = total1;
@@ -305,12 +307,12 @@ angular.module('odisea.intervencion.ejecutivo',
             angular.forEach(data, function (detalle) {
 
                 if (detalle.tipoHurto == 'INTERNO') {
-                    cant1 = cant1 + detalle.cantidadProducto;
-                    total1 = total1 + detalle.totalProducto;
+                    cant1 = cant1 + parseInt(detalle.cantidadProducto);
+                    total1 = total1 + parseFloat(detalle.totalProducto);
                 } else {
                     //EXTERNO
-                    cant2 = cant2 + detalle.cantidadProducto;
-                    total2 = total2 + detalle.totalProducto;
+                    cant2 = cant2 + parseInt(detalle.cantidadProducto);
+                    total2 = total2 + parseFloat(detalle.totalProducto);
                 }
             });
 
