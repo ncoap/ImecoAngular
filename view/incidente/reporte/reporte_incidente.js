@@ -76,7 +76,7 @@ angular.module('odisea.incidente.grafincidente',
         var nombreMeses = ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO",
             "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"
         ];
-        
+
         $scope.seriesConsolidado = ['n° Accidentes', 'n° Incidentes'];
         $scope.labelsConsolidado = [];
         $scope.dataConsolidado = [
@@ -84,21 +84,16 @@ angular.module('odisea.incidente.grafincidente',
             []
         ];
 
-        $scope.seriesDetalle = ['Cantidades', 'Total S/'];
-        $scope.labelsDetalle = [];
-        $scope.dataDetalle = [
-            [],
-            []
-        ];
+        $scope.data = {
+            cabaccidente : [],
+            detaccidente : [],
+            cabincidente : [],
+            detincidente : []
+        };
 
-        $scope.seriesPorTipo = ['ACCIDENTE', 'INCIDENTE'];
-        $scope.labelsPorTipo = [];
-        $scope.dataPorTipo = [
-            [],
-            []
-        ];
+        $scope.dataCabecera = [];
+        $scope.dataDetalle = [];
 
-        //PETICION AL SERVER
         $scope.buscarData = function () {
             if ($scope.busqueda.tipoFecha == 'ANUAL') {
                 $scope.busqueda.opcion = '2';
@@ -111,7 +106,7 @@ angular.module('odisea.incidente.grafincidente',
                 $scope.tituloMes = 'REPORTE MENSUAL : ' + nombreMeses[$scope.busqueda.fecha.getMonth()];
                 $scope.tituloAnio = $scope.busqueda.fecha.getFullYear();
                 buscarDataAnual();
-            } 
+            }
         };
 
         function buscarDataAnual() {
@@ -136,7 +131,6 @@ angular.module('odisea.incidente.grafincidente',
                     console.log("Error");
                 });
         }
-        
 
 
         function calcularTotales(dataPorTipo) {
@@ -155,62 +149,27 @@ angular.module('odisea.incidente.grafincidente',
         //SEGUNDA BUSQUEDA
         $scope.buscarDataDetalle = function () {
 
-            var idtienda = 1;
-            if (!$scope.tienda) {
-                //sino esta definido
-                idtienda = 0;
-            } else {
-                idtienda = $scope.tienda.idTienda;
-            }
             $http.get('php/controller/GraficasControllerGet.php', {
-                    params: {
-                        accion: 'reporte_det_incidente',
-                        idtienda: idtienda,
-                        opcion: $scope.busqueda.opcion,
-                        fecha: $scope.busqueda.fecha,
-                        horaInicial: $scope.busqueda.horario.split(' ')[0],
-                        horaFinal: $scope.busqueda.horario.split(' ')[1]
-                    }
+                params: {
+                    accion: 'reporte_det_incidente',
+                    idtienda: $scope.tienda.idTienda,
+                    opcion: $scope.busqueda.opcion,
+                    fecha: $scope.busqueda.fecha,
+                    horaInicial: $scope.busqueda.horario.split(' ')[0],
+                    horaFinal: $scope.busqueda.horario.split(' ')[1]
                 }
-            ).success(
-                function (data) {
-                    $log.info("RECUPEROS ", data);
-                    if (data[0].length === 0) {
-                        $scope.labelsDetalle= ['1'];
-                        $scope.dataDetalle[0] = data[1];
-                        $scope.dataDetalle[1] = data[2];
-                        $scope.dataAllDetalle = data[4];
-                    } else {
-                        $scope.labelsDetalle = data[0];
-                        $scope.dataDetalle[0] = data[1];
-                        $scope.dataDetalle[1] = data[2];
-                        $scope.dataAllDetalle = data[4];
-                    }
-                    //contabiliza el numero
-                    calcularResumenDetalle(data[3]);
-                }
-            ).error(
+            }).success(function (data) {
+                $log.info("RECUPEROS ", data);
+                $scope.cabaccidente = data[0];
+                $scope.detaccidente = data[1];
+                $scope.cabincidente = data[0];
+                $scope.detincidente = data[1];
+            }).error(
                 function (data) {
                     console.log("Error");
                 }
             );
         };
-
-        function calcularResumenDetalle(data) {
-
-            //OTRA CONSULTA A LA BASE DE DATOS PARA
-            //SABER LAS CANTIDAD DE INCIDENTES E ACCIDENTES.
-            $log.log("calcularResumenDetalle ",data);
-            var cant1 = data.accidentes;
-            var cant2 = data.incidentes;
-            $scope.total = {
-                cantidadAccidentes: cant1,
-                cantidadIncidentes: cant2
-            };
-            $scope.labelsPorTipo = ['POR TIPO'];
-            $scope.dataPorTipo[0] = [cant1];
-            $scope.dataPorTipo[1] = [cant2];
-        }
 
         $scope.buscarData();
     });
