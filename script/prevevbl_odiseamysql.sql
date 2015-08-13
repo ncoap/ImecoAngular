@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.7.1
+-- version 4.2.11
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-08-2015 a las 14:53:58
--- Versión del servidor: 5.6.19
--- Versión de PHP: 5.5.15
+-- Tiempo de generación: 14-08-2015 a las 00:51:09
+-- Versión del servidor: 5.6.21
+-- Versión de PHP: 5.6.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -127,7 +127,8 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `char_incidente`(
 	p_opcion varchar(1),
 	p_fecha varchar(10),
 	p_hora_inicial varchar(8),
-	p_hora_final varchar(8)
+	p_hora_final varchar(8),
+	p_tipo varchar(9)
 )
 	BEGIN
 		declare primer_dia varchar(10);
@@ -171,11 +172,15 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `char_incidente`(
 			SELECT
 				c.id_incidente AS idIncidente,
 				c.nombre_involucrado AS nombreInvolucrado,
-				c.tipo AS tipo
+				c.dni_involucrado AS dniInvolucrado,
+				c.edad_accidentado AS edadInvolucrado,
+				c.sexo_accidentado AS sexoInvolucrado
 			FROM
 				cab_incidente c
 			WHERE
 				c.id_tien = p_id_tien
+				AND
+				c.tipo = p_tipo
 				AND
 				DATE(c.fecha_accidente) BETWEEN primer_dia AND ultimo_dia
 				AND
@@ -197,6 +202,8 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `char_incidente`(
 				INNER JOIN det_incidente d ON c.id_incidente = d.id_incidente
 			WHERE
 				c.id_tien = p_id_tien
+				AND
+				c.tipo = p_tipo
 				AND
 				DATE(c.fecha_accidente) BETWEEN primer_dia AND ultimo_dia
 				AND
@@ -1087,7 +1094,7 @@ CREATE TABLE IF NOT EXISTS `cab_incidente` (
 	`lesion` varchar(30) NOT NULL COMMENT 'INCAPACIDAD TEMPORAL\nINCAPACIDAD PERMANENTE',
 	`acciones_correctivas_realizadas` varchar(500) NOT NULL,
 	`total` double NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `cab_incidente`
@@ -1125,7 +1132,7 @@ CREATE TABLE IF NOT EXISTS `cab_interven` (
 	`id_tien` int(11) NOT NULL,
 	`total_recuperado` double NOT NULL DEFAULT '0',
 	`tipo_hurto` char(1) NOT NULL DEFAULT '1' COMMENT '1 INTERNO\n2 EXTERNO'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=61 ;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `cab_interven`
@@ -1181,7 +1188,7 @@ CREATE TABLE IF NOT EXISTS `cab_operatividad` (
 	`id_operatividad` bigint(20) NOT NULL,
 	`fecha_registro` date NOT NULL,
 	`estado` varchar(10) NOT NULL DEFAULT 'EN PROCESO' COMMENT 'REGISTRADO'
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='CONSOLIDADO DE CHECK LIST GENERAL DE OPERATIVIDAD TIENDAS OECHSLE' AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='CONSOLIDADO DE CHECK LIST GENERAL DE OPERATIVIDAD TIENDAS OECHSLE';
 
 --
 -- Volcado de datos para la tabla `cab_operatividad`
@@ -1204,7 +1211,7 @@ CREATE TABLE IF NOT EXISTS `cab_sensor` (
 	`total` double NOT NULL,
 	`observaciones` varchar(600) DEFAULT NULL,
 	`id_tien` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `cab_sensor`
@@ -1339,7 +1346,7 @@ CREATE TABLE IF NOT EXISTS `det_operatividad` (
 	`cantidad_reubicacion` int(11) NOT NULL,
 	`otros` varchar(250) DEFAULT NULL,
 	`observaciones` varchar(500) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `det_operatividad`
@@ -1416,7 +1423,7 @@ INSERT INTO `prevencionista` (`dni_prev`, `nom_prev`) VALUES
 CREATE TABLE IF NOT EXISTS `producto` (
 	`id_producto` int(11) NOT NULL,
 	`nombre` varchar(100) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=26 ;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `producto`
@@ -1487,7 +1494,7 @@ CREATE TABLE IF NOT EXISTS `tendero` (
 	`id_tip_ten` int(11) NOT NULL,
 	`fec_nac` date NOT NULL,
 	`sexo` char(1) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=30 ;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `tendero`
