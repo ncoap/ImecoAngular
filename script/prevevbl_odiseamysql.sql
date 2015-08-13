@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.11
+-- version 4.2.7.1
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-08-2015 a las 00:26:50
--- Versión del servidor: 5.6.21
--- Versión de PHP: 5.6.3
+-- Tiempo de generación: 13-08-2015 a las 14:53:58
+-- Versión del servidor: 5.6.19
+-- Versión de PHP: 5.5.15
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -31,7 +31,7 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `char_ejecutivo_anual`(
 	p_hora_final varchar(8) ,
 	p_sexo varchar(1)
 )
-BEGIN
+	BEGIN
 
 		declare primer_dia varchar(10);
 		declare ultimo_dia varchar(10);
@@ -81,7 +81,7 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `char_ejecutivo_anual_por_tienda`(
 	p_hora_final varchar(8) ,
 	p_sexo varchar(1)
 )
-BEGIN
+	BEGIN
 
 		declare primer_dia varchar(10);
 		declare ultimo_dia varchar(10);
@@ -129,7 +129,7 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `char_incidente`(
 	p_hora_inicial varchar(8),
 	p_hora_final varchar(8)
 )
-BEGIN
+	BEGIN
 		declare primer_dia varchar(10);
 		declare ultimo_dia varchar(10);
 
@@ -171,7 +171,20 @@ BEGIN
 			SELECT
 				c.id_incidente AS idIncidente,
 				c.nombre_involucrado AS nombreInvolucrado,
-				c.tipo AS tipo,
+				c.tipo AS tipo
+			FROM
+				cab_incidente c
+			WHERE
+				c.id_tien = p_id_tien
+				AND
+				DATE(c.fecha_accidente) BETWEEN primer_dia AND ultimo_dia
+				AND
+				TIME(c.fecha_accidente) BETWEEN p_hora_inicial AND p_hora_final
+			ORDER BY c.id_incidente ASC;
+
+			WHEN 3 THEN
+			SELECT
+				c.id_incidente as idIncidente,
 				coalesce(d.es_activo,'NO') AS esActivo,
 				coalesce(d.cod_pro,'SIN CODIGO') AS codigoProducto,
 				coalesce(d.desc_pro,'SIN PRODUCTO') AS descripcionProducto,
@@ -181,39 +194,27 @@ BEGIN
 				coalesce(d.cant * d.precio,0) AS totalProducto
 			FROM
 				cab_incidente c
-				LEFT JOIN det_incidente d ON c.id_incidente = d.id_incidente
+				INNER JOIN det_incidente d ON c.id_incidente = d.id_incidente
 			WHERE
 				c.id_tien = p_id_tien
 				AND
 				DATE(c.fecha_accidente) BETWEEN primer_dia AND ultimo_dia
 				AND
-				TIME(c.fecha_accidente) BETWEEN p_hora_inicial AND p_hora_final;
-
-			WHEN 3  THEN
-			SELECT
-				COALESCE(SUM(IF(c.tipo = 'accidente', 1, 0)),0) AS accidentes,
-				COALESCE(SUM(IF(c.tipo = 'incidente', 1, 0)),0) AS incidentes
-			FROM
-				cab_incidente c
-			WHERE
-				c.id_tien = p_id_tien
-				AND
-				DATE(c.fecha_accidente) BETWEEN primer_dia AND ultimo_dia
-				AND
-				TIME(c.fecha_accidente) BETWEEN p_hora_inicial AND p_hora_final;
+				TIME(c.fecha_accidente) BETWEEN p_hora_inicial AND p_hora_final
+			ORDER BY c.id_incidente ASC;
 
 		END CASE;
 	END$$
 
 CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `char_operatividad`(
-    p_reporte INT(11),
+	p_reporte INT(11),
 	p_id_tien INT(11),
 	p_id_producto INT(11)
 )
-BEGIN
+	BEGIN
 
-	CASE p_reporte
-		WHEN 1 THEN
+		CASE p_reporte
+			WHEN 1 THEN
 			-- REPORTE DE TODAS LAS TIENDAS CON CAMPOS DE REUBICACION E INOPERATIVO X PRODUCTO
 			SELECT
 				t.nom_tien as tienda,
@@ -221,58 +222,58 @@ BEGIN
 				COALESCE(SUM(d.inoperativo),0) AS inoperativo
 			FROM
 				(   select
-					c.id_tien as idTienda,
-					c.cantidad_reubicacion as reubicados,
-					c.cantidad_inoperativo as inoperativo
-					from det_operatividad c
-					where c.id_producto = p_id_producto
+							c.id_tien as idTienda,
+							c.cantidad_reubicacion as reubicados,
+							c.cantidad_inoperativo as inoperativo
+						from det_operatividad c
+						where c.id_producto = p_id_producto
 				) d
 				RIGHT JOIN tienda t ON t.id_tien = d.idTienda
 			where t.id_tien > 0
 			GROUP BY t.id_tien
 			ORDER BY t.id_tien ASC;
 
-		WHEN 2 THEN
+			WHEN 2 THEN
 			-- REPORTE DE TODAS LAS TIENDAS CON TODOS LOS PRODUCTOS
 			SELECT
-			t.nom_tien as atienda,
-			IF(c.id_producto = 1,c.cantidad_inoperativo,0) as producto1,
-			IF(c.id_producto = 2,c.cantidad_inoperativo,0) as producto2,
-			IF(c.id_producto = 3,c.cantidad_inoperativo,0) as producto3,
-			IF(c.id_producto = 4,c.cantidad_inoperativo,0) as producto4,
-			IF(c.id_producto = 5,c.cantidad_inoperativo,0) as producto5,
-			IF(c.id_producto = 6,c.cantidad_inoperativo,0) as producto6,
-			IF(c.id_producto = 7,c.cantidad_inoperativo,0) as producto7,
-			IF(c.id_producto = 8,c.cantidad_inoperativo,0) as producto8,
-			IF(c.id_producto = 9,c.cantidad_inoperativo,0) as producto9,
-			IF(c.id_producto = 10,c.cantidad_inoperativo,0) as producto10,
-			IF(c.id_producto = 11,c.cantidad_inoperativo,0) as producto11,
-			IF(c.id_producto = 12,c.cantidad_inoperativo,0) as producto12,
-			IF(c.id_producto = 13,c.cantidad_inoperativo,0) as producto13,
-			IF(c.id_producto = 14,c.cantidad_inoperativo,0) as producto14,
-			IF(c.id_producto = 15,c.cantidad_inoperativo,0) as producto15,
-			IF(c.id_producto = 16,c.cantidad_inoperativo,0) as producto16,
-			IF(c.id_producto = 17,c.cantidad_inoperativo,0) as producto17,
-			IF(c.id_producto = 18,c.cantidad_inoperativo,0) as producto18,
-			IF(c.id_producto = 19,c.cantidad_inoperativo,0) as producto19,
-			IF(c.id_producto = 20,c.cantidad_inoperativo,0) as producto20,
-			IF(c.id_producto = 21,c.cantidad_inoperativo,0) as producto21,
-			IF(c.id_producto = 22,c.cantidad_inoperativo,0) as producto22,
-			IF(c.id_producto = 23,c.cantidad_inoperativo,0) as producto23,
-			IF(c.id_producto = 24,c.cantidad_inoperativo,0) as producto24,
-			IF(c.id_producto = 25,c.cantidad_inoperativo,0) as producto25
+				t.nom_tien as atienda,
+				IF(c.id_producto = 1,c.cantidad_inoperativo,0) as producto1,
+				IF(c.id_producto = 2,c.cantidad_inoperativo,0) as producto2,
+				IF(c.id_producto = 3,c.cantidad_inoperativo,0) as producto3,
+				IF(c.id_producto = 4,c.cantidad_inoperativo,0) as producto4,
+				IF(c.id_producto = 5,c.cantidad_inoperativo,0) as producto5,
+				IF(c.id_producto = 6,c.cantidad_inoperativo,0) as producto6,
+				IF(c.id_producto = 7,c.cantidad_inoperativo,0) as producto7,
+				IF(c.id_producto = 8,c.cantidad_inoperativo,0) as producto8,
+				IF(c.id_producto = 9,c.cantidad_inoperativo,0) as producto9,
+				IF(c.id_producto = 10,c.cantidad_inoperativo,0) as producto10,
+				IF(c.id_producto = 11,c.cantidad_inoperativo,0) as producto11,
+				IF(c.id_producto = 12,c.cantidad_inoperativo,0) as producto12,
+				IF(c.id_producto = 13,c.cantidad_inoperativo,0) as producto13,
+				IF(c.id_producto = 14,c.cantidad_inoperativo,0) as producto14,
+				IF(c.id_producto = 15,c.cantidad_inoperativo,0) as producto15,
+				IF(c.id_producto = 16,c.cantidad_inoperativo,0) as producto16,
+				IF(c.id_producto = 17,c.cantidad_inoperativo,0) as producto17,
+				IF(c.id_producto = 18,c.cantidad_inoperativo,0) as producto18,
+				IF(c.id_producto = 19,c.cantidad_inoperativo,0) as producto19,
+				IF(c.id_producto = 20,c.cantidad_inoperativo,0) as producto20,
+				IF(c.id_producto = 21,c.cantidad_inoperativo,0) as producto21,
+				IF(c.id_producto = 22,c.cantidad_inoperativo,0) as producto22,
+				IF(c.id_producto = 23,c.cantidad_inoperativo,0) as producto23,
+				IF(c.id_producto = 24,c.cantidad_inoperativo,0) as producto24,
+				IF(c.id_producto = 25,c.cantidad_inoperativo,0) as producto25
 			FROM
-			(
-				select
-				d.id_tien as idTienda,
-				d.id_producto as id_producto,
-				d.cantidad_inoperativo as cantidad_inoperativo
-				from det_operatividad d
-			) c
-			RIGHT JOIN tienda t ON t.id_tien = c.idTienda
+				(
+					select
+						d.id_tien as idTienda,
+						d.id_producto as id_producto,
+						d.cantidad_inoperativo as cantidad_inoperativo
+					from det_operatividad d
+				) c
+				RIGHT JOIN tienda t ON t.id_tien = c.idTienda
 			where t.id_tien > 0
 			ORDER BY t.id_tien ASC;
-	END CASE;
+		END CASE;
 
 	END$$
 
@@ -284,7 +285,7 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `char_sensomatizado`(
 	p_hora_inicial varchar(8),
 	p_hora_final varchar(8)
 )
-BEGIN
+	BEGIN
 		declare primer_dia varchar(10);
 		declare ultimo_dia varchar(10);
 
@@ -314,8 +315,8 @@ BEGIN
 								coalesce(s.cant,0) as cantidad,
 								coalesce(ROUND(s.precio * s.cant,2),0) as total
 							from cab_sensor c
-							LEFT join det_sensor s
-							ON c.id_sensor = s.id_sensor
+								LEFT join det_sensor s
+									ON c.id_sensor = s.id_sensor
 							where
 								DATE(c.fecha_registro) between primer_dia and ultimo_dia
 								AND
@@ -362,8 +363,8 @@ BEGIN
 								coalesce(s.cant,0) as cantidad,
 								coalesce(ROUND(s.precio * s.cant,2),0) as total
 							from cab_sensor c
-							LEFT join det_sensor s
-							ON c.id_sensor = s.id_sensor
+								LEFT join det_sensor s
+									ON c.id_sensor = s.id_sensor
 							where
 								DATE(c.fecha_registro) between primer_dia and ultimo_dia
 								AND
@@ -400,12 +401,12 @@ BEGIN
 	END$$
 
 CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_get_productos`()
-BEGIN
+	BEGIN
 		select id_producto as idProducto, nombre as nombreProducto from producto;
 	END$$
 
 CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_get_tiendas`()
-BEGIN
+	BEGIN
 		select id_tien as idTienda, nom_tien as nombreTienda from tienda
 		where id_tien > 0;
 	END$$
@@ -438,7 +439,7 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_incidente`(
 	p_precio double,
 	p_es_activo CHAR(2)
 )
-BEGIN
+	BEGIN
 
 		declare indice INT;
 		set indice = (p_pag - 1)*10;
@@ -585,7 +586,7 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_intervencion`(
 	p_cant int,
 	p_precio double
 )
-BEGIN
+	BEGIN
 
 		declare indice INT;
 		set indice = (p_pag - 1)*10;
@@ -732,7 +733,7 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_login`(
 	usu varchar(15),
 	pas varchar(15)
 )
-BEGIN
+	BEGIN
 		SELECT nom_tien as usuario,
 					 rol as rol from tienda
 		WHERE usuario=usu and pass_tien=pas
@@ -765,7 +766,7 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_operatividad`(
 	p_otros varchar(250),
 	p_observaciones varchar(500)
 )
-BEGIN
+	BEGIN
 		CASE opcion
 
 			WHEN 1 THEN
@@ -852,7 +853,7 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_sensomatizado`(
 	p_cant int,
 	p_precio double
 )
-BEGIN
+	BEGIN
 
 		declare indice INT;
 		set indice = (p_pag - 1)*10;
@@ -969,7 +970,7 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_tendero`(
 	p_fec_nac DATE,
 	p_sexo CHAR(1)
 )
-BEGIN
+	BEGIN
 		CASE opcion
 			WHEN 1 THEN
 			-- INSERT NUEVo TENDERO
@@ -1022,7 +1023,7 @@ BEGIN
 -- Funciones
 --
 CREATE DEFINER=`root`@`127.0.0.1` FUNCTION `diaSemana`(dia int) RETURNS varchar(15) CHARSET latin1
-BEGIN
+	BEGIN
 
 		DECLARE diaSemana VARCHAR(15);
 
@@ -1039,7 +1040,7 @@ BEGIN
 	END$$
 
 CREATE DEFINER=`root`@`127.0.0.1` FUNCTION `mes`(mes int) RETURNS varchar(15) CHARSET latin1
-BEGIN
+	BEGIN
 
 		DECLARE v_mes VARCHAR(15);
 
@@ -1069,40 +1070,40 @@ DELIMITER ;
 --
 
 CREATE TABLE IF NOT EXISTS `cab_incidente` (
-`id_incidente` bigint(20) NOT NULL,
-  `id_tien` int(11) NOT NULL,
-  `tipo` varchar(9) NOT NULL DEFAULT 'accidente' COMMENT 'accidente',
-  `nombre_involucrado` varchar(150) NOT NULL,
-  `dni_involucrado` varchar(15) NOT NULL,
-  `acto_condicion_insegura` varchar(500) NOT NULL,
-  `edad_accidentado` int(11) NOT NULL,
-  `sexo_accidentado` char(1) NOT NULL,
-  `fecha_accidente` datetime NOT NULL,
-  `nivel_gravedad` varchar(15) NOT NULL COMMENT 'ALTO\nMODERADO\nBAJO\n',
-  `diagnostico` varchar(500) NOT NULL,
-  `descanso_medico` char(2) NOT NULL COMMENT 'SI\nNO',
-  `cantidad_dias` int(11) NOT NULL,
-  `descripcion_causas` varchar(500) NOT NULL,
-  `lesion` varchar(30) NOT NULL COMMENT 'INCAPACIDAD TEMPORAL\nINCAPACIDAD PERMANENTE',
-  `acciones_correctivas_realizadas` varchar(500) NOT NULL,
-  `total` double NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+	`id_incidente` bigint(20) NOT NULL,
+	`id_tien` int(11) NOT NULL,
+	`tipo` varchar(9) NOT NULL DEFAULT 'accidente' COMMENT 'accidente',
+	`nombre_involucrado` varchar(150) NOT NULL,
+	`dni_involucrado` varchar(15) NOT NULL,
+	`acto_condicion_insegura` varchar(500) NOT NULL,
+	`edad_accidentado` int(11) NOT NULL,
+	`sexo_accidentado` char(1) NOT NULL,
+	`fecha_accidente` datetime NOT NULL,
+	`nivel_gravedad` varchar(15) NOT NULL COMMENT 'ALTO\nMODERADO\nBAJO\n',
+	`diagnostico` varchar(500) NOT NULL,
+	`descanso_medico` char(2) NOT NULL COMMENT 'SI\nNO',
+	`cantidad_dias` int(11) NOT NULL,
+	`descripcion_causas` varchar(500) NOT NULL,
+	`lesion` varchar(30) NOT NULL COMMENT 'INCAPACIDAD TEMPORAL\nINCAPACIDAD PERMANENTE',
+	`acciones_correctivas_realizadas` varchar(500) NOT NULL,
+	`total` double NOT NULL DEFAULT '0'
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
 
 --
 -- Volcado de datos para la tabla `cab_incidente`
 --
 
 INSERT INTO `cab_incidente` (`id_incidente`, `id_tien`, `tipo`, `nombre_involucrado`, `dni_involucrado`, `acto_condicion_insegura`, `edad_accidentado`, `sexo_accidentado`, `fecha_accidente`, `nivel_gravedad`, `diagnostico`, `descanso_medico`, `cantidad_dias`, `descripcion_causas`, `lesion`, `acciones_correctivas_realizadas`, `total`) VALUES
-(1, 1, 'accidente', 'JOSE DOMINGUEZ DE LA CRUZ', '15264512', 'CAIDA DE CAMARA', 25, 'M', '2015-07-05 00:00:00', 'ALTO', 'sin diagnostico', 'NO', 0, 'sin causas', 'INCAPACIDAD TEMPORAL', 'sin acciones correctivas', 0),
-(2, 2, 'accidente', 'FELICIANO', '58256562', 'ROBO', 10, 'F', '2015-07-03 13:15:00', 'ALTO', 'sin diagnostico', 'NO', 0, 'sin causas', 'INCAPACIDAD TEMPORAL', 'sin acciones correctivas', 0),
-(4, 4, 'accidente', 'ANGEL', '25458952', 'CAIDA', 32, 'M', '2015-07-05 15:13:00', 'ALTO', 'sin diagnostico', 'NO', 0, 'sin causas', 'INCAPACIDAD TEMPORAL', 'sin acciones correctivas', 0),
-(6, 11, 'accidente', 'Ricardo coqchi', '46435523', 'sin condicion', 20, 'M', '2015-08-01 11:15:00', 'BAJO', '', 'NO', 0, 'sin descripcion', 'INCAPACIDAD TEMPORAL', 'sin acciones correctivas', 300),
-(7, 4, 'accidente', 'RICARDI COQCHI', '15262252', 'sin condicion', 20, 'M', '2015-08-01 11:26:00', 'BAJO', '', 'NO', 0, 'sin descripcion', 'INCAPACIDAD TEMPORAL', 'sin acciones correctivas', 30),
-(8, 1, 'accidente', 'RICARDITO', '25142236', 'sin condicion', 20, 'M', '2015-08-01 11:38:00', 'BAJO', '', 'NO', 0, 'sin descripcion', 'INCAPACIDAD TEMPORAL', 'sin acciones correctivas', 24),
-(9, 1, 'incidente', 'NELSON', '15265598', 'sin condicion', 20, 'M', '2015-08-01 11:42:00', 'BAJO', '', 'NO', 0, 'sin descripcion', 'INCAPACIDAD TEMPORAL', 'sin acciones correctivas', 25),
-(10, 1, 'incidente', 'JOSE ESPINADO DMOIN', '59654475', 'sin condicion', 20, 'M', '2015-08-03 14:42:00', 'BAJO', 'sin diagnostico', 'NO', 0, 'sin descripcion', 'INCAPACIDAD TEMPORAL', 'sin acciones correctivas', 25),
-(11, 1, 'incidente', 'JUAN CLAUDIO DOMINGUEZ', '48592615', 'sin condicion', 20, 'M', '2015-08-09 00:46:00', 'BAJO', 'sin diagnostico', 'NO', 0, 'sin descripcion', 'INCAPACIDAD TEMPORAL', 'sin acciones correctivas', 0),
-(12, 1, 'incidente', 'Juan Dominguez', '89652214', 'sin condicion', 20, 'M', '2015-08-09 00:51:00', 'BAJO', 'sin diagnostico', 'NO', 0, 'sin descripcion', 'INCAPACIDAD TEMPORAL', 'sin acciones correctivas', 55);
+	(1, 1, 'accidente', 'JOSE DOMINGUEZ DE LA CRUZ', '15264512', 'CAIDA DE CAMARA', 25, 'M', '2015-07-05 00:00:00', 'ALTO', 'sin diagnostico', 'NO', 0, 'sin causas', 'INCAPACIDAD TEMPORAL', 'sin acciones correctivas', 0),
+	(2, 2, 'accidente', 'FELICIANO', '58256562', 'ROBO', 10, 'F', '2015-07-03 13:15:00', 'ALTO', 'sin diagnostico', 'NO', 0, 'sin causas', 'INCAPACIDAD TEMPORAL', 'sin acciones correctivas', 0),
+	(4, 4, 'accidente', 'ANGEL', '25458952', 'CAIDA', 32, 'M', '2015-07-05 15:13:00', 'ALTO', 'sin diagnostico', 'NO', 0, 'sin causas', 'INCAPACIDAD TEMPORAL', 'sin acciones correctivas', 0),
+	(6, 11, 'accidente', 'Ricardo coqchi', '46435523', 'sin condicion', 20, 'M', '2015-08-01 11:15:00', 'BAJO', '', 'NO', 0, 'sin descripcion', 'INCAPACIDAD TEMPORAL', 'sin acciones correctivas', 300),
+	(7, 4, 'accidente', 'RICARDI COQCHI', '15262252', 'sin condicion', 20, 'M', '2015-08-01 11:26:00', 'BAJO', '', 'NO', 0, 'sin descripcion', 'INCAPACIDAD TEMPORAL', 'sin acciones correctivas', 30),
+	(8, 1, 'accidente', 'RICARDITO', '25142236', 'sin condicion', 20, 'M', '2015-08-01 11:38:00', 'BAJO', '', 'NO', 0, 'sin descripcion', 'INCAPACIDAD TEMPORAL', 'sin acciones correctivas', 24),
+	(9, 1, 'incidente', 'NELSON', '15265598', 'sin condicion', 20, 'M', '2015-08-01 11:42:00', 'BAJO', '', 'NO', 0, 'sin descripcion', 'INCAPACIDAD TEMPORAL', 'sin acciones correctivas', 25),
+	(10, 1, 'incidente', 'JOSE ESPINADO DMOIN', '59654475', 'sin condicion', 20, 'M', '2015-08-03 14:42:00', 'BAJO', 'sin diagnostico', 'NO', 0, 'sin descripcion', 'INCAPACIDAD TEMPORAL', 'sin acciones correctivas', 25),
+	(11, 1, 'incidente', 'JUAN CLAUDIO DOMINGUEZ', '48592615', 'sin condicion', 20, 'M', '2015-08-09 00:46:00', 'BAJO', 'sin diagnostico', 'NO', 0, 'sin descripcion', 'INCAPACIDAD TEMPORAL', 'sin acciones correctivas', 0),
+	(12, 1, 'incidente', 'Juan Dominguez', '89652214', 'sin condicion', 20, 'M', '2015-08-09 00:51:00', 'BAJO', 'sin diagnostico', 'NO', 0, 'sin descripcion', 'INCAPACIDAD TEMPORAL', 'sin acciones correctivas', 55);
 
 -- --------------------------------------------------------
 
@@ -1111,64 +1112,64 @@ INSERT INTO `cab_incidente` (`id_incidente`, `id_tien`, `tipo`, `nombre_involucr
 --
 
 CREATE TABLE IF NOT EXISTS `cab_interven` (
-`num_inte` int(11) NOT NULL,
-  `fec_inte` datetime NOT NULL,
-  `id_ten` int(11) NOT NULL,
-  `der_ten` varchar(25) DEFAULT NULL,
-  `lugar_derivacion` varchar(150) DEFAULT NULL,
-  `dni_prev` varchar(15) NOT NULL,
-  `nom_prev` varchar(150) DEFAULT NULL,
-  `id_pues` int(11) NOT NULL,
-  `mod_empl` varchar(500) DEFAULT NULL,
-  `det_inte` varchar(600) DEFAULT NULL,
-  `id_tien` int(11) NOT NULL,
-  `total_recuperado` double NOT NULL DEFAULT '0',
-  `tipo_hurto` char(1) NOT NULL DEFAULT '1' COMMENT '1 INTERNO\n2 EXTERNO'
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=latin1;
+	`num_inte` int(11) NOT NULL,
+	`fec_inte` datetime NOT NULL,
+	`id_ten` int(11) NOT NULL,
+	`der_ten` varchar(25) DEFAULT NULL,
+	`lugar_derivacion` varchar(150) DEFAULT NULL,
+	`dni_prev` varchar(15) NOT NULL,
+	`nom_prev` varchar(150) DEFAULT NULL,
+	`id_pues` int(11) NOT NULL,
+	`mod_empl` varchar(500) DEFAULT NULL,
+	`det_inte` varchar(600) DEFAULT NULL,
+	`id_tien` int(11) NOT NULL,
+	`total_recuperado` double NOT NULL DEFAULT '0',
+	`tipo_hurto` char(1) NOT NULL DEFAULT '1' COMMENT '1 INTERNO\n2 EXTERNO'
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=61 ;
 
 --
 -- Volcado de datos para la tabla `cab_interven`
 --
 
 INSERT INTO `cab_interven` (`num_inte`, `fec_inte`, `id_ten`, `der_ten`, `lugar_derivacion`, `dni_prev`, `nom_prev`, `id_pues`, `mod_empl`, `det_inte`, `id_tien`, `total_recuperado`, `tipo_hurto`) VALUES
-(7, '2015-05-16 19:00:00', 4, 'Otros', NULL, '15254587', 'NUÑEZ ESPINOZA, LUIS ANTONIO', 1, NULL, NULL, 2, 123.47, '2'),
-(10, '2015-05-19 21:00:00', 3, 'Comisaria', NULL, '98653265', 'ANAYA BRIONES, ISSA JOAN', 1, NULL, NULL, 15, 706.66, '2'),
-(11, '2015-05-22 21:00:00', 1, 'Dirincri', NULL, '14152636', 'APAZA MESTAS, CARLA PAOLA', 1, NULL, NULL, 2, 1211.83, '1'),
-(24, '2015-07-09 06:56:00', 6, 'Comisaria', '', '25365587', 'BONIFACIO PACCO, FREYER MIGUEL', 1, 'inasd', 'ererrerere', 1, 390, '2'),
-(25, '2015-07-09 07:14:00', 6, 'Comisaria', '', '34546654', 'LEON MELGAREJO, ELEOENAI MERARI', 1, 'administracoin', 'incidentes', 1, 180, '1'),
-(26, '2015-07-09 07:17:00', 6, 'Comisaria', '', '45253368', 'LIMA TUNQUI, MARYLUZ HANA', 1, 'modalidad emplead', 'detalle de la intervenicon', 1, 750, '2'),
-(27, '2015-07-09 10:18:00', 6, 'Comisaria', '', '25145526', 'LIZANA AUCCASI, JHOSELIN YHOREIMA', 1, 'fdgdfg', 'dfgdfgdfgdfgdfg', 1, 408, '1'),
-(28, '2015-07-09 10:26:00', 6, 'Comisaria', '', '58585666', 'LOPEZ OLANDA, ALISSON ILENE', 1, 'dfgdfgdfg', 'dfgdfgdfg', 1, 0, '1'),
-(29, '2015-07-09 11:34:00', 6, 'Comisaria', '', '56545534', 'SANDOVAL POZO, CLAUDIA MELISSA', 1, '', '', 1, 0, '2'),
-(30, '2015-07-09 11:37:00', 6, 'Comisaria', '', '78657798', 'SIVIRICHI BARRAZA, SANDRA SHERINE', 1, '', '', 10, 125.25, '1'),
-(31, '2015-07-09 11:47:00', 6, 'Comisaria', '', '63528596', 'TORRE AGUIRRE, PATRICIA', 1, '', '', 10, 20.55, '1'),
-(32, '2015-07-09 16:33:00', 12, 'Comisaria', '', '43534255', 'TRUJILLO ZELAYA, DOMINGO', 1, 'ASDASDAS', 'ASDASDASD', 1, 0, '2'),
-(33, '2015-07-09 17:22:00', 13, 'Comisaria', '', '12355555', 'VALDIVIA SALAZAR, ROSITA MARISOL', 1, '', '', 1, 0, '1'),
-(34, '2015-07-10 14:04:00', 14, 'Comisaria', '', '23454988', 'VALENCIA ROCA, SHEYLA JOHANA', 1, '', '', 1, 0, '1'),
-(37, '2015-07-10 20:09:00', 6, 'Comisaria', '', '98685965', 'FLORES LÓPEZ, KEVYN GABRIEL', 1, 'asdasd', 'asdas', 5, 0, '2'),
-(38, '2015-07-11 07:37:00', 6, 'Comisaria', '', '45564434', 'GIL ACUÑA, LADY SMITH ', 1, 'asdasd', 'asdasd', 1, 0, '1'),
-(39, '2015-07-11 07:57:00', 17, 'Comisaria', '', '46435523', 'GOMEZ VILCHEZ, GONZALO', 1, '', '', 1, 0, '2'),
-(40, '2015-07-11 08:09:00', 18, 'Comisaria', '', '69655524', 'GUERREROS NAVARRETE, RAÚL ALONSO', 1, '', '', 3, 0, '1'),
-(41, '2015-07-11 08:21:00', 19, 'Comisaria', '', '12123345', 'GUZMAN LEON, ALEXIS', 1, '', '', 1, 0, '1'),
-(42, '2015-07-11 08:29:00', 20, 'Comisaria', '', '56567787', 'CHAVEZ HUAYTA, ROGER VLADIMIR', 1, '', '', 3, 0, '2'),
-(43, '2015-07-11 08:32:00', 21, 'Comisaria', '', '12345565', 'CHUQUITAYPE CHACALTANA, ALICIA D.', 1, '', '', 4, 0, '1'),
-(44, '2015-07-11 09:04:00', 21, 'Comisaria', '', '48591526', 'CONDORI CHAISA, JOSEPH IVAN', 1, '', '', 1, 0, '2'),
-(45, '2015-07-23 21:20:00', 25, 'Dirincri', '', '48592636', 'Jose Elimiliano', 4, '', '', 12, 600, '2'),
-(46, '2015-07-23 22:56:00', 25, 'Comisaria', '', '12355555', 'VALDIVIA SALAZAR, ROSITA MARISOL', 1, 'asd', 'asdas', 13, 1050.5, '1'),
-(47, '2015-07-24 07:24:00', 26, 'Comisaria', '', '48592615', 'Nuevo PREVEN', 1, 'asd', 'qwe', 11, 20, '1'),
-(48, '2015-07-24 07:27:00', 27, 'Comisaria', '', '48592615', 'Nuevo PREVEN', 1, '', '', 5, 30, '1'),
-(49, '2015-07-28 15:44:00', 26, 'Otros', 'Soltado', '15264859', 'JUAN DOMINGUEZ', 1, 'A MANO ARMADA', 'INFORMACION DE DETALLE', 1, 250.25, '2'),
-(50, '2015-07-28 15:51:00', 26, 'Dirincri', '', '48592615', 'Nuevo PREVEN', 1, 'ADMIN', 'INFORMADOR', 17, 240, '1'),
-(51, '2015-07-28 16:09:00', 26, 'Comisaria', '', '49564859', 'Nuevos Ademanes', 1, '', '', 3, 250.2, '1'),
-(52, '2015-07-28 16:11:00', 26, 'Comisaria', '', '49568858', 'MONTES SANOMAMANI', 1, '', '', 15, 20, '1'),
-(53, '2015-07-30 12:49:00', 26, 'Comisaria', '', '48592615', 'JOSE FELICIANO', 1, '', '', 3, 120, '1'),
-(54, '2015-07-30 13:40:00', 28, 'Comisaria', '', '48596636', 'DIONALY VARGAS', 4, '', '', 4, 30, '1'),
-(55, '2015-08-03 09:54:00', 29, 'Comisaria', '', '15263526', 'QUISPE QUISPE', 3, '', '', 7, 325, '1'),
-(56, '2015-08-04 11:28:00', 26, 'Comisaria', '', '56235562', 'JUAN DOMINGUEZ PEREZ PEREZ', 4, '', '', 5, 150.25, '2'),
-(57, '2015-08-04 12:12:00', 26, 'Comisaria', '', '48592615', 'Nuevo PREVEN', 1, 'ADMINISTRADOR', 'INFORMACION DE LAS MIMSA', 13, 65, '1'),
-(58, '2015-08-04 12:18:00', 26, 'Comisaria', '', '48592615', 'Nuevo PREVEN', 1, '', '', 3, 300.46, '1'),
-(59, '2015-08-04 12:20:00', 26, 'Comisaria', '', '48592615', 'Nuevo PREVEN', 1, 'sin modidad', 'sin intervencion', 3, 1500, '1'),
-(60, '2015-08-04 12:25:00', 28, 'Comisaria', '', '12345565', 'CHUQUITAYPE CHACALTANA, ALICIA D.', 1, '', '', 5, 2000, '1');
+	(7, '2015-05-16 19:00:00', 4, 'Otros', NULL, '15254587', 'NUÑEZ ESPINOZA, LUIS ANTONIO', 1, NULL, NULL, 2, 123.47, '2'),
+	(10, '2015-05-19 21:00:00', 3, 'Comisaria', NULL, '98653265', 'ANAYA BRIONES, ISSA JOAN', 1, NULL, NULL, 15, 706.66, '2'),
+	(11, '2015-05-22 21:00:00', 1, 'Dirincri', NULL, '14152636', 'APAZA MESTAS, CARLA PAOLA', 1, NULL, NULL, 2, 1211.83, '1'),
+	(24, '2015-07-09 06:56:00', 6, 'Comisaria', '', '25365587', 'BONIFACIO PACCO, FREYER MIGUEL', 1, 'inasd', 'ererrerere', 1, 390, '2'),
+	(25, '2015-07-09 07:14:00', 6, 'Comisaria', '', '34546654', 'LEON MELGAREJO, ELEOENAI MERARI', 1, 'administracoin', 'incidentes', 1, 180, '1'),
+	(26, '2015-07-09 07:17:00', 6, 'Comisaria', '', '45253368', 'LIMA TUNQUI, MARYLUZ HANA', 1, 'modalidad emplead', 'detalle de la intervenicon', 1, 750, '2'),
+	(27, '2015-07-09 10:18:00', 6, 'Comisaria', '', '25145526', 'LIZANA AUCCASI, JHOSELIN YHOREIMA', 1, 'fdgdfg', 'dfgdfgdfgdfgdfg', 1, 408, '1'),
+	(28, '2015-07-09 10:26:00', 6, 'Comisaria', '', '58585666', 'LOPEZ OLANDA, ALISSON ILENE', 1, 'dfgdfgdfg', 'dfgdfgdfg', 1, 0, '1'),
+	(29, '2015-07-09 11:34:00', 6, 'Comisaria', '', '56545534', 'SANDOVAL POZO, CLAUDIA MELISSA', 1, '', '', 1, 0, '2'),
+	(30, '2015-07-09 11:37:00', 6, 'Comisaria', '', '78657798', 'SIVIRICHI BARRAZA, SANDRA SHERINE', 1, '', '', 10, 125.25, '1'),
+	(31, '2015-07-09 11:47:00', 6, 'Comisaria', '', '63528596', 'TORRE AGUIRRE, PATRICIA', 1, '', '', 10, 20.55, '1'),
+	(32, '2015-07-09 16:33:00', 12, 'Comisaria', '', '43534255', 'TRUJILLO ZELAYA, DOMINGO', 1, 'ASDASDAS', 'ASDASDASD', 1, 0, '2'),
+	(33, '2015-07-09 17:22:00', 13, 'Comisaria', '', '12355555', 'VALDIVIA SALAZAR, ROSITA MARISOL', 1, '', '', 1, 0, '1'),
+	(34, '2015-07-10 14:04:00', 14, 'Comisaria', '', '23454988', 'VALENCIA ROCA, SHEYLA JOHANA', 1, '', '', 1, 0, '1'),
+	(37, '2015-07-10 20:09:00', 6, 'Comisaria', '', '98685965', 'FLORES LÓPEZ, KEVYN GABRIEL', 1, 'asdasd', 'asdas', 5, 0, '2'),
+	(38, '2015-07-11 07:37:00', 6, 'Comisaria', '', '45564434', 'GIL ACUÑA, LADY SMITH ', 1, 'asdasd', 'asdasd', 1, 0, '1'),
+	(39, '2015-07-11 07:57:00', 17, 'Comisaria', '', '46435523', 'GOMEZ VILCHEZ, GONZALO', 1, '', '', 1, 0, '2'),
+	(40, '2015-07-11 08:09:00', 18, 'Comisaria', '', '69655524', 'GUERREROS NAVARRETE, RAÚL ALONSO', 1, '', '', 3, 0, '1'),
+	(41, '2015-07-11 08:21:00', 19, 'Comisaria', '', '12123345', 'GUZMAN LEON, ALEXIS', 1, '', '', 1, 0, '1'),
+	(42, '2015-07-11 08:29:00', 20, 'Comisaria', '', '56567787', 'CHAVEZ HUAYTA, ROGER VLADIMIR', 1, '', '', 3, 0, '2'),
+	(43, '2015-07-11 08:32:00', 21, 'Comisaria', '', '12345565', 'CHUQUITAYPE CHACALTANA, ALICIA D.', 1, '', '', 4, 0, '1'),
+	(44, '2015-07-11 09:04:00', 21, 'Comisaria', '', '48591526', 'CONDORI CHAISA, JOSEPH IVAN', 1, '', '', 1, 0, '2'),
+	(45, '2015-07-23 21:20:00', 25, 'Dirincri', '', '48592636', 'Jose Elimiliano', 4, '', '', 12, 600, '2'),
+	(46, '2015-07-23 22:56:00', 25, 'Comisaria', '', '12355555', 'VALDIVIA SALAZAR, ROSITA MARISOL', 1, 'asd', 'asdas', 13, 1050.5, '1'),
+	(47, '2015-07-24 07:24:00', 26, 'Comisaria', '', '48592615', 'Nuevo PREVEN', 1, 'asd', 'qwe', 11, 20, '1'),
+	(48, '2015-07-24 07:27:00', 27, 'Comisaria', '', '48592615', 'Nuevo PREVEN', 1, '', '', 5, 30, '1'),
+	(49, '2015-07-28 15:44:00', 26, 'Otros', 'Soltado', '15264859', 'JUAN DOMINGUEZ', 1, 'A MANO ARMADA', 'INFORMACION DE DETALLE', 1, 250.25, '2'),
+	(50, '2015-07-28 15:51:00', 26, 'Dirincri', '', '48592615', 'Nuevo PREVEN', 1, 'ADMIN', 'INFORMADOR', 17, 240, '1'),
+	(51, '2015-07-28 16:09:00', 26, 'Comisaria', '', '49564859', 'Nuevos Ademanes', 1, '', '', 3, 250.2, '1'),
+	(52, '2015-07-28 16:11:00', 26, 'Comisaria', '', '49568858', 'MONTES SANOMAMANI', 1, '', '', 15, 20, '1'),
+	(53, '2015-07-30 12:49:00', 26, 'Comisaria', '', '48592615', 'JOSE FELICIANO', 1, '', '', 3, 120, '1'),
+	(54, '2015-07-30 13:40:00', 28, 'Comisaria', '', '48596636', 'DIONALY VARGAS', 4, '', '', 4, 30, '1'),
+	(55, '2015-08-03 09:54:00', 29, 'Comisaria', '', '15263526', 'QUISPE QUISPE', 3, '', '', 7, 325, '1'),
+	(56, '2015-08-04 11:28:00', 26, 'Comisaria', '', '56235562', 'JUAN DOMINGUEZ PEREZ PEREZ', 4, '', '', 5, 150.25, '2'),
+	(57, '2015-08-04 12:12:00', 26, 'Comisaria', '', '48592615', 'Nuevo PREVEN', 1, 'ADMINISTRADOR', 'INFORMACION DE LAS MIMSA', 13, 65, '1'),
+	(58, '2015-08-04 12:18:00', 26, 'Comisaria', '', '48592615', 'Nuevo PREVEN', 1, '', '', 3, 300.46, '1'),
+	(59, '2015-08-04 12:20:00', 26, 'Comisaria', '', '48592615', 'Nuevo PREVEN', 1, 'sin modidad', 'sin intervencion', 3, 1500, '1'),
+	(60, '2015-08-04 12:25:00', 28, 'Comisaria', '', '12345565', 'CHUQUITAYPE CHACALTANA, ALICIA D.', 1, '', '', 5, 2000, '1');
 
 -- --------------------------------------------------------
 
@@ -1177,17 +1178,17 @@ INSERT INTO `cab_interven` (`num_inte`, `fec_inte`, `id_ten`, `der_ten`, `lugar_
 --
 
 CREATE TABLE IF NOT EXISTS `cab_operatividad` (
-`id_operatividad` bigint(20) NOT NULL,
-  `fecha_registro` date NOT NULL,
-  `estado` varchar(10) NOT NULL DEFAULT 'EN PROCESO' COMMENT 'REGISTRADO'
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='CONSOLIDADO DE CHECK LIST GENERAL DE OPERATIVIDAD TIENDAS OECHSLE';
+	`id_operatividad` bigint(20) NOT NULL,
+	`fecha_registro` date NOT NULL,
+	`estado` varchar(10) NOT NULL DEFAULT 'EN PROCESO' COMMENT 'REGISTRADO'
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='CONSOLIDADO DE CHECK LIST GENERAL DE OPERATIVIDAD TIENDAS OECHSLE' AUTO_INCREMENT=2 ;
 
 --
 -- Volcado de datos para la tabla `cab_operatividad`
 --
 
 INSERT INTO `cab_operatividad` (`id_operatividad`, `fecha_registro`, `estado`) VALUES
-(1, '2015-07-01', 'EN PROCESO');
+	(1, '2015-07-01', 'EN PROCESO');
 
 -- --------------------------------------------------------
 
@@ -1196,28 +1197,28 @@ INSERT INTO `cab_operatividad` (`id_operatividad`, `fecha_registro`, `estado`) V
 --
 
 CREATE TABLE IF NOT EXISTS `cab_sensor` (
-`id_sensor` bigint(20) NOT NULL,
-  `dni_prev` varchar(15) NOT NULL,
-  `nom_prev` varchar(150) NOT NULL,
-  `fecha_registro` datetime NOT NULL,
-  `total` double NOT NULL,
-  `observaciones` varchar(600) DEFAULT NULL,
-  `id_tien` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+	`id_sensor` bigint(20) NOT NULL,
+	`dni_prev` varchar(15) NOT NULL,
+	`nom_prev` varchar(150) NOT NULL,
+	`fecha_registro` datetime NOT NULL,
+	`total` double NOT NULL,
+	`observaciones` varchar(600) DEFAULT NULL,
+	`id_tien` int(11) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
 
 --
 -- Volcado de datos para la tabla `cab_sensor`
 --
 
 INSERT INTO `cab_sensor` (`id_sensor`, `dni_prev`, `nom_prev`, `fecha_registro`, `total`, `observaciones`, `id_tien`) VALUES
-(3, '48592632', 'NELSON COQCHI APAZA', '2015-07-28 21:48:00', 250, 'SIN OBSERVACIONES', 11),
-(4, '46435523', 'JUAN DOMINGUEZ PEREZ', '2015-07-28 21:52:00', 240, 'SIN OBSERVACIONES', 3),
-(5, '48592636', 'CARMEN DE LA CRUZ', '2015-07-29 00:43:00', 250, 'SIN OBSERVACIONES', 2),
-(6, '46435523', 'JUAN DOMINGUEZ PEREZ', '2015-07-29 22:00:00', 130, 'SIN OBSERVACIONES', 6),
-(7, '46435523', 'JUAN DOMINGUEZ PEREZ', '2015-08-03 16:44:00', 1370.75, 'SIN OBSERVACIONES', 6),
-(8, '46435523', 'JUAN DOMINGUEZ PEREZ', '2015-08-04 16:38:00', 120, 'SIN OBSERVACIONES', 3),
-(9, '48592636', 'CARMEN DE LA CRUZ', '2015-08-04 16:42:00', 255, 'SIN OBSERVACIONES', 4),
-(10, '46435523', 'JUAN DOMINGUEZ PEREZ', '2015-08-08 16:18:00', 110, 'SIN OBSERVACIONES', 6);
+	(3, '48592632', 'NELSON COQCHI APAZA', '2015-07-28 21:48:00', 250, 'SIN OBSERVACIONES', 11),
+	(4, '46435523', 'JUAN DOMINGUEZ PEREZ', '2015-07-28 21:52:00', 240, 'SIN OBSERVACIONES', 3),
+	(5, '48592636', 'CARMEN DE LA CRUZ', '2015-07-29 00:43:00', 250, 'SIN OBSERVACIONES', 2),
+	(6, '46435523', 'JUAN DOMINGUEZ PEREZ', '2015-07-29 22:00:00', 130, 'SIN OBSERVACIONES', 6),
+	(7, '46435523', 'JUAN DOMINGUEZ PEREZ', '2015-08-03 16:44:00', 1370.75, 'SIN OBSERVACIONES', 6),
+	(8, '46435523', 'JUAN DOMINGUEZ PEREZ', '2015-08-04 16:38:00', 120, 'SIN OBSERVACIONES', 3),
+	(9, '48592636', 'CARMEN DE LA CRUZ', '2015-08-04 16:42:00', 255, 'SIN OBSERVACIONES', 4),
+	(10, '46435523', 'JUAN DOMINGUEZ PEREZ', '2015-08-08 16:18:00', 110, 'SIN OBSERVACIONES', 6);
 
 -- --------------------------------------------------------
 
@@ -1226,13 +1227,13 @@ INSERT INTO `cab_sensor` (`id_sensor`, `dni_prev`, `nom_prev`, `fecha_registro`,
 --
 
 CREATE TABLE IF NOT EXISTS `det_incidente` (
-  `id_incidente` bigint(20) NOT NULL,
-  `cod_pro` varchar(30) DEFAULT NULL,
-  `desc_pro` varchar(100) DEFAULT NULL,
-  `mar_pro` varchar(50) DEFAULT NULL,
-  `cant` int(11) DEFAULT NULL,
-  `precio` double DEFAULT NULL,
-  `es_activo` char(2) NOT NULL DEFAULT 'SI'
+	`id_incidente` bigint(20) NOT NULL,
+	`cod_pro` varchar(30) DEFAULT NULL,
+	`desc_pro` varchar(100) DEFAULT NULL,
+	`mar_pro` varchar(50) DEFAULT NULL,
+	`cant` int(11) DEFAULT NULL,
+	`precio` double DEFAULT NULL,
+	`es_activo` char(2) NOT NULL DEFAULT 'SI'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1240,16 +1241,16 @@ CREATE TABLE IF NOT EXISTS `det_incidente` (
 --
 
 INSERT INTO `det_incidente` (`id_incidente`, `cod_pro`, `desc_pro`, `mar_pro`, `cant`, `precio`, `es_activo`) VALUES
-(1, 'ERT', 'POLO', '', 1, 0, 'NO'),
-(1, 'ER', ' CAMARA', '', 1, 0, 'NO'),
-(2, 'ERT-25', 'CAMISA', '', 1, 0, 'NO'),
-(2, 'DF', 'LAMPARA', '', 1, 0, 'NO'),
-(4, 'DF', 'PANTALON', '', 1, 0, 'SI'),
-(4, 'DF', 'PANTALON', '', 1, 0, 'NO'),
-(9, 'RER', 'POLO', 'ADIDAS', 1, 25, 'SI'),
-(10, 'ER-215', 'CAMI', 'CAM', 1, 25, 'NO'),
-(11, '485', 'ESCALERA', '', 1, 0, 'SI'),
-(12, 'ER', 'CAMARA', 'imeco', 1, 55, 'SI');
+	(1, 'ERT', 'POLO', '', 1, 0, 'NO'),
+	(1, 'ER', ' CAMARA', '', 1, 0, 'NO'),
+	(2, 'ERT-25', 'CAMISA', '', 1, 0, 'NO'),
+	(2, 'DF', 'LAMPARA', '', 1, 0, 'NO'),
+	(4, 'DF', 'PANTALON', '', 1, 0, 'SI'),
+	(4, 'DF', 'PANTALON', '', 1, 0, 'NO'),
+	(9, 'RER', 'POLO', 'ADIDAS', 1, 25, 'SI'),
+	(10, 'ER-215', 'CAMI', 'CAM', 1, 25, 'NO'),
+	(11, '485', 'ESCALERA', '', 1, 0, 'SI'),
+	(12, 'ER', 'CAMARA', 'imeco', 1, 55, 'SI');
 
 -- --------------------------------------------------------
 
@@ -1258,12 +1259,12 @@ INSERT INTO `det_incidente` (`id_incidente`, `cod_pro`, `desc_pro`, `mar_pro`, `
 --
 
 CREATE TABLE IF NOT EXISTS `det_interven` (
-  `num_inte` int(11) NOT NULL,
-  `cod_pro` varchar(30) DEFAULT NULL,
-  `des_pro` varchar(100) DEFAULT NULL,
-  `mar_pro` varchar(50) DEFAULT NULL,
-  `cant` int(11) DEFAULT NULL,
-  `precio` double DEFAULT NULL
+	`num_inte` int(11) NOT NULL,
+	`cod_pro` varchar(30) DEFAULT NULL,
+	`des_pro` varchar(100) DEFAULT NULL,
+	`mar_pro` varchar(50) DEFAULT NULL,
+	`cant` int(11) DEFAULT NULL,
+	`precio` double DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -1271,50 +1272,50 @@ CREATE TABLE IF NOT EXISTS `det_interven` (
 --
 
 INSERT INTO `det_interven` (`num_inte`, `cod_pro`, `des_pro`, `mar_pro`, `cant`, `precio`) VALUES
-(24, 'cod', 'CORTES', 'adidas', 12, 20),
-(24, 'er-3', 'CORTAS', 'puma', 10, 15),
-(25, 'er-22', 'POLOS', 'adidas', 12, 15),
-(26, 'por-25', 'PANTALON', 'MARC', 25, 30),
-(27, 'er-25', 'CELULAR', 'UMBRO', 12, 23),
-(27, 'we-68', 'CORTAS', 'UMBRO', 12, 11),
-(28, 'er', 'ZAPATO', 'ADIDAS', 34, 0),
-(29, 'Erp32', 'ZAPATILLA', 'PLART', 0, 0),
-(32, '2342', 'CELULAR', 'FILA', 0, 0),
-(33, '12', 'CELULAR', 'ADIDAS', 0, 0),
-(34, '23', 'CORTE', 'NIKE', 0, 0),
-(45, 'ER-25', 'LAS GALERIAS', 'INFROMACION', 20, 30),
-(46, 'ER-69', 'CAMISA', 'KAS', 2, 150.25),
-(46, 'TR-36', 'ADMIN', 'ASD', 12, 20),
-(46, 'KR-25', 'ZAPATILLA', 'NIKE', 2, 250),
-(46, 'HT-58', 'POLO', 'Fila', 1, 10),
-(31, 'ER-25', 'COLLAR', 'PILAS', 1, 20.55),
-(30, 'Re', 'ROPA', 'ERP', 1, 125.25),
-(47, 'TR', 'polo', 'adidas', 2, 10),
-(48, 'RT-25', 'POLOS', 'ADIDAS', 2, 15),
-(11, 'FR-2589', 'GORRAS B13', 'B13', 3, 250.36),
-(11, 'RT-3655', 'PANTALONES ROJOS', 'PANTALONES', 3, 120.25),
-(11, 'ER-25', 'CAMISAS', 'DOLORES', 1, 100),
-(49, 'ER-25', 'CASETERA', 'IMECO', 1, 250.25),
-(50, 'ER-25', 'CASETERA', 'local', 2, 120),
-(51, 'ER-36', 'camisas', 'filpo', 1, 250.2),
-(52, 'ER-5', 'celular', 'samsung', 1, 20),
-(53, 'er-25', 'POLO', 'ADIDAS', 1, 120),
-(54, 'er', 'polo', 'adidas', 1, 10),
-(54, 'er2', 'camisero', 'pum', 1, 20),
-(55, 'ER', 'GORRAS', 'ADIDAS', 1, 150),
-(55, 'ER-2', 'CAMISAS', 'FILP', 1, 25),
-(55, 'RT', 'PANTALON', 'FIL', 2, 75),
-(10, 'DE-2522', 'PANTALONES', 'ADIDAS', 1, 47.36),
-(10, 'DE-2522', 'CAMISAS', 'ADIDAS', 5, 59.65),
-(10, 'GF-5895', 'CAMISAS CUELLO CAMISERO', 'FILIPO', 3, 120.35),
-(7, 'DE-2522', 'POLOS', 'UMBRO', 1, 15.25),
-(7, 'DE-2522', 'JEAN', 'UMBRO', 1, 78.22),
-(7, 'RT-36', 'ASD', 'SDF', 2, 15),
-(56, 'ca-25', 'CASACAS', 'PIM', 1, 150.25),
-(57, 'er-25', 'JEAN', 'TIGRE', 1, 65),
-(58, 'ER-36', 'POLERAS', 'EASY', 2, 150.23),
-(59, 'er-36', 'laptop', 'HP', 1, 1500),
-(60, 'BIC-25', 'BICICLETA', 'monta', 1, 2000);
+	(24, 'cod', 'CORTES', 'adidas', 12, 20),
+	(24, 'er-3', 'CORTAS', 'puma', 10, 15),
+	(25, 'er-22', 'POLOS', 'adidas', 12, 15),
+	(26, 'por-25', 'PANTALON', 'MARC', 25, 30),
+	(27, 'er-25', 'CELULAR', 'UMBRO', 12, 23),
+	(27, 'we-68', 'CORTAS', 'UMBRO', 12, 11),
+	(28, 'er', 'ZAPATO', 'ADIDAS', 34, 0),
+	(29, 'Erp32', 'ZAPATILLA', 'PLART', 0, 0),
+	(32, '2342', 'CELULAR', 'FILA', 0, 0),
+	(33, '12', 'CELULAR', 'ADIDAS', 0, 0),
+	(34, '23', 'CORTE', 'NIKE', 0, 0),
+	(45, 'ER-25', 'LAS GALERIAS', 'INFROMACION', 20, 30),
+	(46, 'ER-69', 'CAMISA', 'KAS', 2, 150.25),
+	(46, 'TR-36', 'ADMIN', 'ASD', 12, 20),
+	(46, 'KR-25', 'ZAPATILLA', 'NIKE', 2, 250),
+	(46, 'HT-58', 'POLO', 'Fila', 1, 10),
+	(31, 'ER-25', 'COLLAR', 'PILAS', 1, 20.55),
+	(30, 'Re', 'ROPA', 'ERP', 1, 125.25),
+	(47, 'TR', 'polo', 'adidas', 2, 10),
+	(48, 'RT-25', 'POLOS', 'ADIDAS', 2, 15),
+	(11, 'FR-2589', 'GORRAS B13', 'B13', 3, 250.36),
+	(11, 'RT-3655', 'PANTALONES ROJOS', 'PANTALONES', 3, 120.25),
+	(11, 'ER-25', 'CAMISAS', 'DOLORES', 1, 100),
+	(49, 'ER-25', 'CASETERA', 'IMECO', 1, 250.25),
+	(50, 'ER-25', 'CASETERA', 'local', 2, 120),
+	(51, 'ER-36', 'camisas', 'filpo', 1, 250.2),
+	(52, 'ER-5', 'celular', 'samsung', 1, 20),
+	(53, 'er-25', 'POLO', 'ADIDAS', 1, 120),
+	(54, 'er', 'polo', 'adidas', 1, 10),
+	(54, 'er2', 'camisero', 'pum', 1, 20),
+	(55, 'ER', 'GORRAS', 'ADIDAS', 1, 150),
+	(55, 'ER-2', 'CAMISAS', 'FILP', 1, 25),
+	(55, 'RT', 'PANTALON', 'FIL', 2, 75),
+	(10, 'DE-2522', 'PANTALONES', 'ADIDAS', 1, 47.36),
+	(10, 'DE-2522', 'CAMISAS', 'ADIDAS', 5, 59.65),
+	(10, 'GF-5895', 'CAMISAS CUELLO CAMISERO', 'FILIPO', 3, 120.35),
+	(7, 'DE-2522', 'POLOS', 'UMBRO', 1, 15.25),
+	(7, 'DE-2522', 'JEAN', 'UMBRO', 1, 78.22),
+	(7, 'RT-36', 'ASD', 'SDF', 2, 15),
+	(56, 'ca-25', 'CASACAS', 'PIM', 1, 150.25),
+	(57, 'er-25', 'JEAN', 'TIGRE', 1, 65),
+	(58, 'ER-36', 'POLERAS', 'EASY', 2, 150.23),
+	(59, 'er-36', 'laptop', 'HP', 1, 1500),
+	(60, 'BIC-25', 'BICICLETA', 'monta', 1, 2000);
 
 -- --------------------------------------------------------
 
@@ -1323,37 +1324,37 @@ INSERT INTO `det_interven` (`num_inte`, `cod_pro`, `des_pro`, `mar_pro`, `cant`,
 --
 
 CREATE TABLE IF NOT EXISTS `det_operatividad` (
-`id_det_operatividad` bigint(20) NOT NULL,
-  `id_operatividad` bigint(20) NOT NULL,
-  `id_tien` int(11) NOT NULL,
-  `id_producto` int(11) NOT NULL,
-  `marca_equipo` varchar(150) NOT NULL,
-  `modelo_equipo` varchar(150) NOT NULL,
-  `capacidad_equipo` varchar(150) NOT NULL,
-  `cantidad_total` int(11) NOT NULL DEFAULT '0',
-  `cantidad_interna` int(11) NOT NULL DEFAULT '0',
-  `cantidad_externa` int(11) NOT NULL DEFAULT '0',
-  `cantidad_inoperativo` int(11) NOT NULL DEFAULT '0',
-  `cantidad_operativo` int(11) NOT NULL DEFAULT '0',
-  `cantidad_reubicacion` int(11) NOT NULL,
-  `otros` varchar(250) DEFAULT NULL,
-  `observaciones` varchar(500) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+	`id_det_operatividad` bigint(20) NOT NULL,
+	`id_operatividad` bigint(20) NOT NULL,
+	`id_tien` int(11) NOT NULL,
+	`id_producto` int(11) NOT NULL,
+	`marca_equipo` varchar(150) NOT NULL,
+	`modelo_equipo` varchar(150) NOT NULL,
+	`capacidad_equipo` varchar(150) NOT NULL,
+	`cantidad_total` int(11) NOT NULL DEFAULT '0',
+	`cantidad_interna` int(11) NOT NULL DEFAULT '0',
+	`cantidad_externa` int(11) NOT NULL DEFAULT '0',
+	`cantidad_inoperativo` int(11) NOT NULL DEFAULT '0',
+	`cantidad_operativo` int(11) NOT NULL DEFAULT '0',
+	`cantidad_reubicacion` int(11) NOT NULL,
+	`otros` varchar(250) DEFAULT NULL,
+	`observaciones` varchar(500) DEFAULT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
 
 --
 -- Volcado de datos para la tabla `det_operatividad`
 --
 
 INSERT INTO `det_operatividad` (`id_det_operatividad`, `id_operatividad`, `id_tien`, `id_producto`, `marca_equipo`, `modelo_equipo`, `capacidad_equipo`, `cantidad_total`, `cantidad_interna`, `cantidad_externa`, `cantidad_inoperativo`, `cantidad_operativo`, `cantidad_reubicacion`, `otros`, `observaciones`) VALUES
-(1, 1, 1, 1, ' ', ' ', ' ', 10, 5, 5, 7, 3, 2, ' ', 'sin observaciones'),
-(2, 1, 2, 1, ' ', ' ', ' ', 25, 18, 7, 10, 15, 3, '', ''),
-(3, 1, 3, 1, ' ', ' ', ' ', 10, 5, 5, 0, 10, 4, ' ', 'sin observaciones'),
-(4, 1, 4, 1, ' ', ' ', ' ', 15, 13, 2, 9, 6, 2, '', ''),
-(5, 1, 5, 1, ' ', ' ', ' ', 20, 10, 10, 2, 18, 5, '', ''),
-(7, 1, 17, 1, 'josefina', 'new', 'cap', 10, 10, 0, 5, 5, 0, '', ''),
-(8, 1, 11, 1, 'nelso', 'asds', 'dfgg', 25, 15, 10, 15, 10, 2, '', ''),
-(11, 1, 10, 2, 'm', 'mo', 'cap', 15, 10, 5, 2, 13, 0, '', ''),
-(12, 1, 4, 3, 'china', 'chi', 'c', 30, 18, 12, 20, 10, 0, '', '');
+	(1, 1, 1, 1, ' ', ' ', ' ', 10, 5, 5, 7, 3, 2, ' ', 'sin observaciones'),
+	(2, 1, 2, 1, ' ', ' ', ' ', 25, 18, 7, 10, 15, 3, '', ''),
+	(3, 1, 3, 1, ' ', ' ', ' ', 10, 5, 5, 0, 10, 4, ' ', 'sin observaciones'),
+	(4, 1, 4, 1, ' ', ' ', ' ', 15, 13, 2, 9, 6, 2, '', ''),
+	(5, 1, 5, 1, ' ', ' ', ' ', 20, 10, 10, 2, 18, 5, '', ''),
+	(7, 1, 17, 1, 'josefina', 'new', 'cap', 10, 10, 0, 5, 5, 0, '', ''),
+	(8, 1, 11, 1, 'nelso', 'asds', 'dfgg', 25, 15, 10, 15, 10, 2, '', ''),
+	(11, 1, 10, 2, 'm', 'mo', 'cap', 15, 10, 5, 2, 13, 0, '', ''),
+	(12, 1, 4, 3, 'china', 'chi', 'c', 30, 18, 12, 20, 10, 0, '', '');
 
 -- --------------------------------------------------------
 
@@ -1362,12 +1363,12 @@ INSERT INTO `det_operatividad` (`id_det_operatividad`, `id_operatividad`, `id_ti
 --
 
 CREATE TABLE IF NOT EXISTS `det_sensor` (
-  `id_sensor` bigint(20) NOT NULL,
-  `cod_pro` varchar(30) DEFAULT NULL,
-  `desc_pro` varchar(100) DEFAULT NULL,
-  `mar_pro` varchar(50) DEFAULT NULL,
-  `cant` int(11) DEFAULT NULL,
-  `precio` double DEFAULT NULL
+	`id_sensor` bigint(20) NOT NULL,
+	`cod_pro` varchar(30) DEFAULT NULL,
+	`desc_pro` varchar(100) DEFAULT NULL,
+	`mar_pro` varchar(50) DEFAULT NULL,
+	`cant` int(11) DEFAULT NULL,
+	`precio` double DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1375,13 +1376,13 @@ CREATE TABLE IF NOT EXISTS `det_sensor` (
 --
 
 INSERT INTO `det_sensor` (`id_sensor`, `cod_pro`, `desc_pro`, `mar_pro`, `cant`, `precio`) VALUES
-(6, 'ER-25', 'CAMISAS', 'AS', 1, 20),
-(6, 'ER-32', 'POLOS', 'puma', 2, 55),
-(7, '123', 'LICUADORA', 'Recco', 1, 120.25),
-(7, 'LED 5050LB', 'TV', 'LG', 1, 1250.5),
-(8, 'cod', 'ZAPATILLA', 'adidas', 1, 120),
-(9, 'ER-255T', 'ZAPATILLA', 'NIKE', 1, 255),
-(10, 'ER-25', 'CAMISAS', '', 2, 55);
+	(6, 'ER-25', 'CAMISAS', 'AS', 1, 20),
+	(6, 'ER-32', 'POLOS', 'puma', 2, 55),
+	(7, '123', 'LICUADORA', 'Recco', 1, 120.25),
+	(7, 'LED 5050LB', 'TV', 'LG', 1, 1250.5),
+	(8, 'cod', 'ZAPATILLA', 'adidas', 1, 120),
+	(9, 'ER-255T', 'ZAPATILLA', 'NIKE', 1, 255),
+	(10, 'ER-25', 'CAMISAS', '', 2, 55);
 
 -- --------------------------------------------------------
 
@@ -1390,8 +1391,8 @@ INSERT INTO `det_sensor` (`id_sensor`, `cod_pro`, `desc_pro`, `mar_pro`, `cant`,
 --
 
 CREATE TABLE IF NOT EXISTS `prevencionista` (
-  `dni_prev` varchar(15) NOT NULL,
-  `nom_prev` varchar(150) DEFAULT NULL
+	`dni_prev` varchar(15) NOT NULL,
+	`nom_prev` varchar(150) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1399,12 +1400,12 @@ CREATE TABLE IF NOT EXISTS `prevencionista` (
 --
 
 INSERT INTO `prevencionista` (`dni_prev`, `nom_prev`) VALUES
-('14253665', 'LOSTAUNAU AVALOS, ANDDHRE PHILIPPE'),
-('24153625', 'GOYONECHE SOLARI, JOSUÁ JOHAO'),
-('45155586', 'JIMENEZ VILLANUEVA, CHRISTOPHER BRYAN'),
-('48591254', 'COTERA CARI, JOSE ALFREDO'),
-('48596653', 'CAMARENA LEON, WALDIR'),
-('51515615', 'CASTRO MORAN, EVELYN EMMA');
+	('14253665', 'LOSTAUNAU AVALOS, ANDDHRE PHILIPPE'),
+	('24153625', 'GOYONECHE SOLARI, JOSUÁ JOHAO'),
+	('45155586', 'JIMENEZ VILLANUEVA, CHRISTOPHER BRYAN'),
+	('48591254', 'COTERA CARI, JOSE ALFREDO'),
+	('48596653', 'CAMARENA LEON, WALDIR'),
+	('51515615', 'CASTRO MORAN, EVELYN EMMA');
 
 -- --------------------------------------------------------
 
@@ -1413,40 +1414,40 @@ INSERT INTO `prevencionista` (`dni_prev`, `nom_prev`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `producto` (
-`id_producto` int(11) NOT NULL,
-  `nombre` varchar(100) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+	`id_producto` int(11) NOT NULL,
+	`nombre` varchar(100) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=26 ;
 
 --
 -- Volcado de datos para la tabla `producto`
 --
 
 INSERT INTO `producto` (`id_producto`, `nombre`) VALUES
-(1, 'ANTENAS AM'),
-(2, 'BATERIAS'),
-(3, 'CAMARAS DOMO'),
-(4, 'CAMARAS FIJAS'),
-(5, 'CONTACTOS MAGNETICO (DE APERTURA)'),
-(6, 'DESACOPLADOR ELECTRICO'),
-(7, 'DESACOPLADOR MANUAL'),
-(8, 'DETECTORES DE HUMO'),
-(9, 'DISCO DURO/VCR'),
-(10, 'DVR/MULTIPLEXOR'),
-(11, 'ESTACIONES MANUALES'),
-(12, 'EXTINTORES'),
-(13, 'GABINETES'),
-(14, 'JOYSTICK'),
-(15, 'LUCES STROBOSCOPICAS'),
-(16, 'MATRIZ'),
-(17, 'MONITOR'),
-(18, 'PANEL'),
-(19, 'PIR(DETECTOR DE MOVIMIENTOS)'),
-(20, 'RADIOS'),
-(21, 'SOPORTE'),
-(22, 'GRUPO ELECTRÓGENO'),
-(23, 'BOMBA CONTRAINCENDIO'),
-(24, 'AIRE ACONDICIONADO'),
-(25, 'GABINETE CONTRAINCENDIO');
+	(1, 'ANTENAS AM'),
+	(2, 'BATERIAS'),
+	(3, 'CAMARAS DOMO'),
+	(4, 'CAMARAS FIJAS'),
+	(5, 'CONTACTOS MAGNETICO (DE APERTURA)'),
+	(6, 'DESACOPLADOR ELECTRICO'),
+	(7, 'DESACOPLADOR MANUAL'),
+	(8, 'DETECTORES DE HUMO'),
+	(9, 'DISCO DURO/VCR'),
+	(10, 'DVR/MULTIPLEXOR'),
+	(11, 'ESTACIONES MANUALES'),
+	(12, 'EXTINTORES'),
+	(13, 'GABINETES'),
+	(14, 'JOYSTICK'),
+	(15, 'LUCES STROBOSCOPICAS'),
+	(16, 'MATRIZ'),
+	(17, 'MONITOR'),
+	(18, 'PANEL'),
+	(19, 'PIR(DETECTOR DE MOVIMIENTOS)'),
+	(20, 'RADIOS'),
+	(21, 'SOPORTE'),
+	(22, 'GRUPO ELECTRÓGENO'),
+	(23, 'BOMBA CONTRAINCENDIO'),
+	(24, 'AIRE ACONDICIONADO'),
+	(25, 'GABINETE CONTRAINCENDIO');
 
 -- --------------------------------------------------------
 
@@ -1455,8 +1456,8 @@ INSERT INTO `producto` (`id_producto`, `nombre`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `puesto` (
-  `id_pues` int(11) NOT NULL,
-  `des_pues` varchar(35) NOT NULL
+	`id_pues` int(11) NOT NULL,
+	`des_pues` varchar(35) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -1464,12 +1465,12 @@ CREATE TABLE IF NOT EXISTS `puesto` (
 --
 
 INSERT INTO `puesto` (`id_pues`, `des_pues`) VALUES
-(1, 'Tangos(Puerta)'),
-(2, 'Movil (Sala de ventas)'),
-(3, 'Aguia (Cctv)'),
-(4, 'Alto Valor'),
-(5, 'Almacen'),
-(6, 'Probadores');
+	(1, 'Tangos(Puerta)'),
+	(2, 'Movil (Sala de ventas)'),
+	(3, 'Aguia (Cctv)'),
+	(4, 'Alto Valor'),
+	(5, 'Almacen'),
+	(6, 'Probadores');
 
 -- --------------------------------------------------------
 
@@ -1478,44 +1479,44 @@ INSERT INTO `puesto` (`id_pues`, `des_pues`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `tendero` (
-`id_ten` int(11) NOT NULL,
-  `nom_ten` varchar(100) NOT NULL,
-  `ape_ten` varchar(100) NOT NULL,
-  `dir_ten` varchar(150) NOT NULL,
-  `doc_ten` varchar(15) NOT NULL,
-  `id_tip_ten` int(11) NOT NULL,
-  `fec_nac` date NOT NULL,
-  `sexo` char(1) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=latin1;
+	`id_ten` int(11) NOT NULL,
+	`nom_ten` varchar(100) NOT NULL,
+	`ape_ten` varchar(100) NOT NULL,
+	`dir_ten` varchar(150) NOT NULL,
+	`doc_ten` varchar(15) NOT NULL,
+	`id_tip_ten` int(11) NOT NULL,
+	`fec_nac` date NOT NULL,
+	`sexo` char(1) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=30 ;
 
 --
 -- Volcado de datos para la tabla `tendero`
 --
 
 INSERT INTO `tendero` (`id_ten`, `nom_ten`, `ape_ten`, `dir_ten`, `doc_ten`, `id_tip_ten`, `fec_nac`, `sexo`) VALUES
-(1, 'JOSELLY ALEXANDRA', 'GUERRERO NARVAEZ', 'lar gardewinas', '58687858', 1, '1990-06-05', 'M'),
-(2, 'LIZBETH LIDUVINA', 'LLANCARI RIVEROS', 'san juan de lurigancho', '15254578', 1, '1990-05-05', 'F'),
-(3, 'CARMEN ROSA', 'CANCHARI CUELLAR', 'san isidro', '56544258', 1, '1990-08-05', 'M'),
-(4, 'ALBERT GONZALO', 'SILVA AHRENS', 'jicamarca', '87554847', 2, '1990-05-05', 'M'),
-(5, 'CAROLINE GIULIANA', 'TERRONES MORENO', 'miraflores', '69685587', 2, '1990-09-05', 'M'),
-(6, 'Nelson', 'Coqchi', 'Las Galeras', '46435529', 1, '2015-07-08', 'M'),
-(12, 'jOSE lUIS', 'ADMIN', 'MASETRAS', '69584475', 1, '2015-07-09', 'M'),
-(13, 'NUEVO TENDERO', 'COQCHI APAZA', '', '12345678', 1, '2015-07-09', 'M'),
-(14, 'rezo', 'goez', '', '56456676', 1, '2015-07-10', 'M'),
-(15, '5432', '54321', '', '99999999', 1, '2015-07-10', 'M'),
-(17, 'probando', 'asdasd', '', '69685580', 1, '2015-07-11', 'M'),
-(18, 'nelson montes', 'sanomamani', '', '46435522', 1, '2015-07-11', 'M'),
-(19, 'CHAPI', 'RAMOS HUILCA', '', '46465523', 1, '2015-07-11', 'M'),
-(20, 'asd', 'asd', '', '46435521', 1, '2015-07-11', 'M'),
-(21, 'CONDORI', 'RAMOS', 'CALLE BAJA', '46435531', 2, '2015-07-11', 'M'),
-(22, 'VREONICA', 'CARMENSITA', 'LAS MALVINAS', '11112222', 3, '2015-07-11', 'M'),
-(23, 'ASDAS', 'ASDAS', '', '11113333', 1, '2015-07-11', 'M'),
-(24, 'asdasd', 'asdasd', '', '11115555', 1, '2015-07-11', 'M'),
-(25, 'Nelson', 'Coqchi Apaza', 'SAN JUAN DE LURIGANCHO', '44444444', 1, '1990-04-22', 'M'),
-(26, 'PANCHO', 'GOMEZ SALDAÑA', 'LOS JIRONEZ DE ACAPULCO', '46435523', 2, '2015-07-24', 'M'),
-(27, 'JOSE', 'JUSTINO', '', '49468825', 1, '1990-05-10', 'M'),
-(28, 'JOSE', 'DOMINGUEZ', 'las nalvinas', '48591625', 1, '1990-07-30', 'M'),
-(29, 'javier', 'de la cruz', 'san juan de lurigancho', '56232214', 2, '1990-08-03', 'M');
+	(1, 'JOSELLY ALEXANDRA', 'GUERRERO NARVAEZ', 'lar gardewinas', '58687858', 1, '1990-06-05', 'M'),
+	(2, 'LIZBETH LIDUVINA', 'LLANCARI RIVEROS', 'san juan de lurigancho', '15254578', 1, '1990-05-05', 'F'),
+	(3, 'CARMEN ROSA', 'CANCHARI CUELLAR', 'san isidro', '56544258', 1, '1990-08-05', 'M'),
+	(4, 'ALBERT GONZALO', 'SILVA AHRENS', 'jicamarca', '87554847', 2, '1990-05-05', 'M'),
+	(5, 'CAROLINE GIULIANA', 'TERRONES MORENO', 'miraflores', '69685587', 2, '1990-09-05', 'M'),
+	(6, 'Nelson', 'Coqchi', 'Las Galeras', '46435529', 1, '2015-07-08', 'M'),
+	(12, 'jOSE lUIS', 'ADMIN', 'MASETRAS', '69584475', 1, '2015-07-09', 'M'),
+	(13, 'NUEVO TENDERO', 'COQCHI APAZA', '', '12345678', 1, '2015-07-09', 'M'),
+	(14, 'rezo', 'goez', '', '56456676', 1, '2015-07-10', 'M'),
+	(15, '5432', '54321', '', '99999999', 1, '2015-07-10', 'M'),
+	(17, 'probando', 'asdasd', '', '69685580', 1, '2015-07-11', 'M'),
+	(18, 'nelson montes', 'sanomamani', '', '46435522', 1, '2015-07-11', 'M'),
+	(19, 'CHAPI', 'RAMOS HUILCA', '', '46465523', 1, '2015-07-11', 'M'),
+	(20, 'asd', 'asd', '', '46435521', 1, '2015-07-11', 'M'),
+	(21, 'CONDORI', 'RAMOS', 'CALLE BAJA', '46435531', 2, '2015-07-11', 'M'),
+	(22, 'VREONICA', 'CARMENSITA', 'LAS MALVINAS', '11112222', 3, '2015-07-11', 'M'),
+	(23, 'ASDAS', 'ASDAS', '', '11113333', 1, '2015-07-11', 'M'),
+	(24, 'asdasd', 'asdasd', '', '11115555', 1, '2015-07-11', 'M'),
+	(25, 'Nelson', 'Coqchi Apaza', 'SAN JUAN DE LURIGANCHO', '44444444', 1, '1990-04-22', 'M'),
+	(26, 'PANCHO', 'GOMEZ SALDAÑA', 'LOS JIRONEZ DE ACAPULCO', '46435523', 2, '2015-07-24', 'M'),
+	(27, 'JOSE', 'JUSTINO', '', '49468825', 1, '1990-05-10', 'M'),
+	(28, 'JOSE', 'DOMINGUEZ', 'las nalvinas', '48591625', 1, '1990-07-30', 'M'),
+	(29, 'javier', 'de la cruz', 'san juan de lurigancho', '56232214', 2, '1990-08-03', 'M');
 
 -- --------------------------------------------------------
 
@@ -1524,12 +1525,12 @@ INSERT INTO `tendero` (`id_ten`, `nom_ten`, `ape_ten`, `dir_ten`, `doc_ten`, `id
 --
 
 CREATE TABLE IF NOT EXISTS `tienda` (
-  `id_tien` int(11) NOT NULL,
-  `nom_tien` varchar(35) NOT NULL,
-  `usuario` varchar(15) NOT NULL,
-  `pass_tien` varchar(15) NOT NULL,
-  `estado` varchar(1) NOT NULL,
-  `rol` varchar(45) NOT NULL
+	`id_tien` int(11) NOT NULL,
+	`nom_tien` varchar(35) NOT NULL,
+	`usuario` varchar(15) NOT NULL,
+	`pass_tien` varchar(15) NOT NULL,
+	`estado` varchar(1) NOT NULL,
+	`rol` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -1537,28 +1538,28 @@ CREATE TABLE IF NOT EXISTS `tienda` (
 --
 
 INSERT INTO `tienda` (`id_tien`, `nom_tien`, `usuario`, `pass_tien`, `estado`, `rol`) VALUES
-(0, 'ADMINISTRADOR', 'grupo odisea', 'RUC 20451806972', 'A', 'ADMINISTRADOR'),
-(1, '(OECHSLE) Salaverry', 'grupo odisea', '980597009', 'A', 'JEFE DE ODISEA'),
-(2, '(OECHSLE) Jockey Plaza', 'Daniel', '46178', 'A', 'GERENTE DE PREVENCION'),
-(3, '(OECHSLE) Plaza Norte', 'oechsle', '20493020618', 'A', 'JEFE DE PREVENCION'),
-(4, '(OECHSLE) Centro Civico', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
-(5, '(OECHSLE) JR Union', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
-(6, '(OECHSLE) Primavera', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
-(7, '(OECHSLE) Plaza Lima Norte', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
-(8, '(OECHSLE) CUSCO', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
-(9, '(OECHSLE) AREQUIPA', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
-(10, '(OECHSLE) JULIACA', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
-(11, '(OECHSLE) HUANCAYO', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
-(12, '(OECHSLE) BARRANCA', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
-(13, '(OECHSLE) CAJAMARCA', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
-(14, '(OECHSLE) CHICLAYO', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
-(15, '(OECHSLE) PUCALLPA', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
-(16, '(OECHSLE) TRUJILLO', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
-(17, '(OECHSLE) PIURA', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
-(18, '(OECHSLE) HUANCAYO', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
-(19, '(OECHSLE) ICA', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
-(20, 'CARPA Pro', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
-(21, 'CARPA Santa Clara', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION');
+	(0, 'ADMINISTRADOR', 'grupo odisea', 'RUC 20451806972', 'A', 'ADMINISTRADOR'),
+	(1, '(OECHSLE) Salaverry', 'grupo odisea', '980597009', 'A', 'JEFE DE ODISEA'),
+	(2, '(OECHSLE) Jockey Plaza', 'Daniel', '46178', 'A', 'GERENTE DE PREVENCION'),
+	(3, '(OECHSLE) Plaza Norte', 'oechsle', '20493020618', 'A', 'JEFE DE PREVENCION'),
+	(4, '(OECHSLE) Centro Civico', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
+	(5, '(OECHSLE) JR Union', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
+	(6, '(OECHSLE) Primavera', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
+	(7, '(OECHSLE) Plaza Lima Norte', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
+	(8, '(OECHSLE) CUSCO', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
+	(9, '(OECHSLE) AREQUIPA', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
+	(10, '(OECHSLE) JULIACA', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
+	(11, '(OECHSLE) HUANCAYO', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
+	(12, '(OECHSLE) BARRANCA', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
+	(13, '(OECHSLE) CAJAMARCA', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
+	(14, '(OECHSLE) CHICLAYO', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
+	(15, '(OECHSLE) PUCALLPA', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
+	(16, '(OECHSLE) TRUJILLO', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
+	(17, '(OECHSLE) PIURA', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
+	(18, '(OECHSLE) HUANCAYO', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
+	(19, '(OECHSLE) ICA', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
+	(20, 'CARPA Pro', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION'),
+	(21, 'CARPA Santa Clara', 'oechsle', '20493020618', 'A', 'JEFES DE PREVENCION');
 
 -- --------------------------------------------------------
 
@@ -1567,8 +1568,8 @@ INSERT INTO `tienda` (`id_tien`, `nom_tien`, `usuario`, `pass_tien`, `estado`, `
 --
 
 CREATE TABLE IF NOT EXISTS `tipo_tendero` (
-  `id_tip_ten` int(11) NOT NULL,
-  `des_tip_ten` varchar(20) NOT NULL
+	`id_tip_ten` int(11) NOT NULL,
+	`des_tip_ten` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -1576,9 +1577,9 @@ CREATE TABLE IF NOT EXISTS `tipo_tendero` (
 --
 
 INSERT INTO `tipo_tendero` (`id_tip_ten`, `des_tip_ten`) VALUES
-(1, 'Oportunista'),
-(2, 'Profesional'),
-(3, 'Interno');
+	(1, 'Oportunista'),
+	(2, 'Profesional'),
+	(3, 'Interno');
 
 --
 -- Índices para tablas volcadas
@@ -1588,85 +1589,85 @@ INSERT INTO `tipo_tendero` (`id_tip_ten`, `des_tip_ten`) VALUES
 -- Indices de la tabla `cab_incidente`
 --
 ALTER TABLE `cab_incidente`
- ADD PRIMARY KEY (`id_incidente`), ADD KEY `fk_cab_incidente_tienda_idx` (`id_tien`);
+ADD PRIMARY KEY (`id_incidente`), ADD KEY `fk_cab_incidente_tienda_idx` (`id_tien`);
 
 --
 -- Indices de la tabla `cab_interven`
 --
 ALTER TABLE `cab_interven`
- ADD PRIMARY KEY (`num_inte`), ADD KEY `FK_idTen_Cab_in` (`id_ten`), ADD KEY `FK_idprev_Cab_in` (`dni_prev`), ADD KEY `FK_idpues_Cab_in` (`id_pues`), ADD KEY `FK_idtien_Cab_in` (`id_tien`);
+ADD PRIMARY KEY (`num_inte`), ADD KEY `FK_idTen_Cab_in` (`id_ten`), ADD KEY `FK_idprev_Cab_in` (`dni_prev`), ADD KEY `FK_idpues_Cab_in` (`id_pues`), ADD KEY `FK_idtien_Cab_in` (`id_tien`);
 
 --
 -- Indices de la tabla `cab_operatividad`
 --
 ALTER TABLE `cab_operatividad`
- ADD PRIMARY KEY (`id_operatividad`);
+ADD PRIMARY KEY (`id_operatividad`);
 
 --
 -- Indices de la tabla `cab_sensor`
 --
 ALTER TABLE `cab_sensor`
- ADD PRIMARY KEY (`id_sensor`), ADD KEY `fk_cab_sensro_tienda_idx` (`id_tien`);
+ADD PRIMARY KEY (`id_sensor`), ADD KEY `fk_cab_sensro_tienda_idx` (`id_tien`);
 
 --
 -- Indices de la tabla `det_incidente`
 --
 ALTER TABLE `det_incidente`
- ADD KEY `fk_det_incidente_cab_incidente_idx` (`id_incidente`);
+ADD KEY `fk_det_incidente_cab_incidente_idx` (`id_incidente`);
 
 --
 -- Indices de la tabla `det_interven`
 --
 ALTER TABLE `det_interven`
- ADD KEY `FK_numinte_Cab_in` (`num_inte`);
+ADD KEY `FK_numinte_Cab_in` (`num_inte`);
 
 --
 -- Indices de la tabla `det_operatividad`
 --
 ALTER TABLE `det_operatividad`
- ADD PRIMARY KEY (`id_det_operatividad`), ADD KEY `fk_detopera_cab_operativis_idx` (`id_operatividad`), ADD KEY `fk_det_operativida_tienda_idx` (`id_tien`), ADD KEY `fk_det_operatividad_producto_idx` (`id_producto`);
+ADD PRIMARY KEY (`id_det_operatividad`), ADD KEY `fk_detopera_cab_operativis_idx` (`id_operatividad`), ADD KEY `fk_det_operativida_tienda_idx` (`id_tien`), ADD KEY `fk_det_operatividad_producto_idx` (`id_producto`);
 
 --
 -- Indices de la tabla `det_sensor`
 --
 ALTER TABLE `det_sensor`
- ADD KEY `fk_det_sensor_cab_sensor_idx` (`id_sensor`);
+ADD KEY `fk_det_sensor_cab_sensor_idx` (`id_sensor`);
 
 --
 -- Indices de la tabla `prevencionista`
 --
 ALTER TABLE `prevencionista`
- ADD PRIMARY KEY (`dni_prev`);
+ADD PRIMARY KEY (`dni_prev`);
 
 --
 -- Indices de la tabla `producto`
 --
 ALTER TABLE `producto`
- ADD PRIMARY KEY (`id_producto`);
+ADD PRIMARY KEY (`id_producto`);
 
 --
 -- Indices de la tabla `puesto`
 --
 ALTER TABLE `puesto`
- ADD PRIMARY KEY (`id_pues`);
+ADD PRIMARY KEY (`id_pues`);
 
 --
 -- Indices de la tabla `tendero`
 --
 ALTER TABLE `tendero`
- ADD PRIMARY KEY (`id_ten`), ADD UNIQUE KEY `doc_ten` (`doc_ten`), ADD KEY `FK_Ten_Tip` (`id_tip_ten`);
+ADD PRIMARY KEY (`id_ten`), ADD UNIQUE KEY `doc_ten` (`doc_ten`), ADD KEY `FK_Ten_Tip` (`id_tip_ten`);
 
 --
 -- Indices de la tabla `tienda`
 --
 ALTER TABLE `tienda`
- ADD PRIMARY KEY (`id_tien`);
+ADD PRIMARY KEY (`id_tien`);
 
 --
 -- Indices de la tabla `tipo_tendero`
 --
 ALTER TABLE `tipo_tendero`
- ADD PRIMARY KEY (`id_tip_ten`);
+ADD PRIMARY KEY (`id_tip_ten`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
