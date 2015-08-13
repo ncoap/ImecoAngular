@@ -147,8 +147,8 @@ class GraficaDao {
     public function chart_incidente($reporte,$idTienda,$opcion, $fecha, $hora_inicial, $hora_final) {
         date_default_timezone_set('America/Lima');
         $fechaActual = date('Y-m-d', strtotime(urldecode($fecha)));
-        $stm = $this->pdo->prepare("CALL char_incidente(?,?,?,?,?,?)");
-        $stm->execute(array($reporte ,$idTienda, $opcion, $fechaActual, $hora_inicial, $hora_final));
+        $stm = $this->pdo->prepare("CALL char_incidente(?,?,?,?,?,?,?)");
+        $stm->execute(array($reporte ,$idTienda, $opcion, $fechaActual, $hora_inicial, $hora_final,''));
 
         $rs = $stm->fetchAll(PDO::FETCH_OBJ);
 
@@ -173,23 +173,45 @@ class GraficaDao {
         $fechaActual = date('Y-m-d', strtotime(urldecode($fecha)));
 
         //para la cabecera
-        $stm = $this->pdo->prepare("CALL char_incidente(?,?,?,?,?,?)");
-        $stm->execute(array($reporte,$idTienda, $opcion, $fechaActual, $hora_inicial, $hora_final));
+        $stm = $this->pdo->prepare("CALL char_incidente(?,?,?,?,?,?,?)");
+        $stm->execute(array($reporte,$idTienda, $opcion, $fechaActual, $hora_inicial, $hora_final,'accidente'));
         $rs = $stm->fetchAll(PDO::FETCH_OBJ);
 
         //para el detalle
         $db = new Conexion();
         $pdo = $db->getConexion();
-        $stm_det = $pdo->prepare("CALL char_incidente(?,?,?,?,?,?)");
-        $stm_det->execute(array(3,$idTienda, $opcion, $fechaActual, $hora_inicial, $hora_final));
+        $stm_det = $pdo->prepare("CALL char_incidente(?,?,?,?,?,?,?)");
+        $stm_det->execute(array(3,$idTienda, $opcion, $fechaActual, $hora_inicial, $hora_final,'accidente'));
         $rs_det = $stm_det->fetchAll(PDO::FETCH_OBJ);
+
+        $cab_incidentes = $this->cab_incidente($idTienda, $opcion, $fechaActual, $hora_inicial, $hora_final);
+        $det_incidentes = $this->det_incidente($idTienda, $opcion, $fechaActual, $hora_inicial, $hora_final);
 
         $total = array();
 
-
-        array_push($total, $rs,$rs_det);
+        array_push($total, $rs,$rs_det,$cab_incidentes,$det_incidentes);
         return $total;
     }
+
+    public function cab_incidente($idTienda, $opcion, $fechaActual, $hora_inicial, $hora_final){
+        $db = new Conexion();
+        $pdo = $db->getConexion();
+        $stm_det = $pdo->prepare("CALL char_incidente(?,?,?,?,?,?,?)");
+        $stm_det->execute(array(2,$idTienda, $opcion, $fechaActual, $hora_inicial, $hora_final,'incidente'));
+        return $stm_det->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function det_incidente($idTienda, $opcion, $fecha, $hora_inicial, $hora_final){
+        date_default_timezone_set('America/Lima');
+        $fechaActual = date('Y-m-d', strtotime(urldecode($fecha)));
+        $db = new Conexion();
+        $pdo = $db->getConexion();
+        $stm_det = $pdo->prepare("CALL char_incidente(?,?,?,?,?,?,?)");
+        $stm_det->execute(array(3,$idTienda, $opcion, $fechaActual, $hora_inicial, $hora_final,'incidente'));
+        return $stm_det->fetchAll(PDO::FETCH_OBJ);
+    }
+
+
 
     public function reporte_main_sensomatizado($reporte,$idTienda,$opcion, $fecha, $hora_inicial, $hora_final){
         date_default_timezone_set('America/Lima');

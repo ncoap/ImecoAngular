@@ -160,10 +160,10 @@ angular.module('odisea.incidente.grafincidente',
                 }
             }).success(function (data) {
                 $log.info("RECUPEROS ", data);
-                $scope.cabaccidente = data[0];
-                $scope.detaccidente = data[1];
-                $scope.cabincidente = data[0];
-                $scope.detincidente = data[1];
+                $scope.data.cabaccidente = data[0];
+                $scope.data.detaccidente = data[1];
+                $scope.data.cabincidente = data[2];
+                $scope.data.detincidente = data[3];
             }).error(
                 function (data) {
                     console.log("Error");

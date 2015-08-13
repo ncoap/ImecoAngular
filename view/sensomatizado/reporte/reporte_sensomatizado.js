@@ -26,6 +26,10 @@ angular.module('odisea.sensomatizado.grafsensomatizado',
         });
     }])
     .controller('grafsensomatizadoController', function ($rootScope, $scope, $log, $http, dialogs) {
+        $scope.tienda = {
+            idTienda: 1,
+            nombreTienda: '(OECHSLE) Salaverry'
+        };
 
         $scope.busqueda = {
             fecha: new Date(),
@@ -58,8 +62,8 @@ angular.module('odisea.sensomatizado.grafsensomatizado',
         };
 
 
-        $scope.totalAccidentes = 0;
-        $scope.totalIncidentes = 0.0;
+        $scope.totalCantidad = 0;
+        $scope.totalMonto = 0.0;
 
         $scope.dataAllConsolidado = [];
         $scope.dataAllDetalle = [];
@@ -67,19 +71,13 @@ angular.module('odisea.sensomatizado.grafsensomatizado',
         $scope.tituloMes = "";
         $scope.tituloAnio = "";
 
-        $scope.tienda = {
-            idTienda: 1,
-            nombreTienda: '(OECHSLE) Salaverry'
-        };
-
-
         var nombreMeses = ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO",
             "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"
         ];
-        
+
         $scope.seriesConsolidadoCantidad = ['CANT. PRODUCTOS'];
         $scope.labelsConsolidadoCantidad = [];
-        $scope.coloursConsolidadoCantidad = ['#3366cc','#dc3912'];
+        $scope.coloursConsolidadoCantidad = ['#3366cc', '#dc3912'];
         $scope.dataConsolidadoCantidad = [
             []
         ];
@@ -89,18 +87,9 @@ angular.module('odisea.sensomatizado.grafsensomatizado',
             []
         ];
 
-
-
         $scope.seriesDetalle = ['Cantidad', 'Total S/'];
         $scope.labelsDetalle = [];
         $scope.dataDetalle = [
-            [],
-            []
-        ];
-
-        $scope.seriesPorTipo = ['ACCIDENTE', 'INCIDENTE'];
-        $scope.labelsPorTipo = [];
-        $scope.dataPorTipo = [
             [],
             []
         ];
@@ -113,13 +102,13 @@ angular.module('odisea.sensomatizado.grafsensomatizado',
                 $scope.tituloAnio = $scope.busqueda.fecha.getFullYear();
                 buscarDataAnual();
 
-            } else if ($scope.busqueda.tipoFecha == 'POR MES'){
+            } else if ($scope.busqueda.tipoFecha == 'POR MES') {
 
                 $scope.busqueda.opcion = '1';
                 $scope.tituloMes = 'REPORTE MENSUAL : ' + nombreMeses[$scope.busqueda.fecha.getMonth()];
                 $scope.tituloAnio = $scope.busqueda.fecha.getFullYear();
                 buscarDataAnual();
-            } 
+            }
         };
 
         function buscarDataAnual() {
@@ -131,33 +120,28 @@ angular.module('odisea.sensomatizado.grafsensomatizado',
                     horaInicial: $scope.busqueda.horario.split(' ')[0],
                     horaFinal: $scope.busqueda.horario.split(' ')[1]
                 }
-            })
-                .success(function (data) {
-                    $log.info("HOLDA", data);
-
-                    $scope.dataAllConsolidado = data[3];
-                    $scope.labelsConsolidadoMonto = data[0];
-                    $scope.labelsConsolidadoCantidad = data[0];
-                    $scope.dataConsolidadoCantidad[0] = data[1];
-                    $scope.dataConsolidadoMonto[0] = data[2];
-
-                    calcularTotales(data[3]);
-                })
-                .error(function (data) {
-                    console.log("Error");
-                });
+            }).success(function (data) {
+                $log.info("HOLDA", data);
+                $scope.dataAllConsolidado = data[3];
+                $scope.labelsConsolidadoMonto = data[0];
+                $scope.labelsConsolidadoCantidad = data[0];
+                $scope.dataConsolidadoCantidad[0] = data[1];
+                $scope.dataConsolidadoMonto[0] = data[2];
+                calcularTotales(data[3]);
+            }).error(function (data) {
+                console.log("Error");
+            });
         }
 
         function calcularTotales(dataPorTipo) {
-
             var total1 = 0;
             var total2 = 0.0;
             angular.forEach(dataPorTipo, function (item) {
                 total1 = total1 + parseInt(item.sensomatizado);
                 total2 = total2 + parseFloat(item.total);
             });
-            $scope.totalAccidentes = total1;
-            $scope.totalIncidentes = total2;
+            $scope.totalCantidad = total1;
+            $scope.totalMonto = total2;
         }
 
         //SEGUNDA BUSQUEDA
@@ -180,9 +164,9 @@ angular.module('odisea.sensomatizado.grafsensomatizado',
                     }
                 }
             ).success(function (data) {
-                    $log.log("DETALLE",data);
+                    $log.log("DETALLE", data);
                     if (data[0].length === 0) {
-                        $scope.labelsDetalle= ['1'];
+                        $scope.labelsDetalle = ['1'];
                         $scope.dataDetalle[0] = data[1];
                         $scope.dataDetalle[1] = data[2];
                         $scope.dataAllDetalle = data[3];
@@ -202,11 +186,11 @@ angular.module('odisea.sensomatizado.grafsensomatizado',
 
         function calcularResumenDetalle(data) {
 
-            $log.log("calcularResumenDetalle ",data);
+            $log.log("calcularResumenDetalle ", data);
             var cant1 = 0;
             var cant2 = 0;
 
-            angular.forEach(data, function(item) {
+            angular.forEach(data, function (item) {
                 cant1 = cant1 + parseInt(item.cantidadProducto);
                 cant2 = cant2 + parseFloat(item.totalProducto);
             });
