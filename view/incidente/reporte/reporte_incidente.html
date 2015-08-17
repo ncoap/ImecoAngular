@@ -10,58 +10,55 @@
     <div class="tab-content" style="overflow:hidden">
         <!--TAB 1-->
         <div class="tab-pane" ng-class="{'active': tab.tab1 == true}">
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="box box-default">
+                <div class="box-header">
                     <strong>MENÚ - OPCIONES DE BÚSQUEDA</strong>
                 </div>
-                <div class="panel-body">
+                <div class="box-body">
                     <div class="row">
+                        <form class="form-horizontal"
+                              name="formFechaConsulta"
+                              ng-submit="buscarData()">
                         <div class="col-sm-4">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
+                            <div class="box box-default">
+                                <div class="box-header">
                                     FILTRO DE FECHAS
                                 </div>
-                                <div class="panel-body">
-                                    <div>
-                                        <input ng-click="pormeses = false" type="radio" name="fecha" value="ANUAL"
-                                               ng-model="busqueda.tipoFecha">
-                                        ANUAL
-                                    </div>
-                                    <div>
-                                        <input ng-click="pormeses = false" type="radio" name="fecha" value="POR MES"
-                                               ng-model="busqueda.tipoFecha">
-                                        POR MES
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    FECHA
-                                </div>
-                                <div class="panel-body">
-                                    <form class="form-horizontal"
-                                          name="formFechaConsulta"
-                                          ng-submit="buscarData()">
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <input type="date" name="dni" ng-model="busqueda.fecha"
-                                                       class="form-control">
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div>
+                                                <input ng-click="pormeses = false" type="radio" name="fecha"
+                                                       value="ANUAL"
+                                                       ng-model="busqueda.tipoFecha">
+                                                ANUAL
+                                            </div>
+                                            <div>
+                                                <input ng-click="pormeses = false" type="radio" name="fecha"
+                                                       value="POR MES"
+                                                       ng-model="busqueda.tipoFecha">
+                                                POR MES
                                             </div>
                                         </div>
-                                    </form>
-                                    <br>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <div class="col-sm-12">
+                                                    <input type="date" name="dni" ng-model="busqueda.fecha"
+                                                           class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-sm-4">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
+                            <div class="box box-default">
+                                <div class="box-header">
                                     FILTRO DE HORARIOS
                                 </div>
-                                <div class="panel-body">
+                                <div class="box-body">
                                     <div>
                                         <input type="radio" name="horario" value="00:00:00 23:59:59"
                                                ng-model="busqueda.horario">
@@ -87,13 +84,13 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-2">
-                            <button class="btn btn-primary animated infinite pulse pull-right"
-                                    ng-disabled="!formFechaConsulta.$valid"
-                                    type="submit">CONSULTAR
+                        <div class="col-sm-4">
+                            <button type="submit" ng-disabled="!formFechaConsulta.$valid"
+                                    class="btn btn-primary animated infinite pulse pull-right">
+                                CONSULTAR
                             </button>
-
                         </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -116,8 +113,8 @@
                                 <div class="box-header" style="background: #404040;text-align: center">
                                     <img src="resources/img/otros/logo.png" width="150" height="50">
                                 </div>
-                                <div class="box-body table-responsive" style="background-color: #FAFAFA">
-                                    <table class="table table-bordered">
+                                <div class="box-body table-responsive">
+                                    <table class="table table-bordered table-striped exportTable">
                                         <thead>
                                         <tr>
                                             <th>Tienda</th>
@@ -140,6 +137,14 @@
                                         </tr>
                                         </tbody>
                                     </table>
+                                </div>
+                                <div class="box-footer">
+                                    <div class="pull-right">
+                                        <button class="odisea-btn-pdf" ng-click="exportAction()">
+                                            <img width="25" height="25" src="resources/img/xls.png">
+                                            &nbsp; Exportar a Excel
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -168,12 +173,11 @@
                     </div>
                 </form>
             </div>
-
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="box box-default">
+                <div class="box-header">
                     <span class="panel-title">{{tituloMes}} {{tituloAnio}}  Tienda:{{tienda.nombreTienda}}</span>
                 </div>
-                <div class="panel-body">
+                <div class="box-body">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="box box-danger">
@@ -181,8 +185,8 @@
                                     <img src="resources/img/otros/logo.png" width="120" height="40" class="pull-left">
                                     <span class="box-title" style="margin-top: 0.5em">Accidentes</span>
                                 </div>
-                                <div class="box-body table-responsive" style="height: 300px;background-color: #FAFAFA">
-                                    <table class="table table-bordered">
+                                <div class="box-body table-responsive" style="height: 300px;">
+                                    <table class="table table-bordered table-striped exportTable1">
                                         <thead>
                                         <tr>
                                             <th>#</th>
@@ -204,7 +208,14 @@
                                     </table>
                                 </div>
                                 <div class="box-footer">
-                                    TOTAL ACCIDENTE :  <span class="label label-success odisea-font">{{data.cabaccidente.length}}</span>
+                                    TOTAL ACCIDENTE : <span class="label label-success odisea-font">{{data.cabaccidente.length}}</span>
+
+                                    <div class="pull-right">
+                                        <button class="odisea-btn-pdf" ng-click="exportAction1()">
+                                            <img width="25" height="25" src="resources/img/xls.png">
+                                            &nbsp; Exportar a Excel
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -214,8 +225,8 @@
                                     <img src="resources/img/otros/logo.png" width="120" height="40" class="pull-left">
                                     <span class="box-title" style="margin-top: 0.5em">Detalle de Productos Dañados - Accidentes</span>
                                 </div>
-                                <div class="box-body table-responsive" style="height: 300px;background-color: #FAFAFA">
-                                    <table class="table table-bordered">
+                                <div class="box-body table-responsive" style="height: 300px;">
+                                    <table class="table table-bordered table-striped exportTable2">
                                         <thead>
                                         <tr>
                                             <th>#</th>
@@ -243,7 +254,14 @@
                                     </table>
                                 </div>
                                 <div class="box-footer">
-                                    TOTAL PRODUCTOS :  <span class="label label-success odisea-font">{{data.detaccidente.length}}</span>
+                                    TOTAL PRODUCTOS : <span class="label label-success odisea-font">{{data.detaccidente.length}}</span>
+
+                                    <div class="pull-right">
+                                        <button class="odisea-btn-pdf" ng-click="exportAction2()">
+                                            <img width="25" height="25" src="resources/img/xls.png">
+                                            &nbsp; Exportar a Excel
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -255,8 +273,8 @@
                                     <img src="resources/img/otros/logo.png" width="120" height="40" class="pull-left">
                                     <span class="box-title" style="margin-top: 0.5em">Incidentes</span>
                                 </div>
-                                <div class="box-body table-responsive" style="height: 300px;background-color: #FAFAFA">
-                                    <table class="table table-bordered">
+                                <div class="box-body table-responsive" style="height: 300px;">
+                                    <table class="table table-bordered table-striped exportTable3">
                                         <thead>
                                         <tr>
                                             <th>#</th>
@@ -278,7 +296,14 @@
                                     </table>
                                 </div>
                                 <div class="box-footer">
-                                    TOTAL INCIDENTES :  <span class="label label-success odisea-font">{{data.cabincidente.length}}</span>
+                                    TOTAL INCIDENTES : <span class="label label-success odisea-font">{{data.cabincidente.length}}</span>
+
+                                    <div class="pull-right">
+                                        <button class="odisea-btn-pdf" ng-click="exportAction3()">
+                                            <img width="25" height="25" src="resources/img/xls.png">
+                                            &nbsp; Exportar a Excel
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -288,8 +313,8 @@
                                     <img src="resources/img/otros/logo.png" width="120" height="40" class="pull-left">
                                     <span class="box-title" style="margin-top: 0.5em">Detalle de Productos Dañados - Incidentes</span>
                                 </div>
-                                <div class="box-body table-responsive" style="height: 300px;background-color: #FAFAFA">
-                                    <table class="table table-bordered">
+                                <div class="box-body table-responsive" style="height: 300px;">
+                                    <table class="table table-bordered table-striped exportTable4">
                                         <thead>
                                         <tr>
                                             <th>#</th>
@@ -317,7 +342,14 @@
                                     </table>
                                 </div>
                                 <div class="box-footer">
-                                    TOTAL PRODUCTOS :  <span class="label label-success odisea-font">{{data.detincidente.length}}</span>
+                                    TOTAL PRODUCTOS : <span class="label label-success odisea-font">{{data.detincidente.length}}</span>
+
+                                    <div class="pull-right">
+                                        <button class="odisea-btn-pdf" ng-click="exportAction4()">
+                                            <img width="25" height="25" src="resources/img/xls.png">
+                                            &nbsp; Exportar a Excel
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

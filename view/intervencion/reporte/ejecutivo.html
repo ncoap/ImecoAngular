@@ -10,189 +10,199 @@
     <div class="tab-content" style="overflow:hidden">
         <!--TAB 1-->
         <div class="tab-pane" ng-class="{'active': tab.tab1 == true}">
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="box box-default">
+                <div class="box-header">
                     <strong>MENÚ - OPCIONES DE BÚSQUEDA</strong>
                 </div>
-                <div class="panel-body">
+                <div class="box-body">
                     <div class="row">
-                        <div class="col-sm-4">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    FILTRO DE FECHAS
-                                </div>
-                                <div class="panel-body">
-                                    <div>
-                                        <input ng-click="pormeses = false" type="radio" name="fecha" value="ANUAL" ng-model="busqueda.tipoFecha">
-                                        ANUAL
+                        <form class="form-horizontal"
+                              name="formFechaConsulta"
+                              ng-submit="buscarData()">
+                            <div class="col-sm-4">
+                                <div class="box box-default">
+                                    <div class="box-header">
+                                        FILTRO DE FECHAS
                                     </div>
-                                    <div>
-                                        <input ng-click="pormeses = false" type="radio" name="fecha" value="POR MES" ng-model="busqueda.tipoFecha">
-                                        POR MES
-                                    </div>
-                                    <div>
-                                        <input ng-click="pormeses = true" type="radio" name="fecha" value="POR MESES" ng-model="busqueda.tipoFecha">
-                                        POR MESES <span class="label label-info">Seleccione Varios Meses</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-sm-6">
 
-                        <div class="col-sm-4">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    FILTRO DE HORARIOS
-                                </div>
-                                <div class="panel-body">
-                                    <div>
-                                        <input type="radio" name="horario" value="00:00:00 23:59:59" ng-model="busqueda.horario">
-                                        TODOS
-                                    </div>
-                                    <div>
-                                        <input type="radio" name="horario" value="09:00:00 12:00:00" ng-model="busqueda.horario">
-                                        09:00 a 12:00
-                                        <input style="margin-left: 2em" type="radio" name="horario" 
-                                               value="12:00:00 17:00:00" ng-model="busqueda.horario">
-                                        12:00 a 17:00
-                                    </div>
-                                    <div>
-                                        <input type="radio" name="horario" value="17:00:00 22:00:00" ng-model="busqueda.horario">
-                                        17:00 a 22:00
-                                        <input style="margin-left: 2em" type="radio" name="horario" 
-                                               value="22:00:00 09:00:00" ng-model="busqueda.horario">
-                                        22:00 a 09:00
+                                                <div>
+                                                    <input ng-click="pormeses = false" type="radio" name="fecha" value="ANUAL"
+                                                           ng-model="busqueda.tipoFecha">
+                                                    ANUAL
+                                                </div>
+                                                <div>
+                                                    <input ng-click="pormeses = false" type="radio" name="fecha" value="POR MES"
+                                                           ng-model="busqueda.tipoFecha">
+                                                    POR MES
+                                                </div>
+                                                <div>
+                                                    <input ng-click="pormeses = true" type="radio" name="fecha"
+                                                           value="POR MESES" ng-model="busqueda.tipoFecha">
+                                                    POR MESES
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="date" name="dni" ng-model="busqueda.fecha"
+                                                       class="form-control">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    FILTRO POR SEXO
-                                </div>
-                                <div class="panel-body">
-                                    <div>
-                                        <input type="radio" name="sexo" value="" ng-model="busqueda.sexo">
-                                        AMBOS
+
+                            <div class="col-sm-3">
+                                <div class="box box-default">
+                                    <div class="box-header">
+                                        FILTRO DE HORARIOS
                                     </div>
-                                    <div>
-                                        <input type="radio" name="sexo" value="M" ng-model="busqueda.sexo">
-                                        MASCULINO
-                                    </div>
-                                    <div>
-                                        <input type="radio" name="sexo" value="F" ng-model="busqueda.sexo">
-                                        FEMENINO
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4" ng-show="pormeses">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    SELECCIONE LOS MESES
-                                </div>
-                                <div class="panel-body">
-                                    <div>
-                                        <button ng-click="checkAll()" class="btn btn-danger btn-xs">Todos</button>
-                                        <button ng-click="uncheckAll()" class="btn btn-danger btn-xs">Ninguno</button>
-                                        <button ng-click="checkFirst()" class="btn btn-danger btn-xs">Actual</button>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label ng-repeat="mes in meses" style="display: block">
-                                            <input type="checkbox" checklist-model="selectMeses.meses"
-                                                   checklist-value="mes.id"> {{mes.text}}
-                                        </label>
+                                    <div class="box-body">
+                                        <div>
+                                            <input type="radio" name="horario" value="00:00:00 23:59:59"
+                                                   ng-model="busqueda.horario">
+                                            TODOS
+                                        </div>
+                                        <div>
+                                            <input type="radio" name="horario" value="09:00:00 12:00:00"
+                                                   ng-model="busqueda.horario">
+                                            09:00 a 12:00
+                                            <input style="margin-left: 2em" type="radio" name="horario"
+                                                   value="12:00:00 17:00:00" ng-model="busqueda.horario">
+                                            12:00 a 17:00
+                                        </div>
+                                        <div>
+                                            <input type="radio" name="horario" value="17:00:00 22:00:00"
+                                                   ng-model="busqueda.horario">
+                                            17:00 a 22:00
+                                            <input style="margin-left: 2em" type="radio" name="horario"
+                                                   value="22:00:00 09:00:00" ng-model="busqueda.horario">
+                                            22:00 a 09:00
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            FILTRO DE FECHA
-                        </div>
-                        <div class="panel-body">
-                            <form class="form-horizontal"
-                                  name="formFechaConsulta"
-                                  ng-submit="buscarData()">
-                                <div class="form-group">
-                                    <label class="col-sm-1">FECHA:</label>
-                                    <div class="col-sm-2">
-                                        <input type="date" name="dni" ng-model="busqueda.fecha"
-                                               class="form-control">
-                                        <label class="label label-default">De esta fecha se tomará el mes, año o ambos dependiendo de
-                                            los filtros que elija</label>
+                            <div class="col-sm-2">
+                                <div class="box box-default">
+                                    <div class="box-header">
+                                        FILTRO POR SEXO
                                     </div>
-                                    <div class="col-sm-9">
-                                        <button class="btn btn-primary animated infinite pulse pull-right" ng-disabled="!formFechaConsulta.$valid"
-                                                type="submit">CONSULTAR</button>
+                                    <div class="box-body">
+                                        <div>
+                                            <input type="radio" name="sexo" value="" ng-model="busqueda.sexo">
+                                            AMBOS
+                                        </div>
+                                        <div>
+                                            <input type="radio" name="sexo" value="M" ng-model="busqueda.sexo">
+                                            MASCULINO
+                                        </div>
+                                        <div>
+                                            <input type="radio" name="sexo" value="F" ng-model="busqueda.sexo">
+                                            FEMENINO
+                                        </div>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
+                            </div>
+                            <div class="col-sm-2" ng-show="pormeses">
+                                <div class="box box-default">
+                                    <div class="box-header">
+                                        SELECCIONE LOS MESES
+                                    </div>
+                                    <div class="box-body">
+                                        <div>
+                                            <button ng-click="checkAll()" class="btn btn-danger btn-xs">Todos</button>
+                                            <button ng-click="uncheckAll()" class="btn btn-danger btn-xs">Ninguno
+                                            </button>
+                                            <button ng-click="checkFirst()" class="btn btn-danger btn-xs">Actual
+                                            </button>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label ng-repeat="mes in meses" style="display: block">
+                                                <input type="checkbox" checklist-model="selectMeses.meses"
+                                                       checklist-value="mes.id"> {{mes.text}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <button class="btn btn-primary animated infinite pulse pull-right"
+                                        ng-disabled="!formFechaConsulta.$valid"
+                                        type="submit">CONSULTAR
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-
             <div>
                 <div style="text-align: center">
                     <h3>Consolidado de Intervenciones Oechsle - Grupo Odisea S.A.C</h3>
                     <h5>Lima y Provincias</h5>
+
                     <h3><label class="label label-danger">{{tituloMes}} - {{tituloAnio}}</label></h3>
                 </div>
 
                 <div ng-show="!pormeses">
                     <div class="row">
                         <div class="col-sm-8">
-                            <canvas id="bar" class="chart chart-bar" data="data" labels="labels" 
+                            <canvas id="bar" class="chart chart-bar" data="data" labels="labels"
                                     legend="true" series="series" click="onClick" style="height: 750px">
-                            </canvas> 
+                            </canvas>
                         </div>
                         <div class="col-sm-4">
                             <div class="box box-danger">
                                 <div class="box-header" style="background: #404040;text-align: center">
                                     <img src="resources/img/otros/logo.png" width="150" height="50">
                                 </div>
-                                <div class="box-body table-responsive" style="background-color: #f3f3f3">
-                                    <table class="table table-bordered table-striped">
+                                <div class="box-body table-responsive">
+                                    <table class="table table-bordered table-striped exportTable">
                                         <thead>
-                                            <tr>
-                                                <th>Tienda</th>
-                                                <th style="text-align: right"># Interv.</th>
-                                                <th style="text-align: right">Total S/.</th>
-                                            </tr>
+                                        <tr>
+                                            <th>Tienda</th>
+                                            <th style="text-align: right"># Interv.</th>
+                                            <th style="text-align: right">Total S/.</th>
+                                        </tr>
                                         </thead>
                                         <tbody>
-                                            <tr ng-repeat="data in allData">
-                                                <td>{{data.tienda}}</td>
-                                                <td style="text-align: right">{{data.intervenciones}}</td>
-                                                <td style="text-align: right">{{data.recuperado| currency:''}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="font-size: 1.1em"><strong>TOTAL:</strong></td>
-                                                <td style="text-align: right;font-size: 1.1em"><strong>{{totalIntervenciones}}</strong></td>
-                                                <td style="text-align: right;font-size: 1.1em"><strong>{{totalRecuperado| currency:''}}</strong></td>
-                                            </tr>
+                                        <tr ng-repeat="data in allData">
+                                            <td>{{data.tienda}}</td>
+                                            <td style="text-align: right">{{data.intervenciones}}</td>
+                                            <td style="text-align: right">{{data.recuperado| currency:''}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-size: 1.1em"><strong>TOTAL:</strong></td>
+                                            <td style="text-align: right;font-size: 1.1em"><strong>{{totalIntervenciones}}</strong>
+                                            </td>
+                                            <td style="text-align: right;font-size: 1.1em"><strong>{{totalRecuperado|
+                                                currency:''}}</strong></td>
+                                        </tr>
                                         </tbody>
                                     </table>
+                                </div>
+                                <div class="box-footer">
+                                    <div class="pull-right">
+                                        <button class="odisea-btn-pdf" ng-click="exportAction()">
+                                            <img width="25" height="25" src="resources/img/xls.png">
+                                            &nbsp; Exportar a Excel
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <!--POR MESES POR MESES POR MESES POR MESES-->
                 <div ng-show="pormeses">
                     <div class="row" ng-repeat="super in superData">
-
                         <div class="col-sm-12" style="text-align: center">
                             <h3><label class="label label-danger">MES {{super[5]}}</label></h3>
                         </div>
-
                         <div class="col-sm-8">
-                            <canvas class="chart chart-bar" data="super[1]" labels="labels" 
+                            <canvas class="chart chart-bar" data="super[1]" labels="labels"
                                     legend="true" series="series" style="height: 750px">
-                            </canvas> 
+                            </canvas>
                         </div>
                         <div class="col-sm-4">
                             <div class="box box-danger">
@@ -203,23 +213,25 @@
                                 <div class="box-body table-responsive" style="background-color: #f3f3f3">
                                     <table class="table table-bordered table-striped">
                                         <thead>
-                                            <tr>
-                                                <th>Tienda</th>
-                                                <th style="text-align: right">n°Interv</th>
-                                                <th style="text-align: right">Total S/.</th>
-                                            </tr>
+                                        <tr>
+                                            <th>Tienda</th>
+                                            <th style="text-align: right">n°Interv</th>
+                                            <th style="text-align: right">Total S/.</th>
+                                        </tr>
                                         </thead>
                                         <tbody>
-                                            <tr ng-repeat="data in super[2]">
-                                                <td>{{data.tienda}}</td>
-                                                <td style="text-align: right">{{data.intervenciones}}</td>
-                                                <td style="text-align: right">{{data.recuperado| currency:''}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="font-size: 1.1em"><strong>TOTAL:</strong></td>
-                                                <td style="text-align: right;font-size: 1.1em"><strong>{{super[3]}}</strong></td>
-                                                <td style="text-align: right;font-size: 1.1em"><strong>{{super[4]| currency:'S/. '}}</strong></td>
-                                            </tr>
+                                        <tr ng-repeat="data in super[2]">
+                                            <td>{{data.tienda}}</td>
+                                            <td style="text-align: right">{{data.intervenciones}}</td>
+                                            <td style="text-align: right">{{data.recuperado| currency:''}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-size: 1.1em"><strong>TOTAL:</strong></td>
+                                            <td style="text-align: right;font-size: 1.1em"><strong>{{super[3]}}</strong>
+                                            </td>
+                                            <td style="text-align: right;font-size: 1.1em"><strong>{{super[4]|
+                                                currency:'S/. '}}</strong></td>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -227,11 +239,9 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
         <!--FIN TAB 1-->
-
 
         <!--TAB 3-->
         <div class="tab-pane" ng-class="{'active': tab.tab2 == true}">
@@ -240,7 +250,6 @@
                       name="formTiendaConsulta">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Seleccione la Tienda</label>
-
                         <div class="col-sm-3">
                             <select class="form-control" ng-model="tienda" ng-change="recuperadoPorPrevencionista()"
                                     ng-options="ti.nombreTienda for ti in tiendas track by ti.idTienda">
@@ -250,12 +259,12 @@
                 </form>
             </div>
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="box box-default">
+                <div class="box-header">
                     <span class="panel-title"><strong>PRODUCTOS RECUPERADOS </strong></span>
                     <span>{{tituloMes}} {{tituloAnio}}  Tienda:{{tienda.nombreTienda}}</span>
                 </div>
-                <div class="panel-body">
+                <div class="box-body">
                     <div class="row">
                         <div class="col-sm-7">
                             <div class="box box-danger">
@@ -263,8 +272,8 @@
                                     <img src="resources/img/otros/logo.png" width="120" height="40" class="pull-left">
                                     <span class="box-title" style="margin-top: 0.5em">Por Prevencionista</span>
                                 </div>
-                                <div class="box-body table-responsive" style="background-color: #f3f3f3;height: 460px">
-                                    <table class="table table-bordered table-striped">
+                                <div class="box-body table-responsive" style="height: 460px">
+                                    <table class="table table-bordered table-striped exportTable1">
                                         <thead>
                                         <tr>
                                             <th>#</th>
@@ -289,15 +298,23 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <div class="box-footer">
+                                    <div class="pull-right">
+                                        <button class="odisea-btn-pdf" ng-click="exportAction1()">
+                                            <img width="25" height="25" src="resources/img/xls.png">
+                                            &nbsp; Exportar a Excel
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="col-sm-5">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
+                            <div class="box box-default">
+                                <div class="box-header">
                                     <span class="panel-title">Por Prevencionista</span>
                                 </div>
-                                <div class="panel-body" style="height: 500px">
+                                <div class="box-body" style="height: 500px">
                                     <canvas id="bar2" class="chart chart-bar" data="data2" labels="labels2"
                                             legend="true" series="series2" style="height: 400px">
                                     </canvas>
@@ -314,8 +331,8 @@
                                     <img src="resources/img/otros/logo.png" width="120" height="40" class="pull-left">
                                     <span class="box-title" style="margin-top: 0.5em">Por Tipo de Hurto</span>
                                 </div>
-                                <div class="box-body" style="background-color: #f3f3f3">
-                                    <table class="table table-bordered table-striped">
+                                <div class="box-body">
+                                    <table class="table table-bordered table-striped exportTable2">
                                         <thead>
                                         <tr>
                                             <th>Tipo de Hurto</th>
@@ -346,14 +363,22 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <div class="box-footer">
+                                    <div class="pull-right">
+                                        <button class="odisea-btn-pdf" ng-click="exportAction2()">
+                                            <img width="25" height="25" src="resources/img/xls.png">
+                                            &nbsp; Exportar a Excel
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-sm-5">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
+                            <div class="box box-default">
+                                <div class="box-header">
                                     <span class="panel-title">Por Tipo de Hurto</span>
                                 </div>
-                                <div class="panel-body" style="height: 500px">
+                                <div class="box-body" style="height: 500px">
                                     <canvas id="bar3" class="chart chart-bar" data="data3" labels="labels3"
                                             legend="true" series="series3" style="height: 400px">
                                     </canvas>

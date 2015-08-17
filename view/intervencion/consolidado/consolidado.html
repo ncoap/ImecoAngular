@@ -10,16 +10,12 @@
     <div class="tab-content" style="overflow:hidden">
         <!--TAB 1-->
         <div class="tab-pane" ng-class="{'active': tab.tab1 == true}">
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="box box-default">
+                <div class="box-header">
                     <strong>OPCIONES DE BÚSQUEDA</strong>
-                    <i class="pull-right fa" style="cursor: pointer;font-size: 1.5em"
-                       ng-class="{'fa-chevron-circle-down': isCollapsed == true ,
-                               'fa-chevron-circle-up': isCollapsed == false}"
-                       ng-click="isCollapsed = !isCollapsed"></i>
                 </div>
-                <div class="panel-body">
-                    <div ng-show="!isCollapsed">
+                <div class="box-body">
+                    <div>
                         <form class="form-horizontal"
                               name="formFechaConsulta"
                               ng-submit="buscarData()">
@@ -37,14 +33,12 @@
                                     </div>
                                 </div>
 
-                                <label class="col-sm-1">FECHA:</label>
-
                                 <div class="col-sm-2">
-                                    <input type="date" name="dni" ng-model="busqueda.fecha"
-                                           class="form-control">
-                                    <label class="label label-default">De esta fecha se tomará el mes, año o ambos
-                                        dependiendo de
-                                        los filtros que elija</label>
+                                    <label>FECHA:</label>
+                                    <div>
+                                        <input type="date" name="dni" ng-model="busqueda.fecha"
+                                               class="form-control">
+                                    </div>
                                 </div>
 
                                 <div class="col-sm-7">
@@ -63,7 +57,6 @@
                 <div style="text-align: center">
                     <h3>Consolidado de Intervenciones Oechsle - Grupo Odisea S.A.C</h3>
                     <h5>Lima y Provincias</h5>
-
                     <h3><label class="label label-danger">{{tituloMes}} - {{tituloAnio}}</label></h3>
                 </div>
 
@@ -79,8 +72,8 @@
                                 <div class="box-header" style="background: #404040;text-align: center">
                                     <img src="resources/img/otros/logo.png" width="150" height="50">
                                 </div>
-                                <div class="box-body table-responsive" style="background-color: #f3f3f3">
-                                    <table class="table table-bordered table-striped">
+                                <div class="box-body table-responsive">
+                                    <table class="table table-bordered table-striped exportTable">
                                         <thead>
                                             <th>Tienda</th>
                                             <th style="text-align: right">n°Interv</th>
@@ -102,6 +95,13 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                </div>
+                                <div class="box-footer">
+                                    <div class="pull-right">
+                                        <button class="odisea-btn-pdf" ng-click="exportAction()">
+                                            <img width="25" height="25" src="resources/img/xls.png">
+                                            &nbsp; Exportar a Excel</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -130,12 +130,12 @@
                 </form>
             </div>
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <span class="panel-title"><strong>PRODUCTOS RECUPERADOS </strong></span>
+            <div class="box box-default">
+                <div class="box-header">
+                    <span class="box-title"><strong>PRODUCTOS RECUPERADOS </strong></span>
                     <span>{{tituloMes}} {{tituloAnio}}  Tienda:{{tienda.nombreTienda}}</span>
                 </div>
-                <div class="panel-body">
+                <div class="box-body">
                     <div class="row">
                         <div class="col-sm-7">
                             <div class="box box-danger">
@@ -143,8 +143,8 @@
                                     <img src="resources/img/otros/logo.png" width="120" height="40" class="pull-left">
                                     <span class="box-title" style="margin-top: 0.5em">Por Prevencionista</span>
                                 </div>
-                                <div class="box-body table-responsive" style="background-color: #f3f3f3;height: 460px">
-                                    <table class="table table-bordered table-striped">
+                                <div class="box-body table-responsive" style="height: 460px">
+                                    <table class="table table-bordered table-striped exportTable1">
                                         <thead>
                                         <tr>
                                             <th>#</th>
@@ -169,15 +169,22 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <div class="box-footer">
+                                    <div class="pull-right">
+                                        <button class="odisea-btn-pdf" ng-click="exportAction1()">
+                                            <img width="25" height="25" src="resources/img/xls.png">
+                                            &nbsp; Exportar a Excel</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="col-sm-5">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <span class="panel-title">Por Prevencionista</span>
+                            <div class="box box-default">
+                                <div class="box-header">
+                                    <span class="box-title">Por Prevencionista</span>
                                 </div>
-                                <div class="panel-body" style="height: 500px">
+                                <div class="box-body" style="height: 500px">
                                     <canvas id="bar2" class="chart chart-bar" data="data2" labels="labels2"
                                             legend="true" series="series2" style="height: 400px">
                                     </canvas>
@@ -194,8 +201,8 @@
                                     <img src="resources/img/otros/logo.png" width="120" height="40" class="pull-left">
                                     <span class="box-title" style="margin-top: 0.5em">Por Tipo de Hurto</span>
                                 </div>
-                                <div class="box-body" style="background-color: #f3f3f3">
-                                    <table class="table table-bordered table-striped">
+                                <div class="box-body">
+                                    <table class="table table-bordered table-striped exportTable2">
                                         <thead>
                                         <tr>
                                             <th>Tipo de Hurto</th>
@@ -226,14 +233,21 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <div class="box-footer">
+                                    <div class="pull-right">
+                                        <button class="odisea-btn-pdf" ng-click="exportAction2()">
+                                            <img width="25" height="25" src="resources/img/xls.png">
+                                            &nbsp; Exportar a Excel</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-sm-5">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <span class="panel-title">Por Tipo de Hurto</span>
+                            <div class="box box-default">
+                                <div class="box-header">
+                                    <span class="box-title">Por Tipo de Hurto</span>
                                 </div>
-                                <div class="panel-body" style="height: 500px">
+                                <div class="box-body" style="height: 500px">
                                     <canvas id="bar3" class="chart chart-bar" data="data3" labels="labels3"
                                             legend="true" series="series3" style="height: 400px">
                                     </canvas>

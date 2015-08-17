@@ -25,6 +25,28 @@ angular.module('odisea.operatividad.grafoperatividad',
             datasetFill: false
         });
     }])
+    .directive('exportTable', function () {
+        var link = function ($scope, elm, attr) {
+            $scope.$on('export-excel', function (e, d) {
+                elm.tableExport({type: 'excel', escape: false});
+            });
+        };
+        return {
+            restrict: 'C',
+            link: link
+        }
+    })
+    .directive('exportTable2', function () {
+        var link = function ($scope, elm, attr) {
+            $scope.$on('export-excel-2', function (e, d) {
+                elm.tableExport({type: 'excel', escape: false});
+            });
+        };
+        return {
+            restrict: 'C',
+            link: link
+        }
+    })
     .controller('grafoperatividadController', function ($rootScope, $scope, $log, $http, dialogs) {
 
         $scope.tab = {
@@ -110,6 +132,14 @@ angular.module('odisea.operatividad.grafoperatividad',
                     console.log("Error");
                 }
             );
+        };
+
+        $scope.exportAction = function(){
+            $scope.$broadcast('export-excel', {});
+        };
+
+        $scope.exportAction2 = function(){
+            $scope.$broadcast('export-excel-2', {});
         };
         $scope.buscarData();
     });

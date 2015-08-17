@@ -25,8 +25,32 @@ angular.module('odisea.incidente.grafincidente',
             datasetFill: false
         });
     }])
+    .directive('exportTable', function () {
+        var link = function ($scope, elm, attr) {
+            $scope.$on('export-excel', function (e, d) {elm.tableExport({type: 'excel', escape: false});});};
+        return {restrict: 'C', link: link}
+    })
+    .directive('exportTable1', function () {
+        var link = function ($scope, elm, attr) {
+            $scope.$on('export-excel-1', function (e, d) {elm.tableExport({type: 'excel', escape: false});});};
+        return {restrict: 'C', link: link}
+    })
+    .directive('exportTable2', function () {
+        var link = function ($scope, elm, attr) {
+            $scope.$on('export-excel-2', function (e, d) {elm.tableExport({type: 'excel', escape: false});});};
+        return {restrict: 'C', link: link}
+    })
+    .directive('exportTable3', function () {
+        var link = function ($scope, elm, attr) {
+            $scope.$on('export-excel-3', function (e, d) {elm.tableExport({type: 'excel', escape: false});});};
+        return {restrict: 'C', link: link}
+    })
+    .directive('exportTable4', function () {
+        var link = function ($scope, elm, attr) {
+            $scope.$on('export-excel-4', function (e, d) {elm.tableExport({type: 'excel', escape: false});});};
+        return {restrict: 'C', link: link}
+    })
     .controller('grafincidenteController', function ($rootScope, $scope, $log, $http, dialogs) {
-
         $scope.busqueda = {
             fecha: new Date(),
             opcion: '1',
@@ -169,6 +193,27 @@ angular.module('odisea.incidente.grafincidente',
                     console.log("Error");
                 }
             );
+        };
+
+
+        $scope.exportAction = function(){
+            $scope.$broadcast('export-excel', {});
+        };
+
+        $scope.exportAction1 = function(){
+            $scope.$broadcast('export-excel-1', {});
+        };
+
+        $scope.exportAction2 = function(){
+            $scope.$broadcast('export-excel-2', {});
+        };
+
+        $scope.exportAction3 = function(){
+            $scope.$broadcast('export-excel-3', {});
+        };
+
+        $scope.exportAction4 = function(){
+            $scope.$broadcast('export-excel-4', {});
         };
 
         $scope.buscarData();

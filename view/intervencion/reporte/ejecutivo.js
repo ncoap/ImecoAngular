@@ -25,6 +25,24 @@ angular.module('odisea.intervencion.ejecutivo',
             datasetFill: false
         });
     }])
+    .directive('exportTable', function () {
+        var link = function ($scope, elm, attr) {
+            $scope.$on('export-excel', function (e, d) {elm.tableExport({type: 'excel', escape: false});});
+        };
+        return {restrict: 'C', link: link}
+    })
+    .directive('exportTable1', function () {
+        var link = function ($scope, elm, attr) {
+            $scope.$on('export-excel-1', function (e, d) {elm.tableExport({type: 'excel', escape: false});});
+        };
+        return {restrict: 'C', link: link}
+    })
+    .directive('exportTable2', function () {
+        var link = function ($scope, elm, attr) {
+            $scope.$on('export-excel-2', function (e, d) {elm.tableExport({type: 'excel', escape: false});});
+        };
+        return {restrict: 'C', link: link}
+    })
     .controller('ejecutivoController', function ($rootScope, $scope, $log, $http, dialogs) {
 
         $scope.pormeses = false;
@@ -301,11 +319,8 @@ angular.module('odisea.intervencion.ejecutivo',
             var cant2 = 0;
             var total1 = 0.0;
             var total2 = 0.0;
-
             $scope.data3 = [cant1, cant2];
-
             angular.forEach(data, function (detalle) {
-
                 if (detalle.tipoHurto == 'INTERNO') {
                     cant1 = cant1 + parseInt(detalle.cantidadProducto);
                     total1 = total1 + parseFloat(detalle.totalProducto);
@@ -315,22 +330,31 @@ angular.module('odisea.intervencion.ejecutivo',
                     total2 = total2 + parseFloat(detalle.totalProducto);
                 }
             });
-
             total1 = Math.round(total1 * 100) / 100;
             total2 = Math.round(total2 * 100) / 100;
-
             $scope.total = {
                 cantidadInternos: cant1,
                 cantidadExternos: cant2,
                 totalInternos: total1,
                 totalExternos: total2
             };
-
             $scope.labels3 = ['INTERNO', 'EXTERNO'];
             $scope.data3[0] = [cant1, cant2];
             $scope.data3[1] = [total1, total2];
-
         }
+
+
+        $scope.exportAction = function(){
+            $scope.$broadcast('export-excel', {});
+        };
+
+        $scope.exportAction1 = function(){
+            $scope.$broadcast('export-excel-1', {});
+        };
+
+        $scope.exportAction2 = function(){
+            $scope.$broadcast('export-excel-2', {});
+        };
 
         $scope.buscarData();
 

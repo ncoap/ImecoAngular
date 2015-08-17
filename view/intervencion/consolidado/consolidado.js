@@ -25,11 +25,27 @@ angular.module('odisea.intervencion.consolidado',
             datasetFill: false
         });
     }])
+    .directive('exportTable', function () {
+        var link = function ($scope, elm, attr) {
+            $scope.$on('export-excel', function (e, d) {elm.tableExport({type: 'excel', escape: false});});
+        };
+        return {restrict: 'C', link: link}
+    })
+    .directive('exportTable1', function () {
+        var link = function ($scope, elm, attr) {
+            $scope.$on('export-excel-1', function (e, d) {elm.tableExport({type: 'excel', escape: false});});
+        };
+        return {restrict: 'C', link: link}
+    })
+    .directive('exportTable2', function () {
+        var link = function ($scope, elm, attr) {
+            $scope.$on('export-excel-2', function (e, d) {elm.tableExport({type: 'excel', escape: false});});
+        };
+        return {restrict: 'C', link: link}
+    })
     .controller('consolidadoController', function ($rootScope, $scope, $log, $http, dialogs) {
 
         $scope.pormeses = false;
-
-        $scope.isCollapsed = false;
 
         $scope.busqueda = {
             fecha: new Date(),
@@ -255,6 +271,18 @@ angular.module('odisea.intervencion.consolidado',
             $scope.data3[1] = [total1, total2];
 
         }
+
+        $scope.exportAction = function(){
+            $scope.$broadcast('export-excel', {});
+        };
+
+        $scope.exportAction1 = function(){
+            $scope.$broadcast('export-excel-1', {});
+        };
+
+        $scope.exportAction2 = function(){
+            $scope.$broadcast('export-excel-2', {});
+        };
 
         $scope.buscarData();
 
