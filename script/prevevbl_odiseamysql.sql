@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-08-2015 a las 00:51:09
+-- Tiempo de generación: 19-08-2015 a las 00:55:00
 -- Versión del servidor: 5.6.21
 -- Versión de PHP: 5.6.3
 
@@ -47,29 +47,54 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `char_ejecutivo_anual`(
 		end if;
 
 
+		IF(p_hora_inicial>p_hora_final) THEN
+			SELECT
+				t.nom_tien as tienda,
+				coalesce(count(d.intervenciones),0) as intervenciones,
+				coalesce(ROUND(sum(d.recuperado),2),0) as recuperado
+			FROM
+				(   select
+							c.id_tien as idTienda,
+							c.num_inte as intervenciones,
+							c.total_recuperado as recuperado
+						from cab_interven c
+							inner join tendero te on te.id_ten = c.id_ten
+						where
+							DATE(c.fec_inte) between primer_dia and ultimo_dia
+							AND
+							TIME(c.fec_inte) not between '09:01:00' AND '21:59:59'
+							AND
+							te.sexo like CONCAT("%",p_sexo,"%")
+				) d
+				RIGHT JOIN tienda t ON t.id_tien = d.idTienda
+			where t.id_tien > 0
+			GROUP BY t.id_tien
+			ORDER BY t.id_tien ASC;
 
-		SELECT
-			t.nom_tien as tienda,
-			coalesce(count(d.intervenciones),0) as intervenciones,
-			coalesce(ROUND(sum(d.recuperado),2),0) as recuperado
-		FROM
-			(   select
-						c.id_tien as idTienda,
-						c.num_inte as intervenciones,
-						c.total_recuperado as recuperado
-					from cab_interven c
-						inner join tendero te on te.id_ten = c.id_ten
-					where
-						DATE(c.fec_inte) between primer_dia and ultimo_dia
-						AND
-						TIME(c.fec_inte) between p_hora_inicial AND p_hora_final
-						AND
-						te.sexo like CONCAT("%",p_sexo,"%")
-			) d
-			RIGHT JOIN tienda t ON t.id_tien = d.idTienda
-		where t.id_tien > 0
-		GROUP BY t.id_tien
-		ORDER BY t.id_tien ASC;
+		ELSE
+			SELECT
+				t.nom_tien as tienda,
+				coalesce(count(d.intervenciones),0) as intervenciones,
+				coalesce(ROUND(sum(d.recuperado),2),0) as recuperado
+			FROM
+				(   select
+							c.id_tien as idTienda,
+							c.num_inte as intervenciones,
+							c.total_recuperado as recuperado
+						from cab_interven c
+							inner join tendero te on te.id_ten = c.id_ten
+						where
+							DATE(c.fec_inte) between primer_dia and ultimo_dia
+							AND
+							TIME(c.fec_inte) between p_hora_inicial AND p_hora_final
+							AND
+							te.sexo like CONCAT("%",p_sexo,"%")
+				) d
+				RIGHT JOIN tienda t ON t.id_tien = d.idTienda
+			where t.id_tien > 0
+			GROUP BY t.id_tien
+			ORDER BY t.id_tien ASC;
+		END IF;
 
 	END$$
 
@@ -96,29 +121,52 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `char_ejecutivo_anual_por_tienda`(
 			set ultimo_dia = date_format(p_fecha,'%Y-12-31');
 		end if;
 
+		IF(p_hora_inicial>p_hora_final) THEN
+			SELECT
+				c.nom_prev AS nombrePrevencionista,
+				c.dni_prev AS dniPrevencionista,
+				IF(c.tipo_hurto = '1', 'INTERNO', 'EXTERNO') AS tipoHurto,
+				coalesce(d.cod_pro,'SIN CODIGO') AS codigoProducto,
+				coalesce(d.des_pro,'SIN PRODUCTO') AS descripcionProducto,
+				coalesce(d.mar_pro,'SIN MARCA') AS marcaProducto,
+				coalesce(d.cant,0) AS cantidadProducto,
+				coalesce(d.cant * d.precio,0) AS totalProducto
+			FROM
+				cab_interven c
+				LEFT JOIN det_interven d ON c.num_inte = d.num_inte
+				INNER JOIN tendero te ON te.id_ten = c.id_ten
+			WHERE
+				c.id_tien = p_id_tien
+				AND
+				DATE(c.fec_inte) BETWEEN primer_dia AND ultimo_dia
+				AND
+				TIME(c.fec_inte) not between '09:01:00' AND '21:59:59'
+				AND
+				te.sexo LIKE CONCAT("%",p_sexo,"%");
+		ELSE
+			SELECT
+				c.nom_prev AS nombrePrevencionista,
+				c.dni_prev AS dniPrevencionista,
+				IF(c.tipo_hurto = '1', 'INTERNO', 'EXTERNO') AS tipoHurto,
+				coalesce(d.cod_pro,'SIN CODIGO') AS codigoProducto,
+				coalesce(d.des_pro,'SIN PRODUCTO') AS descripcionProducto,
+				coalesce(d.mar_pro,'SIN MARCA') AS marcaProducto,
+				coalesce(d.cant,0) AS cantidadProducto,
+				coalesce(d.cant * d.precio,0) AS totalProducto
+			FROM
+				cab_interven c
+				LEFT JOIN det_interven d ON c.num_inte = d.num_inte
+				INNER JOIN tendero te ON te.id_ten = c.id_ten
+			WHERE
+				c.id_tien = p_id_tien
+				AND
+				DATE(c.fec_inte) BETWEEN primer_dia AND ultimo_dia
+				AND
+				TIME(c.fec_inte) between p_hora_inicial AND p_hora_final
+				AND
+				te.sexo LIKE CONCAT("%",p_sexo,"%");
 
-		SELECT
-			c.nom_prev AS nombrePrevencionista,
-			c.dni_prev AS dniPrevencionista,
-			IF(c.tipo_hurto = '1', 'INTERNO', 'EXTERNO') AS tipoHurto,
-			coalesce(d.cod_pro,'SIN CODIGO') AS codigoProducto,
-			coalesce(d.des_pro,'SIN PRODUCTO') AS descripcionProducto,
-			coalesce(d.mar_pro,'SIN MARCA') AS marcaProducto,
-			coalesce(d.cant,0) AS cantidadProducto,
-			coalesce(d.cant * d.precio,0) AS totalProducto
-		FROM
-			cab_interven c
-			LEFT JOIN det_interven d ON c.num_inte = d.num_inte
-			INNER JOIN tendero te ON te.id_ten = c.id_ten
-		WHERE
-			c.id_tien = p_id_tien
-			AND
-			DATE(c.fec_inte) BETWEEN primer_dia AND ultimo_dia
-			AND
-			TIME(c.fec_inte) BETWEEN p_hora_inicial AND p_hora_final
-			AND
-			te.sexo LIKE CONCAT("%",p_sexo,"%");
-
+		END IF;
 	END$$
 
 CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `char_incidente`(
@@ -144,73 +192,146 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `char_incidente`(
 			set ultimo_dia = date_format(p_fecha,'%Y-12-31');
 		end if;
 
+		IF(p_hora_inicial>p_hora_final) THEN
 
-		CASE p_reporte
+			CASE p_reporte
 
-			WHEN 1 THEN
-			SELECT
-				t.nom_tien as tienda,
-				COALESCE(SUM(IF(d.tipo = 'accidente', 1, 0)),0) AS accidentes,
-				COALESCE(SUM(IF(d.tipo = 'incidente', 1, 0)),0) AS incidentes
-			FROM
-				(
-					SELECT
-						c.id_tien AS idTienda,
-						c.tipo
-					FROM cab_incidente c
-					WHERE
-						DATE(c.fecha_accidente) BETWEEN primer_dia AND ultimo_dia
-						AND
-						TIME(c.fecha_accidente) BETWEEN p_hora_inicial AND p_hora_final
-				) d
-				RIGHT JOIN tienda t ON t.id_tien = d.idTienda
-			WHERE t.id_tien > 0
-			GROUP BY t.id_tien
-			ORDER BY t.id_tien ASC;
+				WHEN 1 THEN
+				SELECT
+					t.nom_tien as tienda,
+					COALESCE(SUM(IF(d.tipo = 'accidente', 1, 0)),0) AS accidentes,
+					COALESCE(SUM(IF(d.tipo = 'incidente', 1, 0)),0) AS incidentes
+				FROM
+					(
+						SELECT
+							c.id_tien AS idTienda,
+							c.tipo
+						FROM cab_incidente c
+						WHERE
+							DATE(c.fecha_accidente) BETWEEN primer_dia AND ultimo_dia
+							AND
+							TIME(c.fecha_accidente) not between '09:01:00' AND '21:59:59'
+					) d
+					RIGHT JOIN tienda t ON t.id_tien = d.idTienda
+				WHERE t.id_tien > 0
+				GROUP BY t.id_tien
+				ORDER BY t.id_tien ASC;
 
-			WHEN 2 THEN
-			SELECT
-				c.id_incidente AS idIncidente,
-				c.nombre_involucrado AS nombreInvolucrado,
-				c.dni_involucrado AS dniInvolucrado,
-				c.edad_accidentado AS edadInvolucrado,
-				c.sexo_accidentado AS sexoInvolucrado
-			FROM
-				cab_incidente c
-			WHERE
-				c.id_tien = p_id_tien
-				AND
-				c.tipo = p_tipo
-				AND
-				DATE(c.fecha_accidente) BETWEEN primer_dia AND ultimo_dia
-				AND
-				TIME(c.fecha_accidente) BETWEEN p_hora_inicial AND p_hora_final
-			ORDER BY c.id_incidente ASC;
+				WHEN 2 THEN
+				SELECT
+					c.id_incidente AS idIncidente,
+					c.nombre_involucrado AS nombreInvolucrado,
+					c.dni_involucrado AS dniInvolucrado,
+					c.edad_accidentado AS edadInvolucrado,
+					c.sexo_accidentado AS sexoInvolucrado
+				FROM
+					cab_incidente c
+				WHERE
+					c.id_tien = p_id_tien
+					AND
+					c.tipo = p_tipo
+					AND
+					DATE(c.fecha_accidente) BETWEEN primer_dia AND ultimo_dia
+					AND
+					TIME(c.fecha_accidente) not between '09:01:00' AND '21:59:59'
+				ORDER BY c.id_incidente ASC;
 
-			WHEN 3 THEN
-			SELECT
-				c.id_incidente as idIncidente,
-				coalesce(d.es_activo,'NO') AS esActivo,
-				coalesce(d.cod_pro,'SIN CODIGO') AS codigoProducto,
-				coalesce(d.desc_pro,'SIN PRODUCTO') AS descripcionProducto,
-				coalesce(d.mar_pro,'SIN MARCA') AS marcaProducto,
-				coalesce(d.cant,0) AS cantidadProducto,
-				coalesce(d.precio,0) AS precioProducto,
-				coalesce(d.cant * d.precio,0) AS totalProducto
-			FROM
-				cab_incidente c
-				INNER JOIN det_incidente d ON c.id_incidente = d.id_incidente
-			WHERE
-				c.id_tien = p_id_tien
-				AND
-				c.tipo = p_tipo
-				AND
-				DATE(c.fecha_accidente) BETWEEN primer_dia AND ultimo_dia
-				AND
-				TIME(c.fecha_accidente) BETWEEN p_hora_inicial AND p_hora_final
-			ORDER BY c.id_incidente ASC;
+				WHEN 3 THEN
+				SELECT
+					c.id_incidente as idIncidente,
+					coalesce(d.es_activo,'NO') AS esActivo,
+					coalesce(d.cod_pro,'SIN CODIGO') AS codigoProducto,
+					coalesce(d.desc_pro,'SIN PRODUCTO') AS descripcionProducto,
+					coalesce(d.mar_pro,'SIN MARCA') AS marcaProducto,
+					coalesce(d.cant,0) AS cantidadProducto,
+					coalesce(d.precio,0) AS precioProducto,
+					coalesce(d.cant * d.precio,0) AS totalProducto
+				FROM
+					cab_incidente c
+					INNER JOIN det_incidente d ON c.id_incidente = d.id_incidente
+				WHERE
+					c.id_tien = p_id_tien
+					AND
+					c.tipo = p_tipo
+					AND
+					DATE(c.fecha_accidente) BETWEEN primer_dia AND ultimo_dia
+					AND
+					TIME(c.fecha_accidente) not between '09:01:00' AND '21:59:59'
+				ORDER BY c.id_incidente ASC;
 
-		END CASE;
+			END CASE;
+
+		ELSE
+
+			CASE p_reporte
+
+				WHEN 1 THEN
+				SELECT
+					t.nom_tien as tienda,
+					COALESCE(SUM(IF(d.tipo = 'accidente', 1, 0)),0) AS accidentes,
+					COALESCE(SUM(IF(d.tipo = 'incidente', 1, 0)),0) AS incidentes
+				FROM
+					(
+						SELECT
+							c.id_tien AS idTienda,
+							c.tipo
+						FROM cab_incidente c
+						WHERE
+							DATE(c.fecha_accidente) BETWEEN primer_dia AND ultimo_dia
+							AND
+							TIME(c.fecha_accidente) BETWEEN p_hora_inicial AND p_hora_final
+					) d
+					RIGHT JOIN tienda t ON t.id_tien = d.idTienda
+				WHERE t.id_tien > 0
+				GROUP BY t.id_tien
+				ORDER BY t.id_tien ASC;
+
+				WHEN 2 THEN
+				SELECT
+					c.id_incidente AS idIncidente,
+					c.nombre_involucrado AS nombreInvolucrado,
+					c.dni_involucrado AS dniInvolucrado,
+					c.edad_accidentado AS edadInvolucrado,
+					c.sexo_accidentado AS sexoInvolucrado
+				FROM
+					cab_incidente c
+				WHERE
+					c.id_tien = p_id_tien
+					AND
+					c.tipo = p_tipo
+					AND
+					DATE(c.fecha_accidente) BETWEEN primer_dia AND ultimo_dia
+					AND
+					TIME(c.fecha_accidente) BETWEEN p_hora_inicial AND p_hora_final
+				ORDER BY c.id_incidente ASC;
+
+				WHEN 3 THEN
+				SELECT
+					c.id_incidente as idIncidente,
+					coalesce(d.es_activo,'NO') AS esActivo,
+					coalesce(d.cod_pro,'SIN CODIGO') AS codigoProducto,
+					coalesce(d.desc_pro,'SIN PRODUCTO') AS descripcionProducto,
+					coalesce(d.mar_pro,'SIN MARCA') AS marcaProducto,
+					coalesce(d.cant,0) AS cantidadProducto,
+					coalesce(d.precio,0) AS precioProducto,
+					coalesce(d.cant * d.precio,0) AS totalProducto
+				FROM
+					cab_incidente c
+					INNER JOIN det_incidente d ON c.id_incidente = d.id_incidente
+				WHERE
+					c.id_tien = p_id_tien
+					AND
+					c.tipo = p_tipo
+					AND
+					DATE(c.fecha_accidente) BETWEEN primer_dia AND ultimo_dia
+					AND
+					TIME(c.fecha_accidente) BETWEEN p_hora_inicial AND p_hora_final
+				ORDER BY c.id_incidente ASC;
+
+			END CASE;
+
+		END IF;
+
 	END$$
 
 CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `char_operatividad`(
@@ -1132,7 +1253,7 @@ CREATE TABLE IF NOT EXISTS `cab_interven` (
 	`id_tien` int(11) NOT NULL,
 	`total_recuperado` double NOT NULL DEFAULT '0',
 	`tipo_hurto` char(1) NOT NULL DEFAULT '1' COMMENT '1 INTERNO\n2 EXTERNO'
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `cab_interven`
@@ -1176,7 +1297,9 @@ INSERT INTO `cab_interven` (`num_inte`, `fec_inte`, `id_ten`, `der_ten`, `lugar_
 	(57, '2015-08-04 12:12:00', 26, 'Comisaria', '', '48592615', 'Nuevo PREVEN', 1, 'ADMINISTRADOR', 'INFORMACION DE LAS MIMSA', 13, 65, '1'),
 	(58, '2015-08-04 12:18:00', 26, 'Comisaria', '', '48592615', 'Nuevo PREVEN', 1, '', '', 3, 300.46, '1'),
 	(59, '2015-08-04 12:20:00', 26, 'Comisaria', '', '48592615', 'Nuevo PREVEN', 1, 'sin modidad', 'sin intervencion', 3, 1500, '1'),
-	(60, '2015-08-04 12:25:00', 28, 'Comisaria', '', '12345565', 'CHUQUITAYPE CHACALTANA, ALICIA D.', 1, '', '', 5, 2000, '1');
+	(60, '2015-08-04 12:25:00', 28, 'Comisaria', '', '12345565', 'CHUQUITAYPE CHACALTANA, ALICIA D.', 1, '', '', 5, 2000, '1'),
+	(61, '2015-08-17 15:08:00', 30, 'Interno', '', '46435523', 'GOMEZ VILCHEZ, GONZALO', 2, 'LE ROBARON', 'LE ROABRON', 14, 0, '2'),
+	(62, '2015-08-17 15:17:00', 31, 'Interno', '', '45764336', 'dfg', 4, 'csd', 'fvdg', 3, 0, '2');
 
 -- --------------------------------------------------------
 
@@ -1322,7 +1445,8 @@ INSERT INTO `det_interven` (`num_inte`, `cod_pro`, `des_pro`, `mar_pro`, `cant`,
 	(57, 'er-25', 'JEAN', 'TIGRE', 1, 65),
 	(58, 'ER-36', 'POLERAS', 'EASY', 2, 150.23),
 	(59, 'er-36', 'laptop', 'HP', 1, 1500),
-	(60, 'BIC-25', 'BICICLETA', 'monta', 1, 2000);
+	(60, 'BIC-25', 'BICICLETA', 'monta', 1, 2000),
+	(61, 'ASDAS', 'ASDAS', '', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -1494,7 +1618,7 @@ CREATE TABLE IF NOT EXISTS `tendero` (
 	`id_tip_ten` int(11) NOT NULL,
 	`fec_nac` date NOT NULL,
 	`sexo` char(1) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `tendero`
@@ -1523,7 +1647,9 @@ INSERT INTO `tendero` (`id_ten`, `nom_ten`, `ape_ten`, `dir_ten`, `doc_ten`, `id
 	(26, 'PANCHO', 'GOMEZ SALDAÑA', 'LOS JIRONEZ DE ACAPULCO', '46435523', 2, '2015-07-24', 'M'),
 	(27, 'JOSE', 'JUSTINO', '', '49468825', 1, '1990-05-10', 'M'),
 	(28, 'JOSE', 'DOMINGUEZ', 'las nalvinas', '48591625', 1, '1990-07-30', 'M'),
-	(29, 'javier', 'de la cruz', 'san juan de lurigancho', '56232214', 2, '1990-08-03', 'M');
+	(29, 'javier', 'de la cruz', 'san juan de lurigancho', '56232214', 2, '1990-08-03', 'M'),
+	(30, 'CRISTIAN', 'SDASDASD', 'LAS FLORES', '755462573', 2, '1996-08-17', 'M'),
+	(31, 'dgjk', 'sgb', 'xbj', '467890779', 2, '2015-08-17', 'M');
 
 -- --------------------------------------------------------
 
@@ -1689,7 +1815,7 @@ MODIFY `id_incidente` bigint(20) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
 -- AUTO_INCREMENT de la tabla `cab_interven`
 --
 ALTER TABLE `cab_interven`
-MODIFY `num_inte` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=61;
+MODIFY `num_inte` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=63;
 --
 -- AUTO_INCREMENT de la tabla `cab_operatividad`
 --
@@ -1714,7 +1840,7 @@ MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=26;
 -- AUTO_INCREMENT de la tabla `tendero`
 --
 ALTER TABLE `tendero`
-MODIFY `id_ten` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=30;
+MODIFY `id_ten` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=32;
 --
 -- Restricciones para tablas volcadas
 --
