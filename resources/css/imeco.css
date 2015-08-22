@@ -115,3 +115,110 @@
 .odisea-btn-pdf:focus, .odisea-btn-pdf:hover{
     background-color: #24ba19;
 }
+
+
+.odisea-border-bajo{
+    display: block;
+    text-align: center;
+    width: 80px;
+    font-size: 0.8em;
+    color: #00a65a;
+    font-weight: bold;
+    border: 1px solid #00a65a;
+    border-radius: 3px;
+}
+.odisea-border-bajo:before{
+    content: 'BAJO';
+}
+
+.odisea-border-moderado{
+    display: block;
+    text-align: center;
+    font-size: 0.8em;
+    width: 80px;
+    font-weight: bold;
+    color: #f39c12;
+    border: 1px solid #f39c12;
+    border-radius: 3px;
+}
+.odisea-border-moderado:before{
+    content: 'MODERADO';
+}
+
+.odisea-border-grave{
+    display: block;
+    text-align: center;
+    font-size: 0.8em;
+    width: 80px;
+    color: #dd4b39;
+    font-weight: bold;
+    border: 1px solid #dd4b39;
+    border-radius: 3px;
+}
+
+.odisea-border-grave:before{
+    content: 'GRAVE';
+}
+
+.odisea-border-critico{
+    display: block;
+    text-align: center;
+    font-size: 0.8em;
+    font-weight: bold;
+    width: 80px;
+    color: black;
+    border: 1px solid black;
+    border-radius: 3px;
+}
+
+.odisea-border-critico:before{
+    content: 'CRITICO';
+}
+
+
+/*SIN CONTENT*/
+
+.odisea-bor-bajo{
+    display: block;
+    text-align: right;
+    width: 30px;
+    font-size: 0.8em;
+    color: #00a65a;
+    font-weight: bold;
+    border: 1px solid #00a65a;
+    border-radius: 3px;
+}
+
+
+.odisea-bor-moderado{
+    display: block;
+    text-align: right;
+    font-size: 0.8em;
+    width: 30px;
+    font-weight: bold;
+    color: #f39c12;
+    border: 1px solid #f39c12;
+    border-radius: 3px;
+}
+
+.odisea-bor-grave{
+    display: block;
+    text-align: right;
+    font-size: 0.8em;
+    width: 30px;
+    color: #dd4b39;
+    font-weight: bold;
+    border: 1px solid #dd4b39;
+    border-radius: 3px;
+}
+
+.odisea-bor-critico{
+    display: block;
+    text-align: right;
+    font-size: 0.8em;
+    font-weight: bold;
+    width: 30px;
+    color: black;
+    border: 1px solid black;
+    border-radius: 3px;
+}

@@ -51,21 +51,21 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <div>
-                        <label class="label label-black  odisea-font">CRITICO [15-mas]</label>
+                        <label class="label label-black  odisea-font">CRITICO [5-mas]</label>
                     </div>
                     <div style="margin-top: 0.5em">
-                        <label class="label label-danger  odisea-font">GRAVE [10-14]</label>
+                        <label class="label label-danger  odisea-font">GRAVE [3-4]</label>
                     </div>
                     <div style="margin-top: 0.5em">
-                        <label class="label label-warning odisea-font">MODERADO [5-9]</label>
+                        <label class="label label-warning odisea-font">MODERADO [2]</label>
                     </div>
                     <div style="margin-top: 0.5em;margin-bottom: 1em">
-                        <label class="label label-success odisea-font">BAJO [0-4]</label>
+                        <label class="label label-success odisea-font">BAJO [0-1]</label>
                     </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-5">
                     <div class="box box-danger">
                         <div class="box-header" style="background: #404040;text-align: center">
                             <img src="resources/img/otros/logo.png" width="150" height="50">
@@ -76,24 +76,26 @@
                                     <thead>
                                     <tr>
                                         <th>Tienda</th>
-                                        <th style="text-align: right">REUBICACION</th>
-                                        <th style="text-align: right">INOPERATIVOS</th>
+                                        <th style="text-align: right">Reubicacion</th>
+                                        <th style="text-align: right">Inoperativos</th>
+                                        <th style="text-align: right">Nivel de Riesgo</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="data in dataAllReuIno">
                                         <td>{{data.tienda}}</td>
                                         <td style="text-align: right">{{data.reubicados}}</td>
-                                        <td style="text-align: right">
-                                                <span class="label"
-                                                      ng-class="{
-                                                  'label-black': data.inoperativo >= 15 ,
-                                                  'label-danger': data.inoperativo >= 10 && data.inoperativo <=14,
-                                                  'label-warning': data.inoperativo >=5 && data.inoperativo <=9,
-                                                  'label-success': data.inoperativo <= 4
-                                                  }">
+                                        <td align="right">
                                                 {{data.inoperativo}}
-                                                </span>
+                                        </td>
+                                        <td align="center" style="vertical-align: middle">
+                                           <span ng-class="{
+                                              'odisea-border-critico': data.inoperativo >= 5 ,
+                                              'odisea-border-grave': data.inoperativo >= 3 && data.inoperativo <=4,
+                                              'odisea-border-moderado': data.inoperativo ==2,
+                                              'odisea-border-bajo': data.inoperativo <=1
+                                              }">
+                                            </span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -102,6 +104,8 @@
                                             <strong>{{total.reubicados}}</strong></td>
                                         <td style="text-align: right;font-size: 1.1em">
                                             <strong>{{total.inoperativos}}</strong></td>
+                                        <td style="text-align: right;font-size: 1.1em">
+                                            <strong></strong></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -126,38 +130,38 @@
                 <div class="box-header" style="background: #404040;text-align: center">
                     <img src="resources/img/otros/logo.png" width="150" height="50">
                 </div>
-                <div class="box-body table-responsive">
-                    <table class="table table-bordered table-striped exportTable2">
-                        <thead>
-                        <tr>
-                            <th>Tienda</th>
-                            <th ng-repeat="p in productos" class="imeco-right"
-                                style="
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped exportTable2">
+                            <thead>
+                            <tr>
+                                <th>Tienda</th>
+                                <th ng-repeat="p in productos" class="imeco-right"
+                                    style="
                                 font-weight: normal;
                                 font-size: 0.8em;
                                 width: 100px;
                                 min-width: 100px;
                                 ">{{p.nombreProducto}}
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="data in dataAll">
-                            <td class="imeco-right" ng-repeat="(key, value) in data">
-                                    <span class="label"
-                                          ng-class="{
-                                                  'label-black': value >= 15 ,
-                                                  'label-danger': value >= 10 && value <=14,
-                                                  'label-warning': value >=5 && value <=9,
-                                                  'label-success': value <= 4,
-                                                  'imeco-label': value.indexOf('C') != -1
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="data in dataAll">
+                                <td align="right" ng-repeat="(key, value) in data">
+                                    <span ng-class="{
+                                                   'odisea-bor-critico': value >= 5 ,
+                                                      'odisea-bor-grave': value >= 3 && value <=4,
+                                                      'odisea-bor-moderado': value ==2,
+                                                      'odisea-bor-bajo': value <=1
                                                   }">
                                                 {{value}}
                                     </span>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="box-footer">
                     <div class="pull-left">
