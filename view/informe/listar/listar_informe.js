@@ -1,16 +1,16 @@
-angular.module('odisea.sensomatizado.listar',
+angular.module('odisea.informe.listar',
     ['ui.router', 'ngAnimate', 'ngResource', 'ui.bootstrap', 'dialogs.main'])
-    .config(function config7($stateProvider) {
-        $stateProvider.state('nosensomatizados', {
-            url: '/nosensomatizados',
+    .config(function config57($stateProvider) {
+        $stateProvider.state('informes', {
+            url: '/informes',
             views: {
                 main: {
-                    templateUrl: 'view/sensomatizado/listar/listar_sensomatizado.html',
-                    controller: 'nosensomatizadosController'
+                    templateUrl: 'view/informe/listar/listar_informe.html',
+                    controller: 'informesController'
                 }
             },
             data: {
-                pageTitle: 'Productos No Sensomatizados'
+                pageTitle: 'Informes'
             }
         });
     })
@@ -81,7 +81,7 @@ angular.module('odisea.sensomatizado.listar',
         }
 
     })
-    .controller('nosensomatizadosController', function (utilFactory, $state, $rootScope, $scope, $log,
+    .controller('informesController', function (utilFactory, $state, $rootScope, $scope, $log,
                                                         $http, $modal, $timeout, sensorService) {
 
         //$scope.pagination = {maxSize: 10, totalItems: 0, currentPage: 1};
@@ -206,29 +206,4 @@ angular.module('odisea.sensomatizado.listar',
             $scope.$broadcast('export-excel', {});
         };
 
-    })
-    .controller('VerSensomatizadoController', function ($log, $http, $scope, $modalInstance, sensorSelect, sensorService) {
-
-        $scope.sensor = sensorSelect;
-        $scope.mirandom = Math.random();
-        $scope.productos = [];
-
-        sensorService.get({
-            accion: 'detalle',
-            id: $scope.sensor.idSensor
-        }).then(function (data) {
-            $log.log(data);
-            if (data.msj == 'OK') {
-                $scope.productos = data.detalle;
-            } else {
-                $log.error("ERROR SENSORSERVICE - DETALLE", data.error);
-            }
-
-        }).catch(function (err) {
-            $log.err("SERVICE DETALLE");
-        });
-
-        $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-        };
     });

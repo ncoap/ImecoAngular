@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-08-2015 a las 00:55:00
+-- Tiempo de generación: 25-08-2015 a las 01:03:39
 -- Versión del servidor: 5.6.21
 -- Versión de PHP: 5.6.3
 
@@ -389,7 +389,8 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `char_operatividad`(
 				IF(c.id_producto = 22,c.cantidad_inoperativo,0) as producto22,
 				IF(c.id_producto = 23,c.cantidad_inoperativo,0) as producto23,
 				IF(c.id_producto = 24,c.cantidad_inoperativo,0) as producto24,
-				IF(c.id_producto = 25,c.cantidad_inoperativo,0) as producto25
+				IF(c.id_producto = 25,c.cantidad_inoperativo,0) as producto25,
+				IF(c.id_producto = 26,c.cantidad_inoperativo,0) as producto26
 			FROM
 				(
 					select
@@ -689,6 +690,50 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_incidente`(
 		END CASE;
 
 
+	END$$
+
+CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_informe`(
+	opcion INT,
+	col_busqueda VARCHAR(500),
+	p_id_informe INT,
+	p_dni varchar(15),
+	p_nombres varchar(150),
+	p_cargo varchar(150),
+	p_asunto varchar(150),
+	p_redaccion varchar(2000)
+)
+	BEGIN
+		CASE opcion
+			WHEN 1 THEN
+			SET @npfx_query = CONCAT(
+					"SELECT
+		            id_informe as id,
+		            dni as dni,
+		            nombres as nombres,
+		            cargo as cargo,
+		            asunto as asunto,
+		            redaccion as redaccion
+		            FROM
+		            informe
+		            WHERE ",col_busqueda);
+			PREPARE not_prefixed FROM @npfx_query;
+			EXECUTE not_prefixed;
+
+			WHEN 2 THEN
+			INSERT INTO informe (dni,nombres,cargo,asunto,redaccion)
+			VALUES (p_dni,p_nombres,p_cargo,p_asunto,p_redaccion);
+
+			WHEN 3 THEN
+			UPDATE informe SET
+				p_dni = dni,
+				p_nombres = nombres,
+				p_cargo = cargo,
+				p_asunto = asunto,
+				p_redaccion = redaccion
+			WHERE id_informe = p_id_informe;
+			WHEN 4 THEN
+			DELETE FROM informe WHERE id_informe = p_id_informe;
+		END CASE;
 	END$$
 
 CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_intervencion`(
@@ -1015,7 +1060,7 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_sensomatizado`(
                   left join det_sensor d
             on c.id_sensor = d.id_sensor
             WHERE ",col_busqueda,"
-            ORDER BY c.fecha_registro DESC LIMIT ",indice,", 10");
+            ORDER BY c.fecha_registro DESC");
 			PREPARE not_prefixed FROM @npfx_query;
 			EXECUTE not_prefixed;
 
@@ -1334,7 +1379,7 @@ CREATE TABLE IF NOT EXISTS `cab_sensor` (
 	`total` double NOT NULL,
 	`observaciones` varchar(600) DEFAULT NULL,
 	`id_tien` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `cab_sensor`
@@ -1348,7 +1393,15 @@ INSERT INTO `cab_sensor` (`id_sensor`, `dni_prev`, `nom_prev`, `fecha_registro`,
 	(7, '46435523', 'JUAN DOMINGUEZ PEREZ', '2015-08-03 16:44:00', 1370.75, 'SIN OBSERVACIONES', 6),
 	(8, '46435523', 'JUAN DOMINGUEZ PEREZ', '2015-08-04 16:38:00', 120, 'SIN OBSERVACIONES', 3),
 	(9, '48592636', 'CARMEN DE LA CRUZ', '2015-08-04 16:42:00', 255, 'SIN OBSERVACIONES', 4),
-	(10, '46435523', 'JUAN DOMINGUEZ PEREZ', '2015-08-08 16:18:00', 110, 'SIN OBSERVACIONES', 6);
+	(10, '46435523', 'JUAN DOMINGUEZ PEREZ', '2015-08-08 16:18:00', 110, 'SIN OBSERVACIONES', 6),
+	(11, '48592632', 'NELSON COQCHI APAZA', '2015-07-28 21:48:00', 250, 'SIN OBSERVACIONES', 11),
+	(12, '46435523', 'JUAN DOMINGUEZ PEREZ', '2015-07-28 21:52:00', 240, 'SIN OBSERVACIONES', 3),
+	(13, '48592636', 'CARMEN DE LA CRUZ', '2015-07-29 00:43:00', 250, 'SIN OBSERVACIONES', 2),
+	(14, '46435523', 'JUAN DOMINGUEZ PEREZ', '2015-07-29 22:00:00', 130, 'SIN OBSERVACIONES', 6),
+	(15, '46435523', 'JUAN DOMINGUEZ PEREZ', '2015-08-03 16:44:00', 1370.75, 'SIN OBSERVACIONES', 6),
+	(16, '46435523', 'JUAN DOMINGUEZ PEREZ', '2015-08-04 16:38:00', 120, 'SIN OBSERVACIONES', 3),
+	(17, '48592636', 'CARMEN DE LA CRUZ', '2015-08-04 16:42:00', 255, 'SIN OBSERVACIONES', 4),
+	(18, '46435523', 'JUAN DOMINGUEZ PEREZ', '2015-08-08 16:18:00', 110, 'SIN OBSERVACIONES', 6);
 
 -- --------------------------------------------------------
 
@@ -1518,6 +1571,21 @@ INSERT INTO `det_sensor` (`id_sensor`, `cod_pro`, `desc_pro`, `mar_pro`, `cant`,
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `informe`
+--
+
+CREATE TABLE IF NOT EXISTS `informe` (
+	`id_informe` int(11) NOT NULL,
+	`dni` varchar(15) NOT NULL,
+	`nombres` varchar(150) NOT NULL,
+	`cargo` varchar(150) NOT NULL,
+	`asunto` varchar(150) NOT NULL,
+	`redaccion` varchar(2000) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `prevencionista`
 --
 
@@ -1547,7 +1615,7 @@ INSERT INTO `prevencionista` (`dni_prev`, `nom_prev`) VALUES
 CREATE TABLE IF NOT EXISTS `producto` (
 	`id_producto` int(11) NOT NULL,
 	`nombre` varchar(100) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `producto`
@@ -1578,7 +1646,8 @@ INSERT INTO `producto` (`id_producto`, `nombre`) VALUES
 	(22, 'GRUPO ELECTRÓGENO'),
 	(23, 'BOMBA CONTRAINCENDIO'),
 	(24, 'AIRE ACONDICIONADO'),
-	(25, 'GABINETE CONTRAINCENDIO');
+	(25, 'GABINETE CONTRAINCENDIO'),
+	(26, 'LUCES DE EMERGENCIA');
 
 -- --------------------------------------------------------
 
@@ -1767,6 +1836,12 @@ ALTER TABLE `det_sensor`
 ADD KEY `fk_det_sensor_cab_sensor_idx` (`id_sensor`);
 
 --
+-- Indices de la tabla `informe`
+--
+ALTER TABLE `informe`
+ADD PRIMARY KEY (`id_informe`);
+
+--
 -- Indices de la tabla `prevencionista`
 --
 ALTER TABLE `prevencionista`
@@ -1825,17 +1900,22 @@ MODIFY `id_operatividad` bigint(20) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 -- AUTO_INCREMENT de la tabla `cab_sensor`
 --
 ALTER TABLE `cab_sensor`
-MODIFY `id_sensor` bigint(20) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
+MODIFY `id_sensor` bigint(20) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=19;
 --
 -- AUTO_INCREMENT de la tabla `det_operatividad`
 --
 ALTER TABLE `det_operatividad`
 MODIFY `id_det_operatividad` bigint(20) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
 --
+-- AUTO_INCREMENT de la tabla `informe`
+--
+ALTER TABLE `informe`
+MODIFY `id_informe` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=26;
+MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=27;
 --
 -- AUTO_INCREMENT de la tabla `tendero`
 --

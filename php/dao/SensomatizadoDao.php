@@ -18,7 +18,7 @@ class SensomatizadoDao {
         $response = array('size'=>0,'sensomatizados'=>array(),'busqueda'=>'');
         $col_busqueda = $this->get_terminos_de_busqueda($terminos);
         $response['busqueda']= $col_busqueda;
-        $response['size'] = $this->get_row_count_cab($col_busqueda);
+//        $response['size'] = $this->get_row_count_cab($col_busqueda);
         $stm = $this->pdo->prepare("CALL sp_sensomatizado(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         $stm->execute(array(1,$col_busqueda,$pagina,0,'','',date('Y-m-d H:i:s'),0,'',0,'','','',0,0));
         $response['sensomatizados'] = $stm->fetchAll(PDO::FETCH_OBJ);

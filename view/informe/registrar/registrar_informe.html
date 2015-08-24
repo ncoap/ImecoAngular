@@ -1,0 +1,133 @@
+<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+        <li id="id-tab-1" class="imeco-tab" ng-class="{'active': tab.tab1 == true}">
+            PASO 1
+        </li>
+        <li id="id-tab-2" class="imeco-tab" ng-class="{'active': tab.tab2 == true}">
+            PASO 2
+        </li>
+        <li id="id-tab-3" class="imeco-tab" ng-class="{'active': tab.tab3 == true}">
+            PASO 3
+        </li>
+    </ul>
+
+    <div class="tab-content" style="overflow:hidden">
+        <!--PASO 1-->
+        <div class="tab-pane" ng-class="{'active': tab.tab1 == true}">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <span class="box-title">Registro de Informe Adicional</span>
+                </div>
+                <div class="box-body">
+                    <form class="form-horizontal" name="nameForm1" enctype="multipart/form-data"
+                          ng-submit="registrarProducto()">
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">Dni<span class="imeco-required">*</span></label>
+                            <div class="col-xs-10">
+                                <input type="text" required ng-model="informe.dni"
+                                       ng-blur="buscarNombrePrevencionista()" maxlength="15"
+                                       ng-pattern="/^[0-9]+$/"
+                                       class="form-control" placeholder="Dni">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">Nombre<span class="imeco-required">*</span></label>
+                            <div class="col-xs-10">
+                                <input type="text" required ng-model="informe.nombres" maxlength="150"
+                                       class="form-control" placeholder="Nombre">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">Cargo<span class="imeco-required"></span></label>
+                            <div class="col-xs-10">
+                                <input type="text" ng-model="informe.cargo" maxlength="150"
+                                       class="form-control" placeholder="Cargo">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">Asunto<span class="imeco-required">*</span></label>
+                            <div class="col-xs-10">
+                                <input type="text" required ng-model="informe.asunto" maxlength="150"
+                                       class="form-control" placeholder="Asunto Principal">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <button class="pull-right btn btn-danger" ng-click="irPaso2()"
+                    ng-disabled="!(nameForm1.$valid)">Siguiente
+            </button>
+        </div>
+        <!-- FIN PASO 1 -->
+
+
+        <!-- PASO 2 -->
+        <div class="tab-pane" ng-class="{'active': tab.tab2 == true}">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title">Redacte Informe Respectivo</h3>
+                </div>
+                <div class="box-body">
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label">Informe</label>
+                        <div class="col-xs-10">
+                                <textarea text-angular class="form-control text-res" rows="15"
+                                          maxlength="2000" ng-trim='false'
+                                          ng-model="informe.redaccion"
+                                          style="resize: none">
+                                </textarea>
+                                <span class="label label-info">
+                                    {{2000 - informe.redaccion.length}}
+                                    Caracteres Restantes
+                                </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <button class="pull-left btn btn-danger" ng-click="irPaso1()">Atrás</button>
+                <button class="pull-right btn btn-danger" ng-click="irPaso3()">Siguiente</button>
+            </div>
+
+        </div>
+        <!--FIN PASO 2-->
+
+        <!--PASO 3 PASO 3 PASO 3 PASO 3-->
+        <div class="tab-pane" ng-class="{'active': tab.tab3 == true}">
+            <div class="row">
+                <div class="col-sm-7">
+                    <form name="modelito" class="form-horizontal" enctype="multipart/form-data">
+                        <div class="col-sm-7">
+                            <div class="form-group">
+                                <div>
+                                    <label>Cargar Foto</label>
+                                </div>
+                                <img ng-src="{{image}}" width="300px" height="300px" class="img-rounded">
+                            </div>
+                            <div class="form-group">
+                                <input my-upload type="file" ng-model="document" file-model="myFile" valid-file
+                                       required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+            <div>
+                <button ng-click="irPaso2()" class="pull-left btn btn-danger">Atrás</button>
+                <button ng-click="SaveAll()" ng-disabled="!(modelito.$valid && !isUpload)"
+                        class="pull-right btn btn-primary btn-lg">
+                    Registrar Informe Adicional
+                </button>
+            </div>
+        </div>
+        <!--FIN PASO 3-->
+    </div>
+</div>

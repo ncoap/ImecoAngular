@@ -16,6 +16,9 @@ angular.module('ngOdisea', [
     'odisea.sensomatizado.listar',
     'odisea.sensomatizado.actualizar',
     'odisea.sensomatizado.grafsensomatizado',
+    'odisea.informe.registrar',
+    'odisea.informe.listar',
+    'odisea.informe.actualizar',
     'odisea.incidente.listar',
     'odisea.incidente.registrar',
     'odisea.incidente.actualizar',
@@ -78,10 +81,10 @@ angular.module('ngOdisea', [
             //visualizacion y reportes
             //solo visualizacion
             $scope.urls = {
-                'ADMINISTRADOR' : ['home','intervencion', 'intervencionup', 'intervenciones', 'consolidado', 'ejecutivo', 'incidente', 'incidenteup', 'incidentes', 'grafincidente', 'operatividad', 'grafoperatividad', 'nosensomatizado', 'nosensomatizadoup', 'nosensomatizados', 'grafsensomatizado'],
-                'JEFE DE ODISEA' : ['home','intervencion', 'incidente', 'nosensomatizado'],
-                'GERENTE DE PREVENCION' : ['home','intervenciones', 'consolidado', 'ejecutivo', 'incidentes', 'grafincidente', 'grafoperatividad', 'nosensomatizados', 'grafsensomatizado'],
-                'JEFE DE PREVENCION' : ['home','intervenciones', 'incidentes', 'nosensomatizados']
+                'ADMINISTRADOR' : ['home','intervencion', 'intervencionup', 'intervenciones', 'consolidado', 'ejecutivo', 'incidente', 'incidenteup', 'incidentes', 'grafincidente', 'operatividad', 'grafoperatividad', 'nosensomatizado', 'nosensomatizadoup', 'nosensomatizados', 'grafsensomatizado','informe','informes','informeup'],
+                'JEFE DE ODISEA' : ['home','intervencion', 'incidente', 'nosensomatizado','informe'],
+                'GERENTE DE PREVENCION' : ['home','intervenciones', 'consolidado', 'ejecutivo', 'incidentes', 'grafincidente', 'grafoperatividad', 'nosensomatizados', 'grafsensomatizado','informes'],
+                'JEFE DE PREVENCION' : ['home','intervenciones', 'incidentes', 'nosensomatizados','informes']
             };
 
             $scope.permisos = {
@@ -106,6 +109,7 @@ angular.module('ngOdisea', [
             };
 
             $scope.logout = function(){
+                utilFactory.removeRol();
                 window.location.href = "index.html";
             };
 

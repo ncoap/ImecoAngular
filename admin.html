@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="resources/assets/xeditable/css/xeditable.css"/>
     <link rel="stylesheet" href="resources/assets/dialog/dialogs.min.css"/>
     <link rel="stylesheet" href="resources/css/imeco.css"/>
+    <link rel="shortcut icon" type="image/x-icon" href="resources/iconos/icon.png">
 </head>
 
 <body class="skin-red sidebar-mini">
@@ -92,6 +93,13 @@
                         <li ng-show="permisos.admin_gerente()"><a href="#grafsensomatizado"><i class="fa fa-pie-chart text-lime"></i><span class="text-white">Gráfica por Mes</span></a></li>
                     </ul>
                 </li>
+                <li class="treeview">
+                    <a href=""><i class='fa fa-file-word-o'></i><span>INFORME ADICIONAL</span><i class="fa fa-angle-left pull-right"></i></a>
+                    <ul class="treeview-menu">
+                        <li ng-show="permisos.admin_odisea()"><a href="#informe"><i class="fa fa-save text-red"></i><span class="text-white">Registrar Informe</span></a></li>
+                        <li ng-show="!permisos.odisea()"><a href="#informes"><i class="fa fa-file-text text-aqua"></i><span class="text-white">Visualizar Registros</span></a></li>
+                    </ul>
+                </li>
                 <li class="header">
                     <center><img src="resources/img/otros/logo.png" width="90%"></center>
                 </li>
@@ -161,6 +169,11 @@
 <script src="view/sensomatizado/reporte/reporte_sensomatizado.js"></script>
 <script src="view/sensomatizado/registrar/registrar_sensomatizado.js"></script>
 <script src="view/sensomatizado/actualizar/actualizar_sensomatizado.js"></script>
+
+<script src="view/informe/listar/listar_informe.js"></script>
+<script src="view/informe/registrar/registrar_informe.js"></script>
+<script src="view/informe/actualizar/actualizar_informe.js"></script>
+
 <script src="view/incidente/listar/listar_incidente.js"></script>
 <script src="view/incidente/registrar/registrar_incidente.js"></script>
 <script src="view/incidente/actualizar/actualizar_incidente.js"></script>
