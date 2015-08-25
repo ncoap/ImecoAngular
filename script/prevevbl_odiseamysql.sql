@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.11
+-- version 4.2.7.1
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-08-2015 a las 01:03:39
--- Versión del servidor: 5.6.21
--- Versión de PHP: 5.6.3
+-- Tiempo de generación: 25-08-2015 a las 06:43:21
+-- Versión del servidor: 5.6.19
+-- Versión de PHP: 5.5.15
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -700,7 +700,7 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_informe`(
 	p_nombres varchar(150),
 	p_cargo varchar(150),
 	p_asunto varchar(150),
-	p_redaccion varchar(2000)
+	p_redaccion TEXT
 )
 	BEGIN
 		CASE opcion
@@ -714,14 +714,15 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_informe`(
 		            asunto as asunto,
 		            redaccion as redaccion
 		            FROM
-		            informe
-		            WHERE ",col_busqueda);
+		            informe WHERE ",col_busqueda);
 			PREPARE not_prefixed FROM @npfx_query;
 			EXECUTE not_prefixed;
 
 			WHEN 2 THEN
 			INSERT INTO informe (dni,nombres,cargo,asunto,redaccion)
 			VALUES (p_dni,p_nombres,p_cargo,p_asunto,p_redaccion);
+
+			SELECT LAST_INSERT_ID() AS newid;
 
 			WHEN 3 THEN
 			UPDATE informe SET
@@ -1260,7 +1261,7 @@ CREATE TABLE IF NOT EXISTS `cab_incidente` (
 	`lesion` varchar(30) NOT NULL COMMENT 'INCAPACIDAD TEMPORAL\nINCAPACIDAD PERMANENTE',
 	`acciones_correctivas_realizadas` varchar(500) NOT NULL,
 	`total` double NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
 
 --
 -- Volcado de datos para la tabla `cab_incidente`
@@ -1298,7 +1299,7 @@ CREATE TABLE IF NOT EXISTS `cab_interven` (
 	`id_tien` int(11) NOT NULL,
 	`total_recuperado` double NOT NULL DEFAULT '0',
 	`tipo_hurto` char(1) NOT NULL DEFAULT '1' COMMENT '1 INTERNO\n2 EXTERNO'
-) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=63 ;
 
 --
 -- Volcado de datos para la tabla `cab_interven`
@@ -1356,7 +1357,7 @@ CREATE TABLE IF NOT EXISTS `cab_operatividad` (
 	`id_operatividad` bigint(20) NOT NULL,
 	`fecha_registro` date NOT NULL,
 	`estado` varchar(10) NOT NULL DEFAULT 'EN PROCESO' COMMENT 'REGISTRADO'
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='CONSOLIDADO DE CHECK LIST GENERAL DE OPERATIVIDAD TIENDAS OECHSLE';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='CONSOLIDADO DE CHECK LIST GENERAL DE OPERATIVIDAD TIENDAS OECHSLE' AUTO_INCREMENT=2 ;
 
 --
 -- Volcado de datos para la tabla `cab_operatividad`
@@ -1379,7 +1380,7 @@ CREATE TABLE IF NOT EXISTS `cab_sensor` (
 	`total` double NOT NULL,
 	`observaciones` varchar(600) DEFAULT NULL,
 	`id_tien` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=19 ;
 
 --
 -- Volcado de datos para la tabla `cab_sensor`
@@ -1523,7 +1524,7 @@ CREATE TABLE IF NOT EXISTS `det_operatividad` (
 	`cantidad_reubicacion` int(11) NOT NULL,
 	`otros` varchar(250) DEFAULT NULL,
 	`observaciones` varchar(500) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
 
 --
 -- Volcado de datos para la tabla `det_operatividad`
@@ -1580,8 +1581,18 @@ CREATE TABLE IF NOT EXISTS `informe` (
 	`nombres` varchar(150) NOT NULL,
 	`cargo` varchar(150) NOT NULL,
 	`asunto` varchar(150) NOT NULL,
-	`redaccion` varchar(2000) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+	`redaccion` text NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+
+--
+-- Volcado de datos para la tabla `informe`
+--
+
+INSERT INTO `informe` (`id_informe`, `dni`, `nombres`, `cargo`, `asunto`, `redaccion`) VALUES
+	(1, '48592615', 'MONTES ALEJANDRO', 'adminstrador', 'SIN ASUNTO', 'MI REDACCION'),
+	(2, '96584732', 'DONAIRE RICARDO', 'jefe', 'SEGURIDAD', 'MI REDACCION 1'),
+	(4, '46435523', 'Administracion', 'asdas', 'asdasdasd', '<p>Administracion de Empresas</p><ul><li>Soledad</li><li>Entusiasta</li><li>Enloque</li></ul><p><b>BARRACUDA</b></p>'),
+	(5, '59625532', 'asdasdasd', 'sadasd', 'aasdasdasd', 'REDACTE...<ol><li>asdas</li><li>asdasd</li><li>dfgdfg</li><li>dfgdf</li></ol>');
 
 -- --------------------------------------------------------
 
@@ -1615,7 +1626,7 @@ INSERT INTO `prevencionista` (`dni_prev`, `nom_prev`) VALUES
 CREATE TABLE IF NOT EXISTS `producto` (
 	`id_producto` int(11) NOT NULL,
 	`nombre` varchar(100) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=27 ;
 
 --
 -- Volcado de datos para la tabla `producto`
@@ -1687,7 +1698,7 @@ CREATE TABLE IF NOT EXISTS `tendero` (
 	`id_tip_ten` int(11) NOT NULL,
 	`fec_nac` date NOT NULL,
 	`sexo` char(1) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=32 ;
 
 --
 -- Volcado de datos para la tabla `tendero`
@@ -1910,7 +1921,7 @@ MODIFY `id_det_operatividad` bigint(20) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1
 -- AUTO_INCREMENT de la tabla `informe`
 --
 ALTER TABLE `informe`
-MODIFY `id_informe` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `id_informe` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT de la tabla `producto`
 --
