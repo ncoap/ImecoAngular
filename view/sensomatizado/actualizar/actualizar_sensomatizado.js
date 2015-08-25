@@ -180,7 +180,7 @@ angular.module('odisea.sensomatizado.actualizar',
                             } else {
                                 var noty = dialogs.notify("Mensaje", "PRODUCTO ACTUALIZADO CON EXITO");
                                 noty.result.then(function () {
-                                    $window.location.reload();
+                                    $state.go('nosensomatizados');
                                 });
                             }
                         }else{
@@ -209,13 +209,13 @@ angular.module('odisea.sensomatizado.actualizar',
                     if (data.msj == 'OK') {
                         var noty = dialogs.notify("Mensaje", "PRODUCTO ACTUALIZADO CON EXITO");
                         noty.result.then(function () {
-                            $window.location.reload();
+                            $state.go('nosensomatizados');
                         });
                     } else {
                         var d_error = dialogs.error("Error Subir Imagen", "Producto Actualizado, pero no la Imagen:" +
                             data.info);
                         d_error.result.then(function () {
-                            $window.location.reload();
+                            $state.go('nosensomatizados');
                         });
                     }
                 }).error(function (err, status, headers, config) {
@@ -224,7 +224,7 @@ angular.module('odisea.sensomatizado.actualizar',
                 });
             };
         }else{
-            $state.go('home');
+            $state.go('nosensomatizados');
         }
     });
 

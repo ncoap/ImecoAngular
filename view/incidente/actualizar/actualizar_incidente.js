@@ -172,7 +172,7 @@ angular.module('odisea.incidente.actualizar',
                             } else {
                                 var noty = dialogs.error("ACTUALIZAR", "Se actualizó el incidente");
                                 noty.result.then(function () {
-                                    $window.location.reload();
+                                    $state.go('incidentes');
                                 });
                             }
                         }
@@ -195,12 +195,12 @@ angular.module('odisea.incidente.actualizar',
                         $rootScope.$broadcast('dialogs.wait.complete');
                         var noty = dialogs.error("ACTUALIZAR", "Se actualizó el incidente");
                         noty.result.then(function () {
-                            $window.location.reload();
+                            $state.go('incidentes');
                         });
                     } else {
                         var noty = dialogs.error("IMAGEN", "Se actualizó el incidente, pero no la imagen");
                         noty.result.then(function () {
-                            $window.location.reload();
+                            $state.go('incidentes');
                         });
                     }
                 }).error(function (err) {
@@ -208,7 +208,7 @@ angular.module('odisea.incidente.actualizar',
                 });
             };
         }else{
-            $state.go('home');
+            $state.go('incidentes');
         }
     });
 

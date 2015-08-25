@@ -211,13 +211,14 @@ angular.module('odisea.intervencion.actualizar',
                                 $rootScope.$broadcast('dialogs.wait.complete');
                                 var noty = dialogs.notify("Mensaje", "INTERVENCION ACTUALIZADA CON EXITO");
                                 noty.result.then(function () {
-                                    $window.location.reload();
+                                    $state.go('intervenciones');
                                 });
                             }
                         } else {
                             dialogs.error("Actualizar Intervención", "No se actualizó la Intervención, " +
                                 "Verifique sus Datos:");
                             $scope.isUpload = false;
+                            $state.go('intervenciones');
                         }
                     })
                     .error(function (data) {
@@ -245,6 +246,7 @@ angular.module('odisea.intervencion.actualizar',
                         var noty = dialogs.notify("Imagen", "Datos Actualizados, pero NO se Cargo la Imagen " + data.mensaje);
                         noty.result.then(function () {
                             $scope.isUpload = false;
+                            $state.go('intervenciones');
                         });
                     }
                 }).error(function (data) {
@@ -304,6 +306,6 @@ angular.module('odisea.intervencion.actualizar',
                 }
             };
         }else{
-            $state.go('home');
+            $state.go('intervenciones');
         }
     });
