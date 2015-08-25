@@ -1,0 +1,23 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()"
+            data-dismiss="modal" aria-hidden="true">&times;
+    </button>
+    <h4>Detalle</h4>
+</div>
+
+<div class="modal-body">
+    <div class="imeco-center">
+        <img ng-src="view/imagen_informe/{{informe.id}}.jpg?random={{mirandom}}"
+             style="height:100px; width:100px;" err-src='view/imagen_informe/default.png' >
+    </div>
+
+    <div class="box box-primary">
+        <div class="box-header">
+            <span class="box-title text-light-blue">Redaccion de Informe</span>
+        </div>
+        <div class="box-body" style="padding: 0.5em">
+            <div ng-bind-html="informe.redaccion"></div>
+        </div>
+    </div>
+
+</div>

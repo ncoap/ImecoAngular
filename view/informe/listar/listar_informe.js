@@ -43,13 +43,13 @@ angular.module('odisea.informe.listar',
             link: link
         }
     })
-    .service('sensorService', function ($http, $q) {
+    .service('informeService', function ($http, $q) {
 
         function get(params) {
             var defered = $q.defer();
             var promise = defered.promise;
 
-            $http.get('php/controller/SensomatizadoControllerGet.php', {
+            $http.get('php/controller/InformeControllerGet.php', {
                 params: params
             }).success(function (data) {
                 defered.resolve(data);
@@ -63,7 +63,7 @@ angular.module('odisea.informe.listar',
         function post(postData) {
             var defered = $q.defer();
             var promise = defered.promise;
-            $http.post('php/controller/SensomatizadoControllerPost.php', postData)
+            $http.post('php/controller/InformeControllerPost.php', postData)
                 .success(function (data) {
                     defered.resolve(data);
                 })
@@ -82,103 +82,52 @@ angular.module('odisea.informe.listar',
 
     })
     .controller('informesController', function (utilFactory, $state, $rootScope, $scope, $log,
-                                                        $http, $modal, $timeout, sensorService) {
+                                                        $http, $modal, informeService) {
 
-        //$scope.pagination = {maxSize: 10, totalItems: 0, currentPage: 1};
         $scope.isCollapsed = false;
-        $scope.sensomatizados = [];
+        $scope.informes = [];
 
         //Cual es el valor de cada termino de búsqueda
         $scope.termSearch = {
-            tienda: undefined,
-            nombre: '',
+            nombres: '',
             dni: '',
-            fechaInicial: utilFactory.dateDefault.ini,
-            fechaFinal: new Date(),
-            horario: '00:00:00 23:59:59'
+            cargo:'',
+            asunto:''
         };
 
         $scope.listar = function () {
-            //$scope.pagination.currentPage = 1;
-
-            if (!$scope.termSearch.tienda) {
-                $scope.termSearch.tienda = '0';
-            }
-            $scope.pageChanged();
-        };
-
-        $scope.pageChanged = function () {
-            sensorService.get({
+            informeService.get({
                 accion: 'multiple',
-                pagina: 0,
                 terminos: JSON.stringify($scope.termSearch)
             }).then(function (data) {
                 $log.info("SERVICE - MULTIPLE => ", data);
-                //$scope.pagination.totalItems = data.size;
-                $scope.sensomatizados = data.sensomatizados;
+                $scope.informes = data.informes;
             }).catch(function (err) {
                 $log.error("SERVICE - MULTIPLE =>", err);
             });
         };
 
-        $scope.consultar = function () {
-            $log.info("Termino de Búsqueda: ");
-            $log.info($scope.termSearch);
-            $scope.listar();
-        };
+        $scope.actualizar = function (informe) {
 
-        $scope.actualizar = function (sensor) {
+            $log.log(informe);
+            $state.go('informeup');
 
-            $log.log(sensor);
-
-            var producto = {
-                idSensor: sensor.idSensor,
-                dniPrevencionista: sensor.dniPrevencionista,
-                nombrePrevencionista: sensor.nombrePrevencionista,
-                tienda: {
-                    idTienda: sensor.idTienda,
-                    nombreTienda: sensor.nombreTienda
-                },
-                fecha: utilFactory.getDateTimeFromString(sensor.fechaCompleta),
-                observaciones: sensor.observaciones,
-                total: sensor.total
-            };
-
-            sensorService.get({
-                accion: 'detalle',
-                id: sensor.idSensor
-            }).then(function (data) {
-                $log.log(data);
-                if (data.msj == 'OK') {
-                    $rootScope.sensorSeleccionado = {
-                        sensomatizado: producto,
-                        productos: data.detalle
-                    };
-                    $log.log("FROM LISTA ACTUALIZAR ", $rootScope.sensorSeleccionado);
-                    $state.go('nosensomatizadoup');
-                } else {
-                    $log.error("ERROR SENSORSERVICE - DETALLE", data.error);
-                }
-
-            }).catch(function (err) {
-                $log.err("SERVICE DETALLE");
-            });
         };
 
         $scope.eliminar = function (id) {
-            var a = confirm("¿Desea Eliminar El Registro y Detalle?");
+            var a = confirm("¿Desea Eliminar El Registro?");
             if (a) {
-                sensorService.post({
+                informeService.post({
                     accion: 'eliminar',
                     data: {
                         id: id
                     }
                 }).then(function (data) {
                     if (data.msj == 'OK') {
-                        alert("Producto No Sensomatizado Eliminado");
+                        alert("Informe Eliminado");
                         $scope.listar();
                     } else {
-                        alert("No se pudo Eliminar el Producto");
+                        alert("No se pudo Eliminar el Informe");
                         $log.log("ADMIN ", data);
                     }
                 }).catch(function (err) {
@@ -189,14 +138,14 @@ angular.module('odisea.informe.listar',
 
         $scope.listar();
 
-        $scope.showModalVer = function (sensorSelect) {
+        $scope.showModalVer = function (informeSelect) {
             var modalInstance = $modal.open({
-                templateUrl: 'view/sensomatizado/listar/detalle_sensomatizado.html',
-                controller: 'VerSensomatizadoController',
-                size: 'sm',
+                templateUrl: 'view/informe/listar/detalle_informe.html',
+                controller: 'VerInformeController',
+                size: 'lg',
                 resolve: {
-                    sensorSelect: function () {
-                        return sensorSelect;
+                    informeSelect: function () {
+                        return informeSelect;
                     }
                 }
             });
@@ -206,4 +155,13 @@ angular.module('odisea.informe.listar',
             $scope.$broadcast('export-excel', {});
         };
 
+    })
+    .controller('VerInformeController', function ($log, $http, $scope, $modalInstance, informeSelect) {
+
+        $scope.informe = informeSelect;
+        $scope.mirandom = Math.random();
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
     });

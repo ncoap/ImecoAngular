@@ -24,9 +24,10 @@
 
                         <div class="form-group">
                             <label class="col-xs-2 control-label">Dni<span class="imeco-required">*</span></label>
+
                             <div class="col-xs-10">
                                 <input type="text" required ng-model="informe.dni"
-                                       ng-blur="buscarNombrePrevencionista()" maxlength="15"
+                                       ng-blur="buscarNombre()" maxlength="15"
                                        ng-pattern="/^[0-9]+$/"
                                        class="form-control" placeholder="Dni">
                             </div>
@@ -34,6 +35,7 @@
 
                         <div class="form-group">
                             <label class="col-xs-2 control-label">Nombre<span class="imeco-required">*</span></label>
+
                             <div class="col-xs-10">
                                 <input type="text" required ng-model="informe.nombres" maxlength="150"
                                        class="form-control" placeholder="Nombre">
@@ -42,6 +44,7 @@
 
                         <div class="form-group">
                             <label class="col-xs-2 control-label">Cargo<span class="imeco-required"></span></label>
+
                             <div class="col-xs-10">
                                 <input type="text" ng-model="informe.cargo" maxlength="150"
                                        class="form-control" placeholder="Cargo">
@@ -50,6 +53,7 @@
 
                         <div class="form-group">
                             <label class="col-xs-2 control-label">Asunto<span class="imeco-required">*</span></label>
+
                             <div class="col-xs-10">
                                 <input type="text" required ng-model="informe.asunto" maxlength="150"
                                        class="form-control" placeholder="Asunto Principal">
@@ -73,19 +77,8 @@
                     <h3 class="box-title">Redacte Informe Respectivo</h3>
                 </div>
                 <div class="box-body">
-                    <div class="form-group">
-                        <label class="col-xs-2 control-label">Informe</label>
-                        <div class="col-xs-10">
-                                <textarea text-angular class="form-control text-res" rows="15"
-                                          maxlength="2000" ng-trim='false'
-                                          ng-model="informe.redaccion"
-                                          style="resize: none">
-                                </textarea>
-                                <span class="label label-info">
-                                    {{2000 - informe.redaccion.length}}
-                                    Caracteres Restantes
-                                </span>
-                        </div>
+                    <div text-angular="text-angular" ng-trim='false' name="htmlcontent"
+                         ng-model="informe.redaccion">
                     </div>
                 </div>
             </div>

@@ -7,61 +7,32 @@
            ng-click="isCollapsed = !isCollapsed"></i>
     </div>
     <div class="panel-body">
-        <form name="nameFormSearch" ng-submit="consultar()" class="form-horizontal" collapse="isCollapsed">
+        <form name="nameFormSearch" ng-submit="listar()" class="form-horizontal" collapse="isCollapsed">
             <div class="row">
-                <label class="control-label col-md-1">Tienda:</label>
-                <div  class="col-md-3" style="margin-bottom: 1em">
-                    <select class="form-control" ng-model="termSearch.tienda"
-                            ng-options="ti.nombreTienda for ti in tiendas track by ti.idTienda">
-                        <option value="">TODAS LAS TIENDAS</option>
-                    </select>
-                </div>
 
-                <label class="control-label col-md-1">DNI:</label>
+                <label class="control-label col-md-1">Dni:</label>
                 <div class="col-md-3" style="margin-bottom: 1em">
-                    <input  type="text" ng-model="termSearch.dni"
-                            ng-maxlength="15" maxlength="15"
+                    <input  type="text" ng-model="termSearch.dni" maxlength="15"
                             class="form-control"
-                            placeholder="DNI del Prevencionista">
+                            placeholder="Dni">
                 </div>
 
-                <label class="control-label col-md-1">Nombre:</label>
+                <label class="control-label col-md-1">Nombres:</label>
                 <div class="col-md-3" style="margin-bottom: 1em">
                     <input type="text" ng-model="termSearch.nombre" class="form-control"
-                           placeholder="Nombre del Prevencionista">
+                           placeholder="Nombres">
                 </div>
 
 
-                <label class="control-label col-md-1">Fecha:</label>
+                <label class="control-label col-md-1">Cargo:</label>
                 <div class="col-md-3" style="margin-bottom: 1em">
-                    <input type="date"
-                           ng-model="termSearch.fechaInicial"
-                           class="form-control" style="margin-bottom: 1em" required/>
-                    <input type="date"
-                           ng-model="termSearch.fechaFinal"
-                           class="form-control" style="margin-bottom: 1em" required/>
+                    <input  type="text" ng-model="termSearch.cargo" maxlength="150"
+                            class="form-control">
                 </div>
 
-                <label class="control-label col-md-1">Rango:</label>
+                <label class="control-label col-md-1">Asunto:</label>
                 <div class="col-md-3" style="margin-bottom: 1em">
-                    <div>
-                        <input type="radio" name="horario" value="00:00:00 23:59:59" ng-model="termSearch.horario">
-                        TODOS
-                    </div>
-                    <div>
-                        <input type="radio" name="horario" value="09:00:00 12:00:00" ng-model="termSearch.horario">
-                        09:00 a 12:00
-                        <input style="margin-left: 2em" type="radio" name="horario"
-                               value="12:00:00 17:00:00" ng-model="busqueda.horario">
-                        12:00 a 17:00
-                    </div>
-                    <div>
-                        <input type="radio" name="horario" value="17:00:00 22:00:00" ng-model="termSearch.horario">
-                        17:00 a 22:00
-                        <input style="margin-left: 2em" type="radio" name="horario"
-                               value="22:00:00 09:00:00" ng-model="termSearch.horario">
-                        22:00 a 09:00
-                    </div>
+                    <input type="text" ng-model="termSearch.asunto" class="form-control" maxlength="150">
                 </div>
 
             </div>
@@ -74,51 +45,37 @@
 </div>
 <div class="box box-primary">
     <div class="box-header">
-        <h3 class="box-title">Productos No Sensomatizados</h3>
+        <h3 class="box-title">Informes Adicionales</h3>
     </div>
     <div class="box-body">
-        <div class="table-responsive" style="height: 500px">
+        <div class="table-responsive" style="height: 400px">
             <table class="table table-bordered table-striped exportTable">
                 <thead>
                 <tr>
-                    <th>Tienda</th>
-                    <th>Prevencionista</th>
-                    <th>Hora</th>
-                    <th>Dia</th>
-                    <th>Fecha</th>
-                    <th>Codigo</th>
-                    <th>Producto</th>
-                    <th>Marca</th>
-                    <th class="imeco-right">Cantidad</th>
-                    <th class="imeco-right">Precio. Uni S/.</th>
-                    <th class="imeco-right">Total S/.</th>
-                    <th style="text-align: center">Acciones</th>
+                    <th>Dni</th>
+                    <th>Apellidos y Nombres</th>
+                    <th>Cargo</th>
+                    <th>Asunto</th>
+                    <th class="imeco-center">Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="sensor in sensomatizados">
-                    <td>{{sensor.nombreTienda}}</td>
-                    <td>{{sensor.nombrePrevencionista}}</td>
-                    <td>{{sensor.horaIntervencion}}</td>
-                    <td>{{sensor.diaIntervencion}}</td>
-                    <td>{{sensor.fecha}}</td>
-                    <td>{{sensor.codigoProducto}}</td>
-                    <td>{{sensor.descripcionProducto}}</td>
-                    <td>{{sensor.marcaProducto}}</td>
-                    <td class="imeco-right">{{sensor.cantidadProducto}}</td>
-                    <td class="imeco-right">{{sensor.precioProducto | currency:''}}</td>
-                    <td class="imeco-right">{{sensor.totalProducto | currency:''}}</td>
+                <tr ng-repeat="informe in informes">
+                    <td>{{informe.dni}}</td>
+                    <td>{{informe.nombres}}</td>
+                    <td>{{informe.cargo}}</td>
+                    <td>{{informe.asunto}}</td>
                     <td style="text-align: center">
-                        <img style="cursor: pointer" src="resources/iconos/Info-24.png" ng-click="showModalVer(sensor)" title="Detalle">
-                        <img ng-show="permisos.admin()"  style="cursor: pointer" src="resources/iconos/Ok-24.png" ng-click="actualizar(sensor)" title="Actualizar">
-                        <img ng-show="permisos.admin()"  style="cursor: pointer" src="resources/iconos/Cancel-24.png" ng-click="eliminar(sensor.id)"
-                             title="Eliminar {{sensor.idSensor}}">
+                        <img style="cursor: pointer" src="resources/iconos/Info-24.png" ng-click="showModalVer(informe)" title="Detalle">
+                        <img ng-show="permisos.admin()"  style="cursor: pointer" src="resources/iconos/Ok-24.png" ng-click="actualizar(informe)" title="Actualizar">
+                        <img ng-show="permisos.admin()"  style="cursor: pointer" src="resources/iconos/Cancel-24.png" ng-click="eliminar(informe.id)"
+                             title="Eliminar {{informe.id}}">
                     </td>
                 </tr>
                 </tbody>
             </table>
             <div>
-                <label class="label label-warning" ng-if="sensomatizados.length == 0">0 Registros</label>
+                <label class="label label-warning" ng-if="informes.length == 0">0 Registros</label>
             </div>
         </div>
     </div>

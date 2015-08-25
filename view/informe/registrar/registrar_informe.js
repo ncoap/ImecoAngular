@@ -82,18 +82,18 @@ angular.module('odisea.informe.registrar',
             $scope.tab = {tab1: false, tab2: false, tab3: true};
         };
 
-        $scope.isSaved = false;
+        $scope.isUpload = false;
 
         $scope.informe = {
             dni: '',
             nombres: '',
             cargo: '',
             asunto: '',
-            redaccion: 'REDACTE...'
+            redaccion: ''
         };
 
-        $scope.buscarNombrePrevencionista = function () {
-            $http.get('php/controller/SensomatizadoControllerGet.php', {
+        $scope.buscarNombre = function () {
+           /* $http.get('php/controller/SensomatizadoControllerGet.php', {
                 params: {
                     accion: 'get_name_prevencionista_by_dni',
                     dni: $scope.sensomatizado.dniPrevencionista
@@ -107,40 +107,41 @@ angular.module('odisea.informe.registrar',
                 }
             }).error(function (data, status, headers, config) {
                 console.log("Error");
-            });
+            });*/
         };
 
         $scope.SaveAll = function () {
 
-            var dlg = dialogs.confirm('Confirmar', 'DESEA REGISTRAR EL PRODUCTO?');
+            var dlg = dialogs.confirm('Confirmar', 'DESEA REGISTRAR EL INFORME?');
             dlg.result.then(
                 function (btn) {
+
                     $scope.isUpload = true;
                     var postData = {
                         accion: 'registrar',
                         data: {
-                            sensomatizado: $scope.sensomatizado,
-                            productos: JSON.stringify($scope.productos)
+                            informe: $scope.informe
                         }
                     };
-                    dialogs.wait("Procesando...", "Registrando Intervencion", 100);
+
+                    dialogs.wait("Procesando...", "Registrando Informe", 100);
                     $rootScope.$broadcast('dialogs.wait.progress', {'progress': 100});
 
-                    $http.post('php/controller/SensomatizadoControllerPost.php', postData)
+                    $http.post('php/controller/InformeControllerPost.php', postData)
                         .success(function (data) {
                             $log.log(data);
                             if (data.msj == 'OK') {
                                 $scope.loadImage(data.id);
                             }else{
                                 $rootScope.$broadcast('dialogs.wait.complete');
-                                dialogs.error("Registro", "No se registro el Producto, " +
+                                dialogs.error("Registro", "No se registro el Informe, " +
                                     "Verifique sus Datos o Conexion:");
                                 $scope.isUpload = false;
                             }
                         })
                         .error(function (err) {
                             $rootScope.$broadcast('dialogs.wait.complete');
-                            dialogs.error("ERROR SERVIDOR", data);
+                            dialogs.error("ERROR SERVIDOR InformeControllerPost", data);
                         });
                 },
                 function (btn) {
@@ -154,17 +155,17 @@ angular.module('odisea.informe.registrar',
             fd.append('file', file);
             fd.append('nombre', id);
 
-            $http.post('php/controller/SensomatizadoControllerLoad.php', fd, {
+            $http.post('php/controller/InformeControllerLoad.php', fd, {
                 headers: {'Content-Type': undefined}
             }).success(function (data) {
                 $rootScope.$broadcast('dialogs.wait.complete');
                 if(data.msj == 'OK'){
-                    var noty = dialogs.notify("Mensaje", "PRODUCTO REGISTRADO CON EXITO");
+                    var noty = dialogs.notify("Mensaje", "INFORME REGISTRADO CON EXITO");
                     noty.result.then(function () {
                         $window.location.reload();
                     });
                 }else{
-                    var d_error = dialogs.error("Error Subir Imagen", "Producto Registrado pero no la Imagen:" +
+                    var d_error = dialogs.error("Error Subir Imagen", "Informe Registrado pero no la Imagen:" +
                         data.info);
                     d_error.result.then(function () {
                         $window.location.reload();
@@ -172,7 +173,7 @@ angular.module('odisea.informe.registrar',
                 }
             }).error(function (data) {
                 $rootScope.$broadcast('dialogs.wait.complete');
-                dialogs.error("ERROR SERVIDOR", data);
+                dialogs.error("ERROR SERVIDOR InformeControllerLoad", data);
             });
         };
 
