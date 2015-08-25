@@ -63,27 +63,19 @@ angular.module('odisea.informe.actualizar',
         };
     }])
 
-    .controller('nosensomatizadoupController', function (utilFactory, $state, $rootScope, $window, $scope, $log, $http, $modal, $timeout, dialogs) {
+    .controller('informeupController', function (utilFactory, $state, $rootScope, $window, $scope, $log, $http, $modal, $timeout, dialogs) {
 
-        if ($rootScope.sensorSeleccionado) {
+        if ($rootScope.informeSeleccionado) {
 
-            $scope.image = "view/imagen_no_sensomatizados/default.png";
+            $scope.image = "view/imagen_informe/default.png";
 
             $scope.isNewImage = false;
             $scope.mirandom = Math.random();
 
             $scope.tab = {tab1: true, tab2: false, tab3: false};
 
-            $scope.producto = {
-                codigo: '',
-                descripcion: '',
-                marca: '',
-                cantidad: 0,
-                precio: 0.0
-            };
 
-            $scope.sensomatizado = $rootScope.sensorSeleccionado.sensomatizado;
-            $scope.productos = $rootScope.sensorSeleccionado.productos;
+            $scope.informe = $rootScope.informeSeleccionado.informe;
 
             $scope.irPaso1 = function () {
                 $scope.tab = {tab1: true, tab2: false, tab3: false};
@@ -99,59 +91,37 @@ angular.module('odisea.informe.actualizar',
 
             $scope.isSaved = false;
 
-            $scope.addProduct = function () {
-                var producto = angular.copy($scope.producto);
-                $scope.productos.push(producto);
-                calcularTotalRecuperado();
-                $scope.producto = {codigo: '', descripcion: '', marca: '', cantidad: 0, precio: 0.0};
-            };
-
-            $scope.removeProduct = function (indice) {
-                $scope.productos.splice(indice, 1);
-                calcularTotalRecuperado();
-            };
-
-
-            function calcularTotalRecuperado() {
-                var total = 0.0;
-                angular.forEach($scope.productos, function (item) {
-                    total = total + item.cantidad * item.precio;
-                });
-                $scope.sensomatizado.total = total;
-            }
-
-
-            $scope.buscarNombrePrevencionista = function () {
-                $http.get('php/controller/SensomatizadoControllerGet.php', {
+            $scope.buscarNombre = function () {
+                $http.get('php/controller/InformeControllerGet.php', {
                     params: {
-                        accion: 'get_name_prevencionista_by_dni',
-                        dni: $scope.sensomatizado.dniPrevencionista
+                        accion: 'get_name',
+                        dni: $scope.informe.dni
                     }
-                }).success(function (data, status, headers, config) {
+                }).success(function (data) {
+                    $log.log(data);
                     if (data.msj == 'OK') {
-                        $log.log(data);
-                        $scope.sensomatizado.nombrePrevencionista = data.nombre;
+                        $scope.informe.nombres = data.nombre;
                     } else {
-                        $scope.sensomatizado.nombrePrevencionista = '';
+                        $scope.informe.nombres = '';
                     }
-                }).error(function (data, status, headers, config) {
-                    console.log("Error");
+                }).error(function (data) {
+                    console.log("Error buscar nombres");
                 });
             };
 
             $scope.SaveAll = function () {
 
-                var dlg = dialogs.confirm('Confirmar', 'DESEA REGISTRAR EL PRODUCTO?');
+                var dlg = dialogs.confirm('Confirmar', 'DESEA ACTUALIZAR EL INFORME?');
                 dlg.result.then(
                     function (btn) {
                         if ($scope.isNewImage) {
                             if (!$scope.myFile) {
                                 alert("Cargue una foto o deseleccione la opción");
                             } else {
-                                $scope.updateProductos();
+                                $scope.update();
                             }
                         } else {
-                            $scope.updateProductos();
+                            $scope.update();
                         }
                     },
                     function (btn) {
@@ -159,63 +129,67 @@ angular.module('odisea.informe.actualizar',
                 );
             };
 
-            $scope.updateProductos = function(){
-
+            $scope.update = function(){
                 $scope.isUpload = true;
+
                 var postData = {
                     accion: 'actualizar',
                     data: {
-                        sensomatizado: $scope.sensomatizado,
-                        productos: JSON.stringify($scope.productos)
+                        informe: $scope.informe
                     }
                 };
-                dialogs.wait("Procesando...", "Actualizando Productos", 100);
+                dialogs.wait("Procesando...", "Actualizando Informe", 100);
                 $rootScope.$broadcast('dialogs.wait.progress', {'progress': 100});
-                $http.post('php/controller/SensomatizadoControllerPost.php', postData)
+                $http.post('php/controller/InformeControllerPost.php', postData)
                     .success(function (data) {
                         $rootScope.$broadcast('dialogs.wait.complete');
                         if (data.msj == 'OK') {
                             if ($scope.isNewImage) {
-                                $scope.loadImage($scope.sensomatizado.idSensor);
+                                $scope.loadImage($scope.informe.id);
                             } else {
-                                var noty = dialogs.notify("Mensaje", "PRODUCTO ACTUALIZADO CON EXITO");
+                                var noty = dialogs.notify("Mensaje", "INFORME ACTUALIZADO CON EXITO");
                                 noty.result.then(function () {
                                     $window.location.reload();
                                 });
                             }
                         }else{
-
-                            dialogs.error("Registro", "No se actualizo el Producto, " +
+                            dialogs.error("Actualizacion", "No se actualizo el Informe, " +
                                 "Verifique sus Datos:");
+                            $log.log(data.error);
                             $scope.isUpload = false;
                         }
                     })
                     .error(function (data) {
                         $rootScope.$broadcast('dialogs.wait.complete');
-                        dialogs.error("ERROR SERVIDOR", data);
+                        dialogs.error("ERROR SERVIDOR InformeControllerPost", data);
                     });
             };
 
             $scope.loadImage = function (id) {
+
                 var file = $scope.myFile;
                 var fd = new FormData();
                 fd.append('file', file);
                 fd.append('nombre', id);
 
-                $http.post('php/controller/SensomatizadoControllerLoad.php', fd, {
+                $http.post('php/controller/InformeControllerLoad.php', fd, {
                     headers: {'Content-Type': undefined}
                 }).success(function (data, status, headers, config) {
                     $rootScope.$broadcast('dialogs.wait.complete');
                     if (data.msj == 'OK') {
-                        var noty = dialogs.notify("Mensaje", "PRODUCTO ACTUALIZADO CON EXITO");
+                        var noty = dialogs.notify("Mensaje", "INFORME ACTUALIZADO CON EXITO");
                         noty.result.then(function () {
+
                             $window.location.reload();
+
                         });
                     } else {
-                        var d_error = dialogs.error("Error Subir Imagen", "Producto Actualizado, pero no la Imagen:" +
+                        var d_error = dialogs.error("Error Subir Imagen", "Informe Actualizado, pero no la Imagen:" +
                             data.info);
                         d_error.result.then(function () {
+
                             $window.location.reload();
+
                         });
                     }
                 }).error(function (err, status, headers, config) {
@@ -224,7 +198,7 @@ angular.module('odisea.informe.actualizar',
                 });
             };
         }else{
-            $state.go('home');
+            $state.go('informes');
         }
     });
 

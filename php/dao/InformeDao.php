@@ -69,8 +69,8 @@ class InformeDao {
     public function get_name($dni) {
         $respuesta = array('msj' => 'KO', 'nombre' => null);
         try {
-            $stm = $this->pdo->prepare("CALL sp_sensomatizado(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-            $stm->execute(array(8,'',1,1,$dni,'',date('Y-m-d H:i:s'),0,'',0,'', '', '', 0, 0));
+            $stm = $this->pdo->prepare("CALL sp_informe(?,?,?,?,?,?,?,?)");
+            $stm->execute(array(5,'',0,$dni,'','','',''));
             $res = $stm->fetch(PDO::FETCH_OBJ);
             if ($res == false) {
             } else {

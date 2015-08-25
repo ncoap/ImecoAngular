@@ -108,8 +108,10 @@ angular.module('odisea.informe.listar',
         };
 
         $scope.actualizar = function (informe) {
-
-            $log.log(informe);
+            $rootScope.informeSeleccionado = {
+                informe: informe
+            };
+            $log.log("informe seleccionado ", $rootScope.informeSeleccionado);
             $state.go('informeup');
 
         };

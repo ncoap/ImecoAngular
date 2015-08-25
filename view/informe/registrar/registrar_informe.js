@@ -14,29 +14,12 @@ angular.module('odisea.informe.registrar',
             }
         });
     })
-    .directive('validFile', function (){
-        return {
-            require: 'ngModel',
-            link: function (scope, el, attrs, ngModel) {
-                ngModel.$render = function () {
-                    ngModel.$setViewValue(el.val());
-                };
-
-                el.bind('change', function () {
-                    scope.$apply(function () {
-                        ngModel.$render();
-                    });
-                });
-            }
-        };
-    })
     .directive('fileModel', ['$parse', function ($parse) {
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
                 var model = $parse(attrs.fileModel);
                 var modelSetter = model.assign;
-
                 element.bind('change', function () {
                     scope.$apply(function () {
                         modelSetter(scope, element[0].files[0]);
@@ -49,14 +32,11 @@ angular.module('odisea.informe.registrar',
         return {
             restrict: 'A',
             link: function (scope, elem, attrs) {
-
                 var reader = new FileReader();
-
                 reader.onload = function (e) {
                     scope.image = e.target.result;
                     scope.$apply();
                 };
-
                 elem.on('change', function () {
                     reader.readAsDataURL(elem[0].files[0]);
                 });
@@ -66,7 +46,7 @@ angular.module('odisea.informe.registrar',
 
     .controller('informeController', function (utilFactory,$state, $rootScope, $window, $scope, $log, $http, $modal, $timeout, dialogs) {
 
-        $scope.image = "view/imagen_no_sensomatizados/default.png";
+        $scope.image = "view/imagen_informe/default.png";
 
         $scope.tab = {tab1: true, tab2: false, tab3: false};
 
@@ -93,21 +73,21 @@ angular.module('odisea.informe.registrar',
         };
 
         $scope.buscarNombre = function () {
-           /* $http.get('php/controller/SensomatizadoControllerGet.php', {
+           $http.get('php/controller/InformeControllerGet.php', {
                 params: {
-                    accion: 'get_name_prevencionista_by_dni',
-                    dni: $scope.sensomatizado.dniPrevencionista
+                    accion: 'get_name',
+                    dni: $scope.informe.dni
                 }
-            }).success(function (data, status, headers, config) {
+            }).success(function (data) {
                 $log.log(data);
                 if (data.msj == 'OK') {
-                    $scope.sensomatizado.nombrePrevencionista = data.nombre;
+                    $scope.informe.nombres = data.nombre;
                 } else {
-                    $scope.sensomatizado.nombrePrevencionista = '';
+                    $scope.informe.nombres = '';
                 }
-            }).error(function (data, status, headers, config) {
-                console.log("Error");
-            });*/
+            }).error(function (data) {
+                console.log("Error buscar nombres");
+            });
         };
 
         $scope.SaveAll = function () {
@@ -155,26 +135,39 @@ angular.module('odisea.informe.registrar',
             fd.append('file', file);
             fd.append('nombre', id);
 
-            $http.post('php/controller/InformeControllerLoad.php', fd, {
-                headers: {'Content-Type': undefined}
-            }).success(function (data) {
+            console.log("FILE" + file);
+            console.log("FORM" + fd);
+
+            if(file){
+
+                $http.post('php/controller/InformeControllerLoad.php', fd, {
+                    headers: {'Content-Type': undefined}
+                }).success(function (data) {
+                    $rootScope.$broadcast('dialogs.wait.complete');
+                    if(data.msj == 'OK'){
+                        var noty = dialogs.notify("Mensaje", "INFORME REGISTRADO CON EXITO");
+                        noty.result.then(function () {
+                            $window.location.reload();
+                        });
+                    }else{
+                        var d_error = dialogs.error("Error Subir Imagen", "Informe Registrado pero no la Imagen:" +
+                            data.info);
+                        d_error.result.then(function () {
+                            $window.location.reload();
+                        });
+                    }
+                }).error(function (data) {
+                    $rootScope.$broadcast('dialogs.wait.complete');
+                    dialogs.error("ERROR SERVIDOR InformeControllerLoad", data);
+                });
+
+            }else{
                 $rootScope.$broadcast('dialogs.wait.complete');
-                if(data.msj == 'OK'){
-                    var noty = dialogs.notify("Mensaje", "INFORME REGISTRADO CON EXITO");
-                    noty.result.then(function () {
-                        $window.location.reload();
-                    });
-                }else{
-                    var d_error = dialogs.error("Error Subir Imagen", "Informe Registrado pero no la Imagen:" +
-                        data.info);
-                    d_error.result.then(function () {
-                        $window.location.reload();
-                    });
-                }
-            }).error(function (data) {
-                $rootScope.$broadcast('dialogs.wait.complete');
-                dialogs.error("ERROR SERVIDOR InformeControllerLoad", data);
-            });
+                var noty = dialogs.notify("Mensaje", "INFORME REGISTRADO CON EXITO");
+                noty.result.then(function () {
+                    $window.location.reload();
+                });
+            }
         };
 
     });

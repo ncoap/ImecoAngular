@@ -13,8 +13,8 @@ switch ($accion) {
         $terminos = json_decode($_REQUEST['terminos']);
         echo json_encode($informeDao->listar($terminos));
         break;
-    case 'get_name_prevencionista_by_dni':
+    case 'get_name':
         $dni = $_GET['dni'];
-        echo json_encode($informeDao->get_name_by_dni($dni));
+        echo json_encode($informeDao->get_name($dni));
         break;
 }
