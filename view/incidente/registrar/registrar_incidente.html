@@ -32,7 +32,6 @@
                         </div>
                         <div class="form-group">
                             <label class="col-xs-2 control-label">Tienda<span class="imeco-required">*</span></label>
-
                             <div class="col-xs-10">
                                 <select class="form-control" ng-model="incidente.tienda" required
                                         ng-options="ti.nombreTienda for ti in tiendas track by ti.idTienda">
@@ -193,10 +192,8 @@
         </div>
         <!-- FIN PASO 1 -->
 
-
         <!-- PASO 2 -->
         <div class="tab-pane" ng-class="{'active': tab.tab2 == true}">
-
             <div class="box box-danger">
                 <div class="box-header">
                     <h3 class="box-title">Ingrese Materiales Dañados</h3>
@@ -339,7 +336,6 @@
                     </form>
                 </div>
             </div>
-
             <div>
                 <button ng-click="irPaso2()" class="pull-left btn btn-danger">Atrás</button>
                 <button ng-click="SaveAll()" ng-disabled="!(modelito.$valid && !isUpload)"

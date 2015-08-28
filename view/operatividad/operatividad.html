@@ -6,15 +6,15 @@
         <div>
             <form class="form-horizontal">
                 <div class="form-group">
-                    <label class="col-xs-1 control-label">PRODUCTO:</label>
+                    <label class="col-sm-1 control-label">PRODUCTO:</label>
 
-                    <div class="col-xs-3">
+                    <div class="col-sm-3">
                         <select class="form-control" ng-model="producto" required ng-change="changeProduct()"
                                 ng-options="p.nombreProducto for p in productos track by p.idProducto">
                             <option value="">-Seleccione-</option>
                         </select>
                     </div>
-                    <div class="col-xs-4 pull-right">
+                    <div class="col-sm-4 pull-right">
                         <span class="text-light-blue">internos + externos = TOTAL = inoperativos + operativos</span>
                     </div>
                 </div>

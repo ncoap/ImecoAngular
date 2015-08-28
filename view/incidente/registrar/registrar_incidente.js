@@ -21,7 +21,6 @@ angular.module('odisea.incidente.registrar',
                 ngModel.$render = function () {
                     ngModel.$setViewValue(el.val());
                 };
-
                 el.bind('change', function () {
                     scope.$apply(function () {
                         ngModel.$render();
@@ -36,7 +35,6 @@ angular.module('odisea.incidente.registrar',
             link: function (scope, element, attrs) {
                 var model = $parse(attrs.fileModel);
                 var modelSetter = model.assign;
-
                 element.bind('change', function () {
                     scope.$apply(function () {
                         modelSetter(scope, element[0].files[0]);
